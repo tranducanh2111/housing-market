@@ -15,3 +15,109 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.phone-input {
+  width: inherit !important;
+  border: solid 1px #687076 !important;
+  height: 43px !important;
+  outline: none;
+}
+
+.phone-input-dropdown {
+  /* all: unset; */
+  width: 0 !important;
+  height: 0 !important;
+  /* padding: 0 !important; */
+  border-radius: 0 !important;
+  margin-top: 20px !important;
+  margin-left: 10px !important;
+  border: none !important;
+  font-size: 14px;
+}
+
+/* Hide scroll bar: */
+.hide-scrollbar {
+  overflow: scroll;
+  /* Hide scroll bar: */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hide scroll bar: */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scroll bar: */
+.hide-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.custom-pagination-bullet {
+    background-color: #0065CC !important;
+}
+
+/* Custom active pagination bullet styles */
+.custom-pagination-bullet-active {
+    background-color: red !important;
+}
+
+/* Fade Overlay */
+.mask-gradient {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 1) 20%,
+    rgba(0, 0, 0, 1) 80%,
+    rgba(0, 0, 0, 0)
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 1) 20%,
+    rgba(0, 0, 0, 1) 80%,
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.remove-mask-gradient {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0) 20%,
+    rgba(0, 0, 0, 0) 80%,
+    rgba(0, 0, 0, 0)
+  );
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0) 20%,
+    rgba(0, 0, 0, 0) 80%,
+    rgba(0, 0, 0, 0)
+  );
+}
