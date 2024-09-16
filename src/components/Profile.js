@@ -13,7 +13,7 @@ const sampleUser = {
 };
 
 const NavBarProfile = ({ isProfileOpen, closeProfile }) => {
-  const [user, setUser] = useState(sampleUser); // Using sample user data
+  const [user] = useState(sampleUser); // Using sample user data
 
   const formatEmail = (email) => {
     const atIndex = email.indexOf("@");

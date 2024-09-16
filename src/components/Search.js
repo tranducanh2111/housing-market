@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import IconBlur from '../assets/icons/magnify-blur.svg' // Adjust path as necessary
-import IconFocus from '../assets/icons/magnify-focus.svg' // Adjust path as necessary
+// import IconBlur from '../assets/icons/magnify-blur.svg'
+// import IconFocus from '../assets/icons/magnify-focus.svg'
 import IconSearch from '../assets/icons/magnify.svg'
 
 const Search = () => {
