@@ -4,7 +4,7 @@ import HeroSection from '../page-sections/page-sections/HeroSection';
 
 const HomePage = () => {
   return (
-    <section className='flex flex-col items-center min-h-screen bg-gray-100'>
+    <section className='flex flex-col items-center min-h-screen bg-white px-4'>
       <HeroSection />
     </section>
   );

@@ -32,6 +32,13 @@ module.exports = {
             fontWeight: '700',
           },
         ],
+        'h1-sm': [
+          '48px',
+          {
+            lineHeight: '56px',
+            fontWeight: '700',
+          },
+        ],
         h2: [
           '48px',
           {
@@ -39,8 +46,22 @@ module.exports = {
             fontWeight: '700',
           },
         ],
+        'h2-sm': [
+          '32px',
+          {
+            lineHeight: '40px',
+            fontWeight: '700',
+          },
+        ],
         h3: [
           '24px',
+          {
+            lineHeight: '24px',
+            fontWeight: '600',
+          },
+        ],
+        'h3-sm': [
+          '20px',
           {
             lineHeight: '24px',
             fontWeight: '600',
@@ -53,6 +74,13 @@ module.exports = {
             fontWeight: '600',
           },
         ],
+        'h4-sm': [
+          '18px',
+          {
+            lineHeight: '24px',
+            fontWeight: '600',
+          },
+        ],
         'sub-heading': [
           '1.5rem',
           {
@@ -60,10 +88,25 @@ module.exports = {
             fontWeight: '400',
           },
         ],
+        'sub-heading-sm': [
+          '1.25rem',
+          {
+            lineHeight: '1.75rem',
+            fontWeight: '400',
+          },
+        ],
         body: [
           '16px',
           {
             lineHeight: '24px',
+            fontWeight: '400',
+            letterSpacing: '0.02em',
+          },
+        ],
+        'body-sm': [
+          '14px',
+          {
+            lineHeight: '20px',
             fontWeight: '400',
             letterSpacing: '0.02em',
           },
@@ -76,10 +119,25 @@ module.exports = {
             letterSpacing: '0.02em',
           },
         ],
+        'footnote-sm': [
+          '10px',
+          {
+            lineHeight: '16px',
+            fontWeight: '400',
+            letterSpacing: '0.02em',
+          },
+        ],
         button: [
           '16px',
           {
             lineHeight: '20px',
+            fontWeight: '400',
+          },
+        ],
+        'button-sm': [
+          '14px',
+          {
+            lineHeight: '18px',
             fontWeight: '400',
           },
         ],

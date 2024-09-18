@@ -12,13 +12,17 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
   };
 
   return (
-    <nav className="bg-white-800 pt-[16px] h-[86px]">
+    <nav className="bg-white-800 pt-[16px] sm:h-[86px] h-fit">
       <div className="w-[90%] mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Link to="/">
               <div className="flex-shrink-0">
-                <img src={Logo} alt="Logo" width={128} height={128} />
+                <img 
+                  src={Logo} 
+                  alt="Logo" 
+                  className="w-20 sm:w-32" 
+                />
               </div>
             </Link>
           </div>
@@ -30,12 +34,13 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
               <Button
                 title="Log In"
                 onClick={handleLogin}
-                className="text-black"
+                className="text-black text-body-sm sm:text-body"
               />
               <Button
                 title="Sign Up"
                 onClick={handleLogin}
-                className="bg-primary text-white"
+                className="bg-primary text-body-sm sm:text-body"
+                textColor="text-white"
               />
             </div>
             <button
