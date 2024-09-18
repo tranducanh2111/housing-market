@@ -42,7 +42,7 @@ module.exports = {
         h3: [
           '24px',
           {
-            lineHeight: '28px',
+            lineHeight: '24px',
             fontWeight: '600',
           },
         ],
@@ -93,6 +93,7 @@ module.exports = {
         "sub-head": "#2e2e2e80",
         subtitle: "#00000073",
         grey: "rgba(0, 0, 0, 0.55)",
+        white: "#ffffff",
       },
       borderRadius: {
         'inner-border-radius': 'calc(10px - 8px)',
