@@ -26,7 +26,7 @@ module.exports = {
       },
       fontSize: {
         h1: [
-          '88px',
+          '72px',
           {
             lineHeight: '88px',
             fontWeight: '700',
@@ -70,14 +70,14 @@ module.exports = {
         h4: [
           '20px',
           {
-            lineHeight: '28px',
+            lineHeight: '24px',
             fontWeight: '600',
           },
         ],
         'h4-sm': [
           '18px',
           {
-            lineHeight: '24px',
+            lineHeight: '20px',
             fontWeight: '600',
           },
         ],
