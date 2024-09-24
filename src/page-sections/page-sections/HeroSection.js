@@ -4,6 +4,8 @@ import HeroDecorImage from '../../assets/images/hero-sub-image.png';
 import Button from '../../components/Button';
 import ArrowRight from '../../assets/icons/arrow-right-white.svg';
 import ArrowUpTilt from '../../assets/icons/arrow-up-tilt.svg';
+import Hat from '../../assets/icons/hat.svg'
+import Light from '../../assets/icons/light.svg'
 
 // Swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -60,13 +62,13 @@ const HeroSection = () => {
                 {/* Heading */}
                 <section className='w-full'>
                     <div className='flex flex-row items-center mb-6'>
-                        <h1 className='text-h1-sm sm:text-h1'>Reserve your Ideal Home</h1>
+                        <h1 className='text-h1-sm sm:text-h1'>Your Health, Our Priority</h1>
                         <figure className='hidden lg:flex h-full items-center justify-center aspect-[97/120]'>
                             <img src={HeroDecorImage} alt='Housing Market Analysis' className='w-full h-full aspect-[97/120]'/>
                         </figure>
                     </div>
                     <div className='grid grid-cols-[auto_1fr] gap-x-10 xl:gap-x-16 items-end'>
-                        <h3 className='text-h3-sm sm:text-h3 font-bold'>Let&apos;s get acquainted!</h3>
+                        <h3 className='text-h3-sm sm:text-h3 font-bold'>Your journey to better health starts here.</h3>
                         <div className='hidden xs:block'>
                             <svg width="100%" height="2" xmlns="http://www.w3.org/2000/svg">
                                 <line x1="0" y1="100%" x2="100%" y2="100%" stroke="black" strokeWidth="1" />
@@ -76,7 +78,7 @@ const HeroSection = () => {
                 </section>
                 {/* CTA */}
                 <section className='w-full grid sm:grid-cols-[1fr_auto] gap-x-10 gap-y-2 items-center'>
-                    <p className='text-body-sm sm:text-body'>We specialized in curating exceptional villa, mansion, provideing an unparalleled level of comfort, privacy, and convinience for your dream house.</p>
+                    <p className='text-body-sm sm:text-body'>We specialize in empowering you with personalized insights and tools to manage diabetes and enhance your well-being.</p>
                     <Button
                         title='What&apos;s going on?'
                         icon={ArrowRight}
@@ -96,8 +98,8 @@ const HeroSection = () => {
                         </svg>
                     </div>
                     <div className='text-center xs:text-left h-fit'>
-                        <h2 className='text-h2-sm sm:text-h2 mb-2'>70k+</h2>
-                        <p className='text-body-sm sm:text-body font-bold'>Happy Clients</p>
+                        <h2 className='text-h2-sm sm:text-h2 mb-2'>24k+</h2>
+                        <p className='text-body-sm sm:text-body font-bold'>Health Articles</p>
                     </div>
                     <div className='hidden xs:block'>
                         <svg width="2" height="60" xmlns="http://www.w3.org/2000/svg" className='mx-2'>
@@ -156,26 +158,59 @@ const HeroSection = () => {
             </section>
             {/* Main Image Container */}
             <section
-                className='relative w-full bg-cover h-[32rem] lg:h-full bg-center rounded-2xl'
-                style={{ background: `linear-gradient(180deg, rgba(0, 1, 0, 0.1) 44.65%, #000000 100%), url(${HeroImage})` }}
+                className="relative w-full bg-cover h-[32rem] lg:h-full bg-center rounded-2xl flex flex-col"
+                style={{
+                    background: `linear-gradient(180deg, rgba(0, 1, 0, 0.1) 44.65%, #000000 100%), url(${HeroImage})`,
+                }}
             >
-                <article className='absolute top-3 left-3 p-2 bg-white rounded-lg aspect-[268/98] max-w-[19.75rem] flex'>
-                    <div className='grow'>
-                        <h4 className='text-h4-sm sm:text-h4 font-semibold line-clamp-2 mb-3'>Melbourne, VIC, Australia</h4>
+                <article className="absolute top-3 left-3 p-2 bg-white rounded-lg aspect-[268/98] max-w-[19.75rem] max-h-[6.5rem] sm:max-h-[7rem] flex">
+                    <div className="grow">
+                    <h4 className="text-h4-sm sm:text-h4 font-semibold line-clamp-2 mb-3">
+                        Melbourne, VIC, Australia
+                    </h4>
+                    <Button
+                        icon={ArrowUpTilt}
+                        className="bg-primary w-fit h-[2.5rem] aspect-square"
+                        textColor="text-white"
+                        style={{
+                        padding: "4px",
+                        borderRadius: "50%",
+                        }}
+                        classNameIcon={"h-6 w-6"}
+                    />
+                    </div>
+                    <figure className="h-full aspect-[110/80] rounded-lg">
+                    <img
+                        src={SmallLocationImage}
+                        alt="Housing Market Analysis"
+                        className="h-full w-full object-cover rounded-sm"
+                        width={24}
+                        height={24}
+                    />
+                    </figure>
+                </article>
+
+                {/* Add mt-auto to push this article to the bottom */}
+                <article className="p-3 mt-auto">
+                    <div className="pl-2 border-l border-white border-opacity-70 mb-">
+                        <p className="text-body text-white">
+                            Gain control of your diabetes with insights that fit your unique health profile. Stay on top of your goals, diet, and lifestyle choices with ease.
+                        </p>
+                    </div>
+                    <div className="flex justify-between flex-wrap mt-4 gap-2">
                         <Button
-                            icon={ArrowUpTilt}
-                            className='bg-primary w-fit h-[2.5rem] aspect-square'
-                            textColor='text-white'
-                            style={{
-                                padding: '4px',
-                                borderRadius: '50%',
-                            }}
-                            classNameIcon={'h-6 w-6'}
+                            title="Personalized Insight"
+                            icon={Light}
+                            className="flex-1 min-w-fit mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md border border-white rounded-md text-white"
+                            textColor="text-white"
+                        />
+                        <Button
+                            title="Join our Survey"
+                            icon={Hat}
+                            className="flex-1 min-w-fit bg-primary rounded-md text-white"
+                            textColor="text-white"
                         />
                     </div>
-                    <figure className='h-full aspect-[110/80] rounded-lg'>
-                        <img src={SmallLocationImage} alt='Housing Market Analysis' className='h-full w-full object-cover rounded-sm' width={24} height={24}/>
-                    </figure>
                 </article>
             </section>
         </main>
