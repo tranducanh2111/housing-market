@@ -7,12 +7,13 @@ const Button = forwardRef(({
   className,
   classNameIcon,
   style,
+  textColor,
   disabled = false,
 }, ref) => {
   // Manually concatenate class strings
   const buttonClasses = `flex items-center justify-center text-body px-[9px] sm:px-[15px] py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out ${
     className || ''
-  }`;
+  } ${textColor}`;
 
   return (
     <button
@@ -42,7 +43,7 @@ const Button = forwardRef(({
             height={14}
             className={classNameIcon}
           />
-          <span className='max-w-content text-body'>{title}</span>
+          <span className={`max-w-content text-body ${textColor}`}>{title}</span>
         </span>
       ) : (
         title

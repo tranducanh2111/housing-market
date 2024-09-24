@@ -26,9 +26,16 @@ module.exports = {
       },
       fontSize: {
         h1: [
-          '88px',
+          '72px',
           {
             lineHeight: '88px',
+            fontWeight: '700',
+          },
+        ],
+        'h1-sm': [
+          '48px',
+          {
+            lineHeight: '56px',
             fontWeight: '700',
           },
         ],
@@ -39,17 +46,38 @@ module.exports = {
             fontWeight: '700',
           },
         ],
+        'h2-sm': [
+          '32px',
+          {
+            lineHeight: '40px',
+            fontWeight: '700',
+          },
+        ],
         h3: [
           '24px',
           {
-            lineHeight: '28px',
+            lineHeight: '24px',
+            fontWeight: '600',
+          },
+        ],
+        'h3-sm': [
+          '20px',
+          {
+            lineHeight: '24px',
             fontWeight: '600',
           },
         ],
         h4: [
           '20px',
           {
-            lineHeight: '28px',
+            lineHeight: '24px',
+            fontWeight: '600',
+          },
+        ],
+        'h4-sm': [
+          '18px',
+          {
+            lineHeight: '20px',
             fontWeight: '600',
           },
         ],
@@ -60,10 +88,25 @@ module.exports = {
             fontWeight: '400',
           },
         ],
+        'sub-heading-sm': [
+          '1.25rem',
+          {
+            lineHeight: '1.75rem',
+            fontWeight: '400',
+          },
+        ],
         body: [
           '16px',
           {
             lineHeight: '24px',
+            fontWeight: '400',
+            letterSpacing: '0.02em',
+          },
+        ],
+        'body-sm': [
+          '14px',
+          {
+            lineHeight: '20px',
             fontWeight: '400',
             letterSpacing: '0.02em',
           },
@@ -76,10 +119,25 @@ module.exports = {
             letterSpacing: '0.02em',
           },
         ],
+        'footnote-sm': [
+          '10px',
+          {
+            lineHeight: '16px',
+            fontWeight: '400',
+            letterSpacing: '0.02em',
+          },
+        ],
         button: [
           '16px',
           {
             lineHeight: '20px',
+            fontWeight: '400',
+          },
+        ],
+        'button-sm': [
+          '14px',
+          {
+            lineHeight: '18px',
             fontWeight: '400',
           },
         ],
@@ -93,6 +151,7 @@ module.exports = {
         "sub-head": "#2e2e2e80",
         subtitle: "#00000073",
         grey: "rgba(0, 0, 0, 0.55)",
+        white: "#ffffff",
       },
       borderRadius: {
         'inner-border-radius': 'calc(10px - 8px)',
