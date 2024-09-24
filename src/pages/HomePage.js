@@ -1,6 +1,6 @@
 // src/pages/HomePage.js
 import React from 'react';
-import HeroSection from '../page-sections/page-sections/HeroSection';
+import HeroSection from '../page-sections/Homepage/HeroSection';
 
 const HomePage = () => {
   return (
