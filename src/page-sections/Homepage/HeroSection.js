@@ -192,7 +192,7 @@ const HeroSection = () => {
 
                 {/* Add mt-auto to push this article to the bottom */}
                 <article className="p-3 mt-auto">
-                    <div className="pl-2 border-l border-white border-opacity-70 mb-">
+                    <div className="pl-2 border-l border-white border-opacity-70">
                         <p className="text-body text-white">
                             Gain control of your diabetes with insights that fit your unique health profile. Stay on top of your goals, diet, and lifestyle choices with ease.
                         </p>
