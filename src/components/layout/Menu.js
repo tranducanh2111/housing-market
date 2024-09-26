@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Use react-router for routing
-import HomeIcon from '../assets/icons/home-icon.svg';
-import DropdownIcon from '../assets/icons/dropdown.svg';
-import PeopleIcon from '../assets/icons/people.svg';
-import ResourceIcon from '../assets/icons/resource.svg';
-import ContactIcon from '../assets/icons/contact.svg';
-import BlogIcon from '../assets/icons/blog.svg';
-import ArrowHover from '../assets/icons/arrowhover.svg';
-import Arrow from '../assets/icons/arrow.svg';
+import HomeIcon from 'assets/icons/home-icon.svg';
+import DropdownIcon from 'assets/icons/dropdown.svg';
+import PeopleIcon from 'assets/icons/people.svg';
+import ResourceIcon from 'assets/icons/resource.svg';
+import ContactIcon from 'assets/icons/contact.svg';
+import BlogIcon from 'assets/icons/blog.svg';
+import ArrowHover from 'assets/icons/arrowhover.svg';
+import Arrow from 'assets/icons/arrow.svg';
 
 const Menu = () => {
   const [educationCenterSubMenuOpen, setEducationCenterSubMenuOpen] = useState(false);

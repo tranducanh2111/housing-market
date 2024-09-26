@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Use react-router for routing
-import Button from "./Button"; // Adjust path as necessary
-import ThinArrow from "../assets/icons/thin-arrow.svg"; // Adjust path as necessary
-import LogOut from "../assets/icons/logout.svg"; // Adjust path as necessary
+import Button from "../ultility/Button"; // Adjust path as necessary
+import ThinArrow from "assets/icons/thin-arrow.svg"; // Adjust path as necessary
+import LogOut from "assets/icons/logout.svg"; // Adjust path as necessary
 
 // Sample user data for demonstration
 const sampleUser = {
