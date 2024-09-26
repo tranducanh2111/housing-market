@@ -143,7 +143,7 @@ module.exports = {
         ],
       },
       colors: {
-        body: 'rgba(0,0,0,0.85)',
+        paragraph: 'rgba(0,0,0,0.85)',
         primary: "#0E4459",
         secondary: "#2976A6",
         accent: '#73A9D9',

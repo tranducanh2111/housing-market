@@ -56,14 +56,14 @@ const slidesData = [
 
 const HeroSection = () => {
     return (
-        <main className='grid grid-cols-1 lg:grid-cols-2 gap-16'>
+        <main className='grid grid-cols-1 xl:grid-cols-2 gap-16'>
             {/* Main Content Container */}
             <section className='flex flex-col gap-y-12'>
                 {/* Heading */}
                 <section className='w-full'>
                     <div className='flex flex-row items-center mb-6'>
                         <h1 className='text-h1-sm sm:text-h1'>Your Health, Our Priority</h1>
-                        <figure className='hidden lg:flex h-full items-center justify-center aspect-[97/120]'>
+                        <figure className='hidden xl:flex h-full items-center justify-center aspect-[97/120]'>
                             <img src={HeroDecorImage} alt='Housing Market Analysis' className='w-full h-full aspect-[97/120]'/>
                         </figure>
                     </div>
@@ -92,18 +92,32 @@ const HeroSection = () => {
                         <h2 className='text-h2-sm sm:text-h2 mb-2'>115k+</h2>
                         <p className='text-body-sm sm:text-body font-bold'>Capital Raise</p>
                     </div>
+                    {/* Vertical Line */}
                     <div className='hidden xs:block'>
                         <svg width="2" height="60" xmlns="http://www.w3.org/2000/svg" className='mx-2'>
                             <line x1="0" y1="0" x2="0" y2="100%" stroke="black" strokeWidth="1" />
+                        </svg>
+                    </div>
+                    {/* Horizontal Line */}
+                    <div className='w-[60%] flex xs:hidden justify-center'>
+                        <svg width="100%" height="2" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="0" y1="0" x2="100%" y2="0" stroke="black" strokeWidth="1" />
                         </svg>
                     </div>
                     <div className='text-center xs:text-left h-fit'>
                         <h2 className='text-h2-sm sm:text-h2 mb-2'>24k+</h2>
                         <p className='text-body-sm sm:text-body font-bold'>Health Articles</p>
                     </div>
+                    {/* Vertical Line */}
                     <div className='hidden xs:block'>
                         <svg width="2" height="60" xmlns="http://www.w3.org/2000/svg" className='mx-2'>
                             <line x1="0" y1="0" x2="0" y2="100%" stroke="black" strokeWidth="1" />
+                        </svg>
+                    </div>
+                    {/* Horizontal Line */}
+                    <div className='w-[60%] flex xs:hidden justify-center'>
+                        <svg width="100%" height="2" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="0" y1="0" x2="100%" y2="0" stroke="black" strokeWidth="1" />
                         </svg>
                     </div>
                     <div className='text-center xs:text-left h-fit'>
@@ -126,9 +140,9 @@ const HeroSection = () => {
                         className="mySwiper max-w-[450px]"
                     >
                         {slidesData.map((slide, index) => (
-                                <SwiperSlide key={index} className='aspect-[367/275] rounded-2xl'>
+                                <SwiperSlide key={index} className='aspect-video rounded-2xl'>
                                     <figure className='w-full h-full rounded-2xl'>
-                                        <img src={slide.image} alt='Housing Market Analysis' className='w-full h-full aspect-[367/275] rounded-2xl' />
+                                        <img src={slide.image} alt='Housing Market Analysis' className='w-full h-full object-cover rounded-2xl' />
                                     </figure>
                                     {/* Article Title */}
                                     <div className='absolute top-3 left-3 px-2 py-1 mix-blend-luminosity bg-opacity-20 bg-black backdrop-blur-md rounded-lg border-2 border-white z-10'>
@@ -158,7 +172,7 @@ const HeroSection = () => {
             </section>
             {/* Main Image Container */}
             <section
-                className="relative w-full bg-cover h-[32rem] lg:h-full bg-center rounded-2xl flex flex-col"
+                className="relative w-full bg-cover h-[32rem] xl:h-full bg-center rounded-2xl flex flex-col"
                 style={{
                     background: `linear-gradient(180deg, rgba(0, 1, 0, 0.1) 44.65%, #000000 100%), url(${HeroImage})`,
                 }}
