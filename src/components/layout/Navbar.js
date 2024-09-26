@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Use react-router for routing
-import Logo from '../assets/icons/Logo.svg'; // Adjust path as necessary
+import Logo from 'assets/icons/Logo.svg';
 import Search from './Search';
-import Button from './Button';
-import SideLogo from '../assets/icons/Sidebar.svg'; // Adjust path as necessary
+import Button from '../ultility/Button';
+import SideLogo from 'assets/icons/Sidebar.svg';
 
 const Navbar = ({ openSidebar, toggleProfile }) => {
   const handleLogin = () => {

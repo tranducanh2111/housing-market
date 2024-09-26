@@ -1,7 +1,7 @@
 // src/pages/HomePage.js
 import React from 'react';
-import HeroSection from '../page-sections/Homepage/HeroSection';
-import ServiceSection from '../page-sections/Homepage/ServiceSection';
+import HeroSection from 'page-sections/Homepage/HeroSection';
+import ServiceSection from 'page-sections/Homepage/ServiceSection';
 
 const HomePage = () => {
   return (
