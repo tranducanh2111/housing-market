@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+    "baseUrl": "./src",
+        "paths": {
+            "assets/*": ["assets/*"],
+            "page-sections/*": ["page-sections/*"],
+            "components/*": ["components/*"]
+        }
+    }
+}

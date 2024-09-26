@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Search from './Search';
-import SideLogo from '../assets/icons/Sidebar.svg';
-import HomeIcon from '../assets/icons/home-icon.svg';
-import PeopleIcon from '../assets/icons/people.svg';
-import ResourceIcon from '../assets/icons/resource.svg';
-import ContactIcon from '../assets/icons/contact.svg';
-import BlogIcon from '../assets/icons/blog.svg';
+import SideLogo from 'assets/icons/Sidebar.svg';
+import HomeIcon from 'assets/icons/home-icon.svg';
+import PeopleIcon from 'assets/icons/people.svg';
+import ResourceIcon from 'assets/icons/resource.svg';
+import ContactIcon from 'assets/icons/contact.svg';
+import BlogIcon from 'assets/icons/blog.svg';
 import Menu from './Menu';
 
 const categories = [

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../assets/icons/Logo.svg';
-import FacebookIcon from '../assets/icons/facebook.svg';
-import InstagramIcon from '../assets/icons/instagram.svg';
-import TwitterIcon from '../assets/icons/twitter.svg';
-import GithubIcon from '../assets/icons/github.svg';
+import Logo from 'assets/icons/Logo.svg';
+import FacebookIcon from 'assets/icons/facebook.svg';
+import InstagramIcon from 'assets/icons/instagram.svg';
+import TwitterIcon from 'assets/icons/twitter.svg';
+import GithubIcon from 'assets/icons/github.svg';
 
 const Footer = () => {
   const socials = [

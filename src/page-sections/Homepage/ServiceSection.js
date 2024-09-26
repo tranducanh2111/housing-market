@@ -2,8 +2,8 @@
 import React from 'react';
 
 // Images
-import HeroImage from '../../assets/images/homepage-hero-image.png';
-import Button from '../../components/Button';
+import HeroImage from 'assets/images/homepage-hero-image.png';
+import Button from 'components/ultility/Button';
 
 const ServiceSection = () => {
     return (

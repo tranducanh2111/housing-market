@@ -1,7 +1,7 @@
 // src/pages-section/HomePage.js
 import React from 'react';
 import HeroDecorImage from '../../assets/images/hero-sub-image.png';
-import Button from '../../components/Button';
+import Button from '../../components/ultility/Button';
 import ArrowRight from '../../assets/icons/arrow-right-white.svg';
 import ArrowUpTilt from '../../assets/icons/arrow-up-tilt.svg';
 import Hat from '../../assets/icons/hat.svg'
