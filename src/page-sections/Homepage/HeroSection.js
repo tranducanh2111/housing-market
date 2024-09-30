@@ -56,7 +56,7 @@ const slidesData = [
 
 const HeroSection = () => {
     return (
-        <main className='grid grid-cols-1 xl:grid-cols-2 gap-16'>
+        <main className='grid grid-cols-1 xl:grid-cols-2 gap-16 px-4'>
             {/* Main Content Container */}
             <section className='flex flex-col gap-y-12'>
                 {/* Heading */}
