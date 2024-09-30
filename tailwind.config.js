@@ -56,7 +56,7 @@ module.exports = {
         h3: [
           '24px',
           {
-            lineHeight: '24px',
+            lineHeight: '32px',
             fontWeight: '600',
           },
         ],
@@ -98,7 +98,7 @@ module.exports = {
         body: [
           '16px',
           {
-            lineHeight: '24px',
+            lineHeight: '22px',
             fontWeight: '400',
             letterSpacing: '0.02em',
           },
@@ -162,6 +162,9 @@ module.exports = {
         'auto-fit': 'repeat(auto-fit, minmax(300px, 1fr))',
         'about-mission': 'auto 560px',
         'tab': '46px auto 46px',
+      },
+      width: {
+        'testimonial': 'calc(100vw - 78px) !important',
       }
     },
   },
