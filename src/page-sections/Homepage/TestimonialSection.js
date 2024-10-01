@@ -22,23 +22,21 @@ const TestimonialSection = () => {
                 </div>
             </div>
 
-            <div className="mx-5 sm:mx-0">
-                <Swiper
-                    className="justify-start items-start gap-6 inline-flex bottom-[11.5rem] h-[12.5rem]"
-                    spaceBetween={24}
-                    slidesPerView="auto"
-                >
-                    {items.map((item, index) => (
-                        <SwiperSlide
-                            className="px-4 py-2 bg-white rounded-xl shadow-lg flex-col justify-start items-start gap-1 inline-flex"
-                            key={index}
-                            style={{ maxWidth: '18.75rem', width: '100%', height: '11rem' }}
-                        >
-                            <TestimonialCard {...item} />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </div>
+            <Swiper
+                className="justify-start items-start gap-6 inline-flex bottom-[11.5rem] h-[12.5rem]"
+                spaceBetween={24}
+                slidesPerView="auto"
+            >
+                {items.map((item, index) => (
+                    <SwiperSlide
+                        className="px-4 py-2 bg-white rounded-xl shadow-lg flex-col justify-start items-start gap-1 inline-flex"
+                        key={index}
+                        style={{ maxWidth: '18.75rem', width: '100%', height: '11rem' }}
+                    >
+                        <TestimonialCard {...item} />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
         </section>
     );
 };

@@ -6,7 +6,7 @@ const Button = forwardRef(
         ref,
     ) => {
         // Manually concatenate class strings
-        const buttonClasses = `flex items-center justify-center text-body px-[9px] sm:px-[15px] py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out ${
+        const buttonClasses = `flex items-center justify-center text-body-sm sm:text-body px-[9px] sm:px-[15px] py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out ${
             className || ''
         } ${textColor}`;
 

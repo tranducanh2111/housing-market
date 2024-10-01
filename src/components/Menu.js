@@ -32,13 +32,13 @@ const Menu = () => {
     };
 
     return (
-        <div className="w-[232px] mt-2">
+        <div className="w-[14rem] mt-2">
             {/* Homepage */}
-            <button className="mb-[16px] hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between">
+            <button className="mb-4 hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between">
                 <Link to="/">
                     <div className="flex">
                         <img src={HomeIcon} alt="Home" width={20} height={20} />
-                        <p className="ml-2 tracking-wide">Homepage</p>
+                        <p className="ml-2 tracking-wide text-body-sm sm:text-body">Homepage</p>
                     </div>
                 </Link>
             </button>
@@ -49,7 +49,7 @@ const Menu = () => {
             >
                 <div className="flex">
                     <img src={ResourceIcon} alt="Logo" width={20} height={20} />
-                    <p className="ml-2 tracking-wide">Education Center</p>
+                    <p className="ml-2 tracking-wide text-body-sm sm:text-body">Education Center</p>
                 </div>
                 <img src={DropdownIcon} alt="Logo" width={20} height={20} className="" />
             </button>
@@ -63,7 +63,7 @@ const Menu = () => {
                     {educationCenterMenu.map((item, index) => (
                         <li key={index}>
                             <a
-                                className={`flex px-4 pl-8 py-2 ${
+                                className={`flex px-4 pl-8 py-2 text-body-sm sm:text-body ${
                                     item.isHovered
                                         ? 'bg-primary text-white'
                                         : 'hover:bg-primary hover:text-white'
@@ -90,7 +90,7 @@ const Menu = () => {
                 <Link to="/about">
                     <div className="flex">
                         <img src={PeopleIcon} alt="About Us" width={20} height={20} />
-                        <p className="ml-2 tracking-wide">About Us</p>
+                        <p className="ml-2 tracking-wide text-body-sm sm:text-body">About Us</p>
                     </div>
                 </Link>
             </button>
@@ -99,7 +99,7 @@ const Menu = () => {
                 <Link to="/contact">
                     <div className="flex">
                         <img src={ContactIcon} alt="Sponsors" width={20} height={20} />
-                        <p className="ml-2 tracking-wide">Contact Us</p>
+                        <p className="ml-2 tracking-wide text-body-sm sm:text-body">Contact Us</p>
                     </div>
                 </Link>
             </button>
@@ -108,7 +108,7 @@ const Menu = () => {
                 <Link to="/blog">
                     <div className="flex">
                         <img src={BlogIcon} alt="Blog" width={20} height={20} />
-                        <p className="ml-2 tracking-wide">Blog</p>
+                        <p className="ml-2 tracking-wide text-body-sm sm:text-body">Blog</p>
                     </div>
                 </Link>
             </button>
