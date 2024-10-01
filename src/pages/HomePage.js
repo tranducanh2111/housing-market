@@ -6,15 +6,15 @@ import TestimonialSection from 'page-sections/Homepage/TestimonialSection';
 import SponsorList from 'page-sections/Homepage/SponsorList';
 import ContactSection from 'page-sections/Homepage/ContactFormSection';
 const HomePage = () => {
-  return (
-    <section className='mx-auto flex flex-col items-center min-h-screen bg-white gap-y-24'>
-      <HeroSection />
-      <ServiceSection />
-      <TestimonialSection />
-      <SponsorList />
-      <ContactSection />
-    </section>
-  );
+    return (
+        <section className="mx-auto flex flex-col items-center min-h-screen bg-white gap-y-24">
+            <HeroSection />
+            <ServiceSection />
+            <TestimonialSection />
+            <SponsorList />
+            <ContactSection />
+        </section>
+    );
 };
 
 export default HomePage;
