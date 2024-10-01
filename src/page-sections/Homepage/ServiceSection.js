@@ -32,7 +32,7 @@ const cardData = [
 
 const ServiceSection = () => {
     return (
-        <section className='flex flex-col gap-[3rem] px-4'>
+        <section className='max-w-[78rem] mx-auto flex flex-col gap-[3rem] px-4'>
             <div className='block lg:grid lg:grid-cols-3 gap-x-8 md:gap-x-12'>
                 {/* Header Heading */}
                 <div className='col-span-1 mb-6 lg:mb-0 flex flex-col justify-center'>

@@ -22,7 +22,8 @@ module.exports = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "contact-section": "linear-gradient(to right bottom, rgb(0, 0, 0, 0.60), rgb(0, 0, 0, 0.60)),url(/contact-section.jpg)"
+        "contact-section": "linear-gradient(to right bottom, rgb(0, 0, 0, 0.60), rgb(0, 0, 0, 0.60)),url(/contact-section.jpg)",
+        'contact-image': "url('assets/images/contact-section.jpg')",
       },
       fontSize: {
         h1: [
