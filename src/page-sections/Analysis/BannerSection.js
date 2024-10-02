@@ -10,11 +10,11 @@ const NavigateButton = ({ imageList, activeIndex }) => {
     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
       {imageList.map((_, index) => (
         <div
-          onClick={() => swiper.slideToLoop(index)}
-          key={index}
-          className={`w-[28px] sm:w-[48px] h-[6px] px-[10px] sm:px-[24px] py-[3px] ${
-            activeIndex === index ? 'bg-[#FFFFFF]' : 'bg-grey opacity-[0.5]'
-          } rounded-[2px] inline-block mx-1 cursor-pointer`}
+            onClick={() => swiper.slideToLoop(index)}
+            key={index}
+            className={`w-7 sm:w-12 h-2 px-2.5 sm:px-6 py-1 ${
+                activeIndex === index ? 'bg-white' : 'bg-grey opacity-50'
+            } rounded-lg inline-block mx-1 cursor-pointer`}
         />
       ))}
     </div>
@@ -31,8 +31,8 @@ const BannerSection = ({ imageList }) => {
         loop={true}
         slidesPerView={1}
         autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
+            delay: 3000,
+            disableOnInteraction: false,
         }}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         className="mySwiper"
@@ -42,7 +42,7 @@ const BannerSection = ({ imageList }) => {
             <img
               src={image}
               alt={`Banner ${index + 1}`}
-              className="max-h-[480px] object-cover w-full"
+              className="max-h-[30rem] object-cover w-full"
             />
           </SwiperSlide>
         ))}

@@ -12,7 +12,7 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
     };
 
     return (
-        <nav className="bg-white-800 pt-[16px] sm:h-[86px] h-fit">
+        <nav className="bg-white-800 pt-[16px] h-[68px] sm:h-[86px] h-fit">
             <div className="w-[90%] mx-auto">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
