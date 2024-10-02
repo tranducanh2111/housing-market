@@ -1,6 +1,8 @@
 // src/pages/LatestResearch.js
 import React from 'react';
+
 import BannerSection from 'page-sections/Analysis/BannerSection';
+import GallerySection from 'page-sections/Analysis/GallerySection';
 import Banner1 from 'assets/images/banner-1.jpg'
 import Banner2 from 'assets/images/banner-2.jpg'
 import Banner3 from 'assets/images/banner-3.jpg'
@@ -15,6 +17,7 @@ const LatestResearch = () => {
     return (
         <section className="mx-auto flex flex-col items-center min-h-screen bg-white gap-y-24">
             <BannerSection imageList={imageList} />
+            <GallerySection />
         </section>
     );
 };
