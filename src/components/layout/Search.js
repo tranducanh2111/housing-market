@@ -37,11 +37,11 @@ const Search = () => {
 
     return (
         <div
-            className={`py-[1px] pl-[8px] md:pl-[16px] flex border-[2px] justify-left items-center flex-1 rounded-md ${
+            className={`py-px pl-2 md:pl-4 flex border-2 justify-left items-center flex-1 rounded-md ${
                 isInputFocused ? 'border-primary' : 'border-[#B6B6B6]'
             }`}
         >
-            <div className="icon mr-[8px] md:mr-[16px]">
+            <div className="icon mr-2 md:mr-4">
                 <img
                     // src={isInputFocused || search ? IconFocus : IconBlur}
                     src={isInputFocused || search ? IconSearch : IconSearch}
@@ -51,7 +51,7 @@ const Search = () => {
                 />
             </div>
             <input
-                className="w-[100%] h-[34px] border-0 outline-none"
+                className="w-full h-[2.125rem] border-0 outline-none"
                 placeholder="What are you looking for?"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -61,7 +61,7 @@ const Search = () => {
             />
 
             {showSpinningIcon && (
-                <div className="icon mr-[16px]">
+                <div className="icon mr-4">
                     <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-primary border-solid"></div>
                 </div>
             )}

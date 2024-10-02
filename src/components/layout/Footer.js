@@ -43,10 +43,10 @@ const Footer = () => {
 
     return (
         <section className="z-[39] relative">
-            <div className="max-w-[1170px] px-5 mx-auto py-[3rem] flex flex-col md:justify-start lg:flex-row lg:justify-between gap-y-[3rem]">
-                <article className="flex flex-col items-between lg:items-start gap-[1.5rem]">
-                    <img src={Logo} alt="SPPC Logo" className="object-fit w-full max-w-[8rem]" />
-                    <span className="flex justify-start ml-[-8px]">
+            <div className="max-w-[78rem] px-5 mx-auto py-12 flex flex-col md:justify-start lg:flex-row lg:justify-between gap-y-12">
+                <article className="flex flex-col items-between lg:items-start gap-6">
+                    <img src={Logo} alt="SPPC Logo" className="object-fit w-full max-w-32" />
+                    <span className="flex justify-start ml-[-1.5rem]">
                         {socials.map((social, index) => (
                             <div key={index} className="social_logo_item">
                                 <a href={social.link} target="_blank" rel="noreferrer">
@@ -55,26 +55,26 @@ const Footer = () => {
                                         alt={social.name}
                                         width={20}
                                         height={20}
-                                        className="mx-[8px]"
+                                        className="mx-2"
                                     />
                                 </a>
                             </div>
                         ))}
                     </span>
                 </article>
-                <div className="grid grid-cols-2 gap-x-[2rem] gap-y-[3rem]">
-                    <article className="flex flex-col gap-[0.5rem]">
-                        <h3 className="text-primary text-h3 mb-[0.5rem]">About Us</h3>
+                <div className="grid grid-cols-2 gap-x-8 gap-y-12">
+                    <article className="flex flex-col gap-2">
+                        <h3 className="text-primary text-h3-sm sm:text-h3 mb-2">About Us</h3>
                         {aboutCategories.map((item, index) => (
-                            <Link key={index} to={item.link} className="text-body">
+                            <Link key={index} to={item.link} className="text-body-sm sm:text-body">
                                 {item.name}
                             </Link>
                         ))}
                     </article>
-                    <article className="flex flex-col gap-[0.5rem]">
-                        <h3 className="text-primary text-h3 mb-[0.5rem]">Support Us</h3>
+                    <article className="flex flex-col gap-2">
+                        <h3 className="text-primary text-h3-sm sm:text-h3 mb-2">Support Us</h3>
                         {supportUsCategories.map((item, index) => (
-                            <Link key={index} to={item.link} className="text-body">
+                            <Link key={index} to={item.link} className="text-body-sm sm:text-body">
                                 {item.name}
                             </Link>
                         ))}
@@ -82,12 +82,12 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="bg-secondary px-[30px] sm:px-[70px] py-[8px]">
-                <div className="max-w-[1170px] mx-auto text-center sm:flex justify-between w-[100%] m-auto py-2 text-white">
-                    <p className="text-footnote">
+            <div className="bg-secondary px-8 sm:px-[4.375rem] py-2">
+                <div className="max-w-[78rem] mx-auto text-center sm:flex justify-between w-full m-auto py-2 text-white">
+                    <p className="text-footnote-sm sm:text-footnote">
                         &copy; {new Date().getFullYear()} NextHome. All rights reserved.
                     </p>
-                    <p className="text-footnote">
+                    <p className="text-footnote-sm sm:text-footnote">
                         Contact us:{' '}
                         <a href="mailto:Jungtalents@gmail.com">support@nexthome.com.au</a>
                     </p>

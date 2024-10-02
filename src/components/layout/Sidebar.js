@@ -27,21 +27,21 @@ const SidebarModal = ({ isOpen, closeSidebar, openSidebar }) => {
 
             {/* Extended sidebar */}
             <div
-                className={`sm:relative fixed inset-y-0 right-0 sm:left-0 top-0 z-[1010] sm:z-0 bg-white mr-0 ${isOpen ? 'w-[260px]' : 'w-[70px] invisible sm:visible duration-0'} duration-100`}
+                className={`sm:relative fixed inset-y-0 right-0 sm:left-0 top-0 z-[1010] sm:z-0 bg-white mr-0 ${isOpen ? 'w-[16.25rem]' : 'w-[4.375rem] invisible sm:visible duration-0'} duration-100`}
             >
                 <div className="fixed">
                     <div
-                        className={`px-4 justify-between flex items-center w-full mb-[24px] ${!isOpen && 'hidden'}`}
+                        className={`px-4 justify-between flex items-center w-full mb-6 ${!isOpen && 'hidden'}`}
                     >
                         <div className="hidden sm:block">
                             <h2 className="text-xl font-semibold">Dashboard</h2>
                         </div>
-                        <button className="pl-[104px] hidden sm:block" onClick={closeSidebar}>
+                        <button className="pl-28 hidden sm:block" onClick={closeSidebar}>
                             <img src={SideLogo} alt="Logo" width={20} height={20} />
                         </button>
                     </div>
                     <div className={`fixed ${!isOpen && 'hidden'} px-4 pt-2`}>
-                        <div className="w-[230px] md:hidden block">
+                        <div className="w-[14.375rem] md:hidden block">
                             <Search />
                         </div>
                         <Menu />
@@ -51,10 +51,10 @@ const SidebarModal = ({ isOpen, closeSidebar, openSidebar }) => {
 
             {/* Small sidebar */}
             <div
-                className={`bg-[#EEEEEE] hidden sm:block w-[70px] fixed z-50 sm:z-0 top-21 ${isOpen ? 'invisible' : 'visible'} duration-50`}
+                className={`bg-[#EEEEEE] hidden sm:block w-[4.375rem] fixed z-50 sm:z-0 top-21 ${isOpen ? 'invisible' : 'visible'} duration-50`}
             >
-                <div className="p-[8px] flex flex-col justify-items-stretch justify-start bg-white items-center">
-                    <div className="menu_bar mb-[50px] cursor-pointer" onClick={openSidebar}>
+                <div className="p-2 flex flex-col justify-items-stretch justify-start bg-white items-center">
+                    <div className="menu_bar mb-12 cursor-pointer" onClick={openSidebar}>
                         <img src={SideLogo} alt="Logo" width={20} height={20} />
                     </div>
                     {/* Render categories dynamically */}

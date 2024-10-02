@@ -12,7 +12,7 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
     };
 
     return (
-        <nav className="bg-white-800 pt-[16px] h-[68px] sm:h-[86px] h-fit">
+        <nav className="bg-white-800 pt-3 h-[3.75rem] sm:h-[5.375rem] h-fit">
             <div className="w-[90%] mx-auto">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
@@ -22,7 +22,7 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
                             </div>
                         </Link>
                     </div>
-                    <div className="hidden md:flex flex-1 max-w-[600px] px-[30px]">
+                    <div className="hidden md:flex flex-1 max-w-[37.5rem] px-[1.875rem]">
                         <Search />
                     </div>
                     <div className="flex justify-center items-center">
@@ -40,7 +40,7 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
                             />
                         </div>
                         <button
-                            className="ml-[25px] text-gray-600 hover:text-gray-900 block sm:hidden"
+                            className="ml-6 text-gray-600 hover:text-gray-900 block sm:hidden"
                             onClick={openSidebar}
                         >
                             <img src={SideLogo} alt="Sidebar Logo" width={30} height={30} />

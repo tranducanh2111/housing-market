@@ -14,7 +14,7 @@ const Layout = ({ children, isOpen, openSidebar, closeSidebar, isProfileOpen, cl
                 />
 
                 {/* Content */}
-                <div className="relative flex-1 min-h-[1472px] sm:min-h-[1504px] overflow-x-hidden sm:border-l-4">
+                <div className="relative flex-1 min-h-[92rem] sm:min-h-[84rem] overflow-x-hidden sm:border-l-4">
                     <Profile isProfileOpen={isProfileOpen} closeProfile={closeProfile} />
                     <div className={`relative ${isProfileOpen && 'hidden sm:block'}`}>
                         {children}
