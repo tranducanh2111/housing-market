@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/layout/Navbar';
-import Layout from './components/layout/Layout';
-import Footer from './components/layout/Footer';
-import HomePage from './pages/HomePage';
+import Navbar from 'components/layout/Navbar';
+import Layout from 'components/layout/Layout';
+import Footer from 'components/layout/Footer';
+import HomePage from 'pages/HomePage';
+import LatestResearch from './pages/LatestResearch';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -41,8 +42,8 @@ const App = () => {
                     closeProfile={closeProfile}
                 >
                     <Routes>
-                        <Route path="/" element={<HomePage />} /> {/* Use element prop */}
-                        {/* Add more routes as needed */}
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/latest-research" element={<LatestResearch />} />
                     </Routes>
                 </Layout>
                 <div className={`${isProfileOpen && 'lg:block hidden'}`}>
