@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Use react-router for routing
-import Logo from 'assets/icons/Logo.svg';
+import Logo from '../assets/icons/Logo.svg'; // Adjust path as necessary
 import Search from './Search';
-import Button from '../ultility/Button';
-import SideLogo from 'assets/icons/Sidebar.svg';
+import Button from './Button';
+import SideLogo from '../assets/icons/Sidebar.svg'; // Adjust path as necessary
 
 const Navbar = ({ openSidebar, toggleProfile }) => {
     const handleLogin = () => {
@@ -12,7 +12,7 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
     };
 
     return (
-        <nav className="bg-white-800 py-3 h-[3.75rem] sm:h-[5.375rem] h-fit">
+        <nav className="bg-white-800 pt-[16px] sm:h-[86px] h-fit">
             <div className="w-[90%] mx-auto">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
@@ -22,7 +22,7 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
                             </div>
                         </Link>
                     </div>
-                    <div className="hidden md:flex flex-1 max-w-[37.5rem] px-[1.875rem]">
+                    <div className="hidden md:flex flex-1 max-w-[600px] px-[30px]">
                         <Search />
                     </div>
                     <div className="flex justify-center items-center">
@@ -35,12 +35,12 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
                             <Button
                                 title="Sign Up"
                                 onClick={handleLogin}
-                                className="bg-primary text-body-sm sm:text-body"
+                                className="bg-primary text-white text-body-sm sm:text-body"
                                 textColor="text-white"
                             />
                         </div>
                         <button
-                            className="ml-6 text-gray-600 hover:text-gray-900 block sm:hidden"
+                            className="ml-[25px] text-gray-600 hover:text-gray-900 block sm:hidden"
                             onClick={openSidebar}
                         >
                             <img src={SideLogo} alt="Sidebar Logo" width={30} height={30} />
