@@ -1,7 +1,7 @@
 // src/ultility/BlogCard.js
 import React from 'react';
-import ThinArrow from 'assets/icons/thin-arrow.svg'; // Adjust the path to the arrow icon
-import Button from 'components/ultility/Button'; // Adjust the path to the Button component
+import ThinArrow from 'assets/icons/thin-arrow.svg';
+import Button from 'components/ultility/Button';
 
 // Define the prop types for the Card component
 const getFirstWord = str => {

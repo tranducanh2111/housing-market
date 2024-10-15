@@ -11,7 +11,7 @@ import Menu from './Menu';
 
 const categories = [
     { href: '/', src: HomeIcon, alt: 'Home' },
-    { href: '/education-center', src: ResourceIcon, alt: 'Education Center' },
+    { href: '/insights', src: ResourceIcon, alt: 'Market Insight' },
     { href: '/about', src: PeopleIcon, alt: 'About Us' },
     { href: '/contact', src: ContactIcon, alt: 'Contact Us' },
     { href: '/blog', src: BlogIcon, alt: 'Blog' },
