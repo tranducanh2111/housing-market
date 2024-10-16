@@ -19,8 +19,7 @@ const Menu = () => {
 
     const educationCenterMenu = [
         { name: 'Latest Research', isHovered: false, page: 'latest-research' },
-        { name: 'Nutrition Guidelines', isHovered: false, page: 'nutrition-guidelines' },
-        { name: 'Exercise Tips', isHovered: false, page: 'exercise-tips' },
+        { name: 'Personalize Insights', isHovered: false, page: 'personalize-insight' }
     ];
 
     const handleContestHoverOn = index => {
@@ -42,18 +41,18 @@ const Menu = () => {
                     </div>
                 </Link>
             </button>
-            {/* Education Center Group */}
+            {/* insights Group */}
             <button
                 className={`text-${educationCenterSubMenuOpen ? 'primary' : 'black mb-[16px]'} hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between`}
                 onClick={toggleContestSubMenu}
             >
                 <div className="flex">
                     <img src={ResourceIcon} alt="Logo" width={20} height={20} />
-                    <p className="ml-2 tracking-wide text-body-sm sm:text-body">Education Center</p>
+                    <p className="ml-2 tracking-wide text-body-sm sm:text-body">Market Insights</p>
                 </div>
                 <img src={DropdownIcon} alt="Logo" width={20} height={20} className="" />
             </button>
-            {/* Education Center Categories */}
+            {/* Market Insight Categories */}
             <div
                 className={`overflow-hidden w-full transition-all duration-300 ${
                     educationCenterSubMenuOpen ? 'h-auto' : 'h-0'
