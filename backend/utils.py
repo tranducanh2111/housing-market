@@ -1,14 +1,21 @@
+# Filename: main.py
+#
+# Description: Utility functions.
+#
+# Author: John Iliadis - 104010553
+
+
 import logging
 
 
 def get_logger() -> logging.Logger:
-    logging.basicConfig(level=logging.INFO)  # todo: make config for logger
+    logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger(__name__)
     return logger
 
 
-# todo: rename this function
-def error_handler(func):
+def trace_exception(func):
+    """A decorator used for tracing the original function that raised the exception."""
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)

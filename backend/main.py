@@ -1,49 +1,71 @@
+# Filename: main.py
+#
+# Description: This script implements the FastAPI back-end for the project application.
+#
+# Author: John Iliadis - 104010553
+
+
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator, PastDate
 from model import get_model, make_prediction
 from datetime import date
-from utils import error_handler, get_logger
+from utils import trace_exception, get_logger
 import json
 import requests
 
 
 class HousePricePredictionModelInput(BaseModel):
+    """Pydantic model used for validating the input data. This class also processes the data into an appropriate
+    format for the model."""
     state: str = Field(..., description='American state')
     city: str = Field(..., description='City of state')
     beds: int = Field(..., gt=0, description='Number of beds')
     baths: int = Field(..., gt=0, description='Number of baths')
     living_area: float = Field(..., gt=0, description='Living area in square meters')
     land_area: float = Field(..., gt=0, description='Total land area in square meters')
-    prev_sold_date: date = Field(..., description='Previously sold date')
+    prev_sold_date: PastDate = Field(..., description='Previously sold date')
 
-    @error_handler
-    def years_since_last_sold(self):
+    @classmethod
+    @field_validator('state', 'city')
+    @trace_exception
+    def check_empty_string(cls, string_input: str):
+        """Validator makes sure that the 'state' and 'city' fields are not empty."""
+        if string_input.strip() == '':
+            raise ValueError("String is empty")
+        return string_input
+
+    @trace_exception
+    def years_since_last_sold(self) -> int:
+        """Calculates the number of years since the property was last sold."""
         current_date = date.today()
         difference = current_date - self.prev_sold_date
         return difference.days // 365
 
-    # todo: error handling and comment
-    @error_handler
+    @trace_exception
     def encode_state_value(self) -> float:
+        """Returns the encoded value for the state. The encoded mappings from data processing have been stored
+        in the 'city_state_encoded_data_mappings' json file."""
         global city_state_encoded_data_mappings
         encoded_state_value = city_state_encoded_data_mappings[self.state.lower()]['encoded_value']
         return encoded_state_value
 
-    # todo: add comment
-    @error_handler
+    @trace_exception
     def encode_city_value(self) -> float:
+        """Returns the encoded value for the city. If the city is not found in the stored values, the encoded value
+        for the state will be returned instead. This won't affect the performance much because target encoding was
+        used, and the city is related to the state."""
         global city_state_encoded_data_mappings
         if self.city.lower() in city_state_encoded_data_mappings[self.state.lower()]:
-            encoded_city_value = city_state_encoded_data_mappings[self.state.lower()][self.city.lower()][
-                'encoded_value']
+            encoded_city_value = city_state_encoded_data_mappings[self.state.lower()][
+                self.city.lower()]['encoded_value']
             return encoded_city_value
         else:
             return self.encode_state_value()
 
-    # todo: add comment
     def get_processed_input(self) -> dict:
+        """Returns all the values in the correct order and format for the model prediction."""
         return {
             'beds': self.beds,
             'baths': self.baths,
@@ -60,29 +82,35 @@ model = get_model()
 logger = get_logger()
 city_state_encoded_data_mappings = {}
 
-# todo: add comment
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000"],  # allow only requests originating from the React app
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# todo: add comment
 @app.on_event('startup')
 async def load_city_state_encoded_data():
+    """Loads the encoded data mappings from data processing on app startup. These are required for transforming the
+    input data into the correct format for the model."""
     global city_state_encoded_data_mappings
-    with open('model/state_city_encoded_values.json', 'r') as json_file:
-        city_state_encoded_data_mappings = json.load(json_file)
+    try:
+        with open('model/state_city_encoded_values.json', 'r') as json_file:
+            city_state_encoded_data_mappings = json.load(json_file)
+    except Exception as e:
+        logger.error(f'Failed to read state_city_encoded_values.json: {str(e)}')
+        raise HTTPException(status_code=500, detail='Failed to read a core app file on startup')
 
 
 @app.post('/predict')
 async def predict_house_price(input: HousePricePredictionModelInput):
+    """Post method used for making a price prediction on a property, given the property's details."""
     try:
-        prediction = make_prediction(model, input.get_processed_input())
-        return int(prediction)
+        processed_input = input.get_processed_input()
+        prediction = make_prediction(model, processed_input)
+        return {'result': int(prediction)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
         raise HTTPException(status_code=500, detail="Internal server error")
@@ -95,19 +123,29 @@ RAPID_API_HEADERS = {
 }
 
 
-@error_handler
+@trace_exception
 def fetch_rapid_api_house_data(address: str):
+    """
+    Rapid API is used for fetching property data from listings on Zillow.com.
+
+    Args:
+        address: (str): The american address of a property in the format of 'street, city, state'.
+    """
+    logger.debug(f'Rapid API call attempt with address: {address}')
     response = requests.get(url=RAPID_API_URL, headers=RAPID_API_HEADERS, params={'address': address}, timeout=5)
 
     if response.status_code != 200:
-        logger.error(f'Failed to fetch data from rapid api: Response status code: {response.status_code}')
-        raise HTTPException(status_code=500, detail=f'Failed to fetch data from rapid api.')
+        logger.error(f'Failed to fetch data from Rapid API: Response status code: {response.status_code}')
+        raise RuntimeError('Failed to fetch data from Rapid API')
 
     return response.json()
 
 
-@app.get('/some_url/{street}/{city}/{state}')
+@app.get('/predict/{street}/{city}/{state}')
 async def predict_house_price(street: str, city: str, state: str):
+    """Get request function used for making a price prediction on a property, based on the property's address. Rapid
+    API is used to fetch the data required for the model. This method is used for when the user doesn't know the
+    property's specific details, but knows the property address."""
     address = f'{street} {city} {state}'
     house_data = fetch_rapid_api_house_data(address)
 
@@ -129,11 +167,11 @@ async def predict_house_price(street: str, city: str, state: str):
             prev_sold_date=date_sold
         )
 
-        prediction = make_prediction(model, model_input.get_processed_input())
-        return int(prediction)
+        processed_input = model_input.get_processed_input()
+        prediction = make_prediction(model, processed_input)
+        return {'result': int(prediction)}
     except Exception as e:
-        logger.error(f'Error occurred in predict_house_price() with get request: {str(e)}\n\tMost likely some'
-                     f'Rapid API data was missing')
+        logger.error(f'Error occurred in predict_house_price(): {str(e)}')
         raise HTTPException(status_code=500, detail='Internal server error')
 
 
