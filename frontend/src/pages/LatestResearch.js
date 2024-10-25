@@ -1,9 +1,12 @@
 // src/pages/LatestResearch.js
+/* eslint-disable */
 import React from 'react';
 
 import BannerSection from 'page-sections/Analysis/BannerSection';
 import GallerySection from 'page-sections/Analysis/GallerySection';
 import ArticleSection from 'page-sections/Analysis/ArticleSection';
+import ErrorBoundary from 'components/ErrorBoundary';
+import withErrorBoundary from 'hoc/withErrorBoundary';
 
 import Banner1 from 'assets/images/banner-1.jpg';
 import Banner2 from 'assets/images/banner-2.jpg';
@@ -15,7 +18,7 @@ import Banner6 from 'assets/images/banner-6.jpg';
 // Image List
 const imageList = [Banner1, Banner2, Banner3, Banner4, Banner5, Banner6];
 
-const LatestResearch = () => {
+const LatestResearchContent = () => {
     return (
         <section className="mx-auto flex flex-col items-center min-h-screen bg-white gap-y-24">
             <BannerSection imageList={imageList} />
@@ -32,4 +35,12 @@ const LatestResearch = () => {
     );
 };
 
-export default LatestResearch;
+const LatestResearch = () => {
+    return (
+        <ErrorBoundary>
+            <LatestResearchContent />
+        </ErrorBoundary>
+    );
+};
+
+export default withErrorBoundary(LatestResearch);

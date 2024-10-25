@@ -16,6 +16,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
+import ErrorBoundary from 'components/ErrorBoundary';
 
 const App = () => {
     const [isOpen, setIsOpen] = React.useState(false);
@@ -39,7 +40,7 @@ const App = () => {
 
     return (
         <Router>
-            <>
+            <ErrorBoundary> {/* Wrap your components with ErrorBoundary */}
                 <Navbar openSidebar={openSidebar} toggleProfile={toggleProfile} />
                 <Layout
                     isOpen={isOpen}
@@ -49,15 +50,36 @@ const App = () => {
                     closeProfile={closeProfile}
                 >
                     <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/latest-research" element={<LatestResearch />} />
-                        <Route path="/nutrition-guidelines" element={<PersonalizeInsight />} />
+                        <Route 
+                            path="/" 
+                            element={
+                                <ErrorBoundary>
+                                    <HomePage />
+                                </ErrorBoundary>
+                            } 
+                        />
+                        <Route 
+                            path="/latest-research" 
+                            element={
+                                <ErrorBoundary>
+                                    <LatestResearch />
+                                </ErrorBoundary>
+                            } 
+                        />
+                        <Route 
+                            path="/nutrition-guidelines" 
+                            element={
+                                <ErrorBoundary>
+                                    <PersonalizeInsight />
+                                </ErrorBoundary>
+                            } 
+                        />
                     </Routes>
                 </Layout>
                 <div className={`${isProfileOpen && 'lg:block hidden'}`}>
                     <Footer />
                 </div>
-            </>
+            </ErrorBoundary>
         </Router>
     );
 };
