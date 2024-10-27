@@ -4,6 +4,7 @@
 #
 # Author: John Iliadis - 104010553
 
+# todo: add comments
 
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,10 +13,12 @@ from pydantic import BaseModel, Field, field_validator, PastDate
 from model import get_model, make_prediction
 from datetime import date
 from utils import trace_exception, get_logger
+from constants import *
 import json
 import requests
 
 
+# todo: finalize this class
 class HousePricePredictionModelInput(BaseModel):
     """Pydantic model used for validating the input data. This class also processes the data into an appropriate
     format for the model."""
@@ -25,7 +28,8 @@ class HousePricePredictionModelInput(BaseModel):
     baths: int = Field(..., gt=0, description='Number of baths')
     living_area: float = Field(..., gt=0, description='Living area in square meters')
     land_area: float = Field(..., gt=0, description='Total land area in square meters')
-    prev_sold_date: PastDate = Field(..., description='Previously sold date')
+    sold: bool = Field(..., description='Flag that states if the property has ever been sold')
+    prev_sold_date: PastDate = Field(..., description='Previously sold date')  # todo: put yesterday
 
     @classmethod
     @field_validator('state', 'city')
@@ -76,6 +80,20 @@ class HousePricePredictionModelInput(BaseModel):
             'city_encoded': self.encode_city_value()
         }
 
+    def getPropertyDetails(self):
+        """Returns the inputted property details."""
+        return {
+            'state': self.state,
+            'city': self.city,
+            'beds': self.beds,
+            'baths': self.baths,
+            'living-area': self.living_area,
+            'land-area': self.land_area,
+            'sold': self.sold,
+            'sold_date': self.prev_sold_date,
+            'years_since_last_sold': self.years_since_last_sold()
+        }
+
 
 app = fastapi.FastAPI()
 model = get_model()
@@ -105,12 +123,10 @@ async def load_city_state_encoded_data():
 
 
 @app.post('/predict')
-async def predict_house_price(input: HousePricePredictionModelInput):
+async def predict_house_price(user_input: HousePricePredictionModelInput):
     """Post method used for making a price prediction on a property, given the property's details."""
     try:
-        processed_input = input.get_processed_input()
-        prediction = make_prediction(model, processed_input)
-        return {'result': int(prediction)}
+        return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
         raise HTTPException(status_code=500, detail="Internal server error")
@@ -157,7 +173,7 @@ async def predict_house_price(street: str, city: str, state: str):
         if date_sold == '':
             date_sold = date.today()  # house hasn't been sold yet
 
-        model_input = HousePricePredictionModelInput(
+        user_input = HousePricePredictionModelInput(
             state=state,
             city=city,
             beds=house_data['bedrooms'],
@@ -167,12 +183,89 @@ async def predict_house_price(street: str, city: str, state: str):
             prev_sold_date=date_sold
         )
 
-        processed_input = model_input.get_processed_input()
-        prediction = make_prediction(model, processed_input)
-        return {'result': int(prediction)}
+        return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
         raise HTTPException(status_code=500, detail='Internal server error')
+
+
+@trace_exception
+def get_result_data(userInput: HousePricePredictionModelInput) -> dict:
+    return {
+        'property-details': userInput.getPropertyDetails(),
+        'choropleth-chart-data': get_choropleth_chart_data(userInput),
+        'bar-chart-data': get_bar_chart_data(userInput),
+        'line-chart-data': get_line_chart_data(userInput)
+    }
+
+
+@trace_exception
+def get_choropleth_chart_data(user_input: HousePricePredictionModelInput) -> list:
+    data = user_input.get_processed_input()
+    result = []
+
+    for state in STATES:
+        data['state_encoded'] = get_encoded_state_value(state)
+        result.append({
+            'state': state,
+            'price': make_prediction(model, data)
+        })
+
+    return result
+
+
+@trace_exception
+def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
+    state = user_input.state
+    data = user_input.get_processed_input()
+    result = []
+
+    for city in city_state_encoded_data_mappings[state.lower()]['cities']:
+        data['city_encoded'] = city['encoded_value']
+        result.append({
+            'city': city['city_name'],
+            'price': make_prediction(model, data)
+        })
+
+    return result
+
+
+@trace_exception
+def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
+    data_living_area = user_input.get_processed_input()
+    data_land_area = user_input.get_processed_input()
+    living_area = user_input.living_area
+    land_area = user_input.land_area
+    result_living_area = []
+    result_land_area = []
+
+    factor = 0.5
+    for i in range(11):
+        data_living_area['living_area'] = living_area * factor
+        data_land_area['land_area'] = land_area * factor
+
+        result_living_area.append({
+            'living_area': data_living_area['living_area'],
+            'price': make_prediction(model, data_living_area)
+        })
+
+        result_land_area.append({
+            'land_area': data_land_area['land_area'],
+            'price': make_prediction(model, data_land_area)
+        })
+
+        factor += 0.1
+
+    return {
+        'living-area-prices': result_living_area,
+        'land-area-prices': result_land_area
+    }
+
+
+@trace_exception
+def get_encoded_state_value(state: str):
+    encoded_state_value = city_state_encoded_data_mappings[state.lower()]['encoded_value']
+    return encoded_state_value
 
 
 if __name__ == "__main__":
