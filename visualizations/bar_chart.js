@@ -104,7 +104,7 @@ function drawBarChart(data)
     // tooltip
     const tooltip = d3.select('body')
         .append('div')
-        .attr('id', 'plot-tooltip')
+        .attr('id', 'tooltip')
         .style('visibility', 'hidden');
 
     bars.on('mouseover', (event, d) =>

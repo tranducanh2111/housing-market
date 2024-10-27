@@ -1,4 +1,3 @@
-// todo: add id to inputted data
 Promise.all([d3.json('living_area-prices.json'), d3.json('land_area-prices.json')])
     .then(([livingAreaPrice, landAreaPrice]) =>
     {
@@ -43,7 +42,7 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
     // tooltip
     const tooltip = d3.select('body')
         .append('div')
-        .attr('id', 'plot-tooltip')
+        .attr('id', 'tooltip')
         .style('visibility', 'hidden');
 
     d3.selectAll('input[name="area"]').on('change', function() {

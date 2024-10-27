@@ -17,7 +17,10 @@ todo: make the fill color of the user's dot red
     <title>Line Chart</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="utils.js"></script>
+    <link rel="stylesheet" href="tooltip.css">
     <style>
+
+        /* todo: check for remove */
         .line {
             fill: none;
             stroke: steelblue;
@@ -26,21 +29,6 @@ todo: make the fill color of the user's dot red
 
         .axis-label {
             font-size: 12px;
-        }
-
-        #plot-tooltip {
-            font-family: Helvetica, sans-serif;
-            background: rgba(69,77,93,.9);
-            border-radius: .5rem;
-            color: #fff;
-            box-shadow: 0 0 5px #999999;
-            display: block;
-            font-size: 14px;
-            padding: .2rem .4rem;
-            position: absolute;
-            text-overflow: ellipsis;
-            white-space: pre;
-            z-index: 300;
         }
 
         .line-chart-axis g line {

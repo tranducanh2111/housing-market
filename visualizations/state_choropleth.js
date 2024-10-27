@@ -14,6 +14,7 @@ function drawChoropleth(geoJson, statePrices)
 
     const svg = d3.select('body')
         .append('svg')
+        .attr('id', 'state-choropleth-svg')
         .attr('width', width)
         .attr('height', height);
 
@@ -47,7 +48,7 @@ function drawChoropleth(geoJson, statePrices)
 
     const tooltip = d3.select('body')
         .append('div')
-        .attr('id', 'plot-tooltip')
+        .attr('id', 'tooltip')
         .style('visibility', 'hidden');
 
     states.on('mouseover', (event, d) =>

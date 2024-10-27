@@ -1,5 +1,5 @@
 <!--
-Filename: US_state_choropleth.html
+Filename: state_choropleth.html
 Author: John Iliadis - 104010553
 
 References:
@@ -15,26 +15,12 @@ todo: make user inputted state outline red
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>US state choropleth</title>
+    <title>State choropleth</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="colorLegend.js"></script>
     <script src="utils.js"></script>
+    <link rel="stylesheet" href="tooltip.css">
     <style>
-        #plot-tooltip {
-            font-family: Helvetica, sans-serif;
-            background: rgba(69,77,93,.9);
-            border-radius: .5rem;
-            color: #fff;
-            box-shadow: 0 0 5px #999999;
-            display: block;
-            font-size: 14px;
-            padding: .2rem .4rem;
-            position: absolute;
-            text-overflow: ellipsis;
-            white-space: pre;
-            z-index: 300;
-        }
-
         .state {
             stroke: white;
             stroke-width: 1;
@@ -49,7 +35,7 @@ todo: make user inputted state outline red
 <body>
 <h1>How much would the same property cost in different states?</h1>
 
-<script src="US_state_choropleth.js"></script>
+<script src="state_choropleth.js"></script>
 
 </body>
 </html>
