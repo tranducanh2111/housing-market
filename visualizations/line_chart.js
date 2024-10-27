@@ -20,6 +20,7 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
     // Create an SVG container
     const svg = d3.select('body')
         .append('svg')
+        .attr('id', 'line-chart-svg')
         .attr('width', width)
         .attr('height', height);
 
@@ -87,11 +88,11 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
         svg.select('#line-chart-y-axis .domain').remove();
 
         // horizontal grid lines
-        svg.selectAll('line.horizontal-grid')
+        svg.selectAll('line.line-chart-horizontal-gridline')
             .data(yTickValues)  // Use yTickValues to match the y-axis tick values
             .enter()
             .append('line')
-            .attr('class', 'horizontal-grid')
+            .attr('class', 'line-chart-horizontal-gridline')
             .attr('x1', marginLeft)
             .attr('y1', d => y(d))  // Update y position to match tick values
             .attr('x2', width - marginRight)
@@ -100,11 +101,11 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
             .attr('stroke-width', 0.5);
 
         // vertical grid lines
-        svg.selectAll('line.vertical-grid')
+        svg.selectAll('line.line-chart-vertical-gridline')
             .data(xTickValues)
             .enter()
             .append('line')
-            .attr('class', 'vertical-grid')
+            .attr('class', 'line-chart-vertical-gridline')
             .attr('x1', d => x(d))
             .attr('y1', height - marginBottom)
             .attr('x2', d => x(d))

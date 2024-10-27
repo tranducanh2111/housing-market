@@ -26,7 +26,9 @@ function drawBarChart(data)
     data.sort(orderMap.get('Alphabetical'));
 
     // create svg
-    const svg = d3.select('body').append('svg')
+    const svg = d3.select('body')
+        .append('svg')
+        .attr('id', 'bar-chart-svg')
         .attr('width', width)
         .attr('height', height);
 
@@ -45,11 +47,11 @@ function drawBarChart(data)
     const yAxis = d3.axisLeft(y).tickSize(0);
 
     // horizontal dashed gridlines
-    svg.selectAll('line.horizontal-grid')
+    svg.selectAll('line.bar-chart-horizontal-gridline')
         .data(y.ticks())
         .enter()
         .append('line')
-        .attr('class', 'horizontal-grid')
+        .attr('class', 'bar-chart-horizontal-gridline')
         .attr('x1', marginLeft)
         .attr('y1', d => y(d))
         .attr('x2', width)
@@ -73,7 +75,8 @@ function drawBarChart(data)
 
     // x-axis
     svg.append('g')
-        .attr('id', 'x-axis')
+        .attr('class', 'bar-chart-axis')
+        .attr('id', 'bar-chart-x-axis')
         .attr('transform', `translate(0, ${height - marginBottom})`)
         .call(xAxis)
         .selectAll('text')
@@ -82,7 +85,8 @@ function drawBarChart(data)
 
     // y-axis
     svg.append('g')
-        .attr('id', 'y-axis')
+        .attr('class', 'bar-chart-axis')
+        .attr('id', 'bar-chart-y-axis')
         .attr('transform', `translate(${marginLeft}, 0)`)
         .call(yAxis)
         .call(g => g.select('.domain').remove());
@@ -97,7 +101,7 @@ function drawBarChart(data)
         transform = transform.translate(-event.deltaY * 0.6, 0);
         transform.x = Math.max(maxPan, Math.min(0, transform.x));
 
-        svg.select('#x-axis').attr('transform', `translate(${transform.x}, ${height - marginBottom})`);
+        svg.select('#bar-chart-x-axis').attr('transform', `translate(${transform.x}, ${height - marginBottom})`);
         svg.selectAll('.bar').attr('transform', `translate(${transform.x}, 0)`);
     });
 
@@ -126,7 +130,7 @@ function drawBarChart(data)
     });
 
     // handle bar sorting
-    d3.select('#Order').on('change', (event) => orderBars(event.target.value));
+    d3.select('#bar-chart-order').on('change', (event) => orderBars(event.target.value));
 
     function getXaxisScaler()
     {
@@ -158,7 +162,7 @@ function drawBarChart(data)
 
         x.domain(data.map(d => d['city']));
 
-        svg.select('#x-axis')
+        svg.select('#bar-chart-x-axis')
             .transition()
             .duration(800)
             .call(xAxis);

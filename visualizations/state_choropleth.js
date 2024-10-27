@@ -84,7 +84,7 @@ function drawChoropleth(geoJson, statePrices)
 
     // add color legend
     svg.append('g')
-        .attr('id', 'choropleth-legend')
+        .attr('id', 'state-choropleth-legend')
         .attr('transform', 'translate(610, 20)')
         .append(() => Legend(colorScale, {title: 'Price (USD)', width: 260}));
 
