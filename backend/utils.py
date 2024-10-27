@@ -20,6 +20,6 @@ def trace_exception(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
-            print(f'Error originates from function "{func.__module__}.{func.__name__}()"')
+            print(f'Error raised in function "{func.__module__}.{func.__name__}()"')
             raise e
     return wrapper
