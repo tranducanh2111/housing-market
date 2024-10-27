@@ -4,21 +4,18 @@
 #
 # Author: John Iliadis - 104010553
 
-# todo: add comments
-
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
 from pydantic import BaseModel, Field, field_validator, PastDate
 from model import get_model, make_prediction
-from datetime import date
+from datetime import datetime, date, timedelta
 from utils import trace_exception, get_logger
-from constants import *
+from states import *
 import json
 import requests
 
 
-# todo: finalize this class
 class HousePricePredictionModelInput(BaseModel):
     """Pydantic model used for validating the input data. This class also processes the data into an appropriate
     format for the model."""
@@ -29,7 +26,7 @@ class HousePricePredictionModelInput(BaseModel):
     living_area: float = Field(..., gt=0, description='Living area in square meters')
     land_area: float = Field(..., gt=0, description='Total land area in square meters')
     sold: bool = Field(..., description='Flag that states if the property has ever been sold')
-    prev_sold_date: PastDate = Field(..., description='Previously sold date')  # todo: put yesterday
+    prev_sold_date: PastDate = Field(..., description='Previously sold date')
 
     @classmethod
     @field_validator('state', 'city')
@@ -49,11 +46,8 @@ class HousePricePredictionModelInput(BaseModel):
 
     @trace_exception
     def encode_state_value(self) -> float:
-        """Returns the encoded value for the state. The encoded mappings from data processing have been stored
-        in the 'city_state_encoded_data_mappings' json file."""
-        global city_state_encoded_data_mappings
-        encoded_state_value = city_state_encoded_data_mappings[self.state.lower()]['encoded_value']
-        return encoded_state_value
+        """Returns the encoded value for the state."""
+        return get_encoded_state_value(self.state)
 
     @trace_exception
     def encode_city_value(self) -> float:
@@ -170,8 +164,10 @@ async def predict_house_price(street: str, city: str, state: str):
         land_area = house_data['lotSize'] * 0.09290304  # convert from square feet to square meters
         date_sold = house_data['dateSoldString']
 
+        # house hasn't been sold yet, so make the date yesterday. This will make the years_since_last_sold variable to 0.
+        # can't put today since pydantic validation requires a past date.
         if date_sold == '':
-            date_sold = date.today()  # house hasn't been sold yet
+            date_sold = datetime.now() - timedelta(days=1)
 
         user_input = HousePricePredictionModelInput(
             state=state,
@@ -191,6 +187,7 @@ async def predict_house_price(street: str, city: str, state: str):
 
 @trace_exception
 def get_result_data(userInput: HousePricePredictionModelInput) -> dict:
+    """Calculates and returns all the data needed for the visualizations."""
     return {
         'property-details': userInput.getPropertyDetails(),
         'choropleth-chart-data': get_choropleth_chart_data(userInput),
@@ -201,9 +198,19 @@ def get_result_data(userInput: HousePricePredictionModelInput) -> dict:
 
 @trace_exception
 def get_choropleth_chart_data(user_input: HousePricePredictionModelInput) -> list:
+    """Calculates the data required for the US state choropleth chart. It returns a
+    list of dictionaries in the following format:
+
+    [
+      {"state": "Massachusetts", "price": 345151},
+      {"state": "Connecticut", "price": 294903},
+        ...
+    ]
+    """
     data = user_input.get_processed_input()
     result = []
 
+    # get a price prediction for every state
     for state in STATES:
         data['state_encoded'] = get_encoded_state_value(state)
         result.append({
@@ -216,10 +223,21 @@ def get_choropleth_chart_data(user_input: HousePricePredictionModelInput) -> lis
 
 @trace_exception
 def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
+    """Calculates the data required for the bar chart. It returns a list of
+    dictionaries in the following format:
+
+    [
+      {"city": "fort payne", "price": 203386},
+      {"city": "valley head",  "price": 176204},
+        ...
+    ]
+    """
+
     state = user_input.state
     data = user_input.get_processed_input()
     result = []
 
+    # get a price prediction for every city in the inputted state
     for city in city_state_encoded_data_mappings[state.lower()]['cities']:
         data['city_encoded'] = city['encoded_value']
         result.append({
@@ -232,6 +250,15 @@ def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
 
 @trace_exception
 def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
+    """Calculates the data required for the line chart. It returns two lists of
+    dictionaries in the following format:
+
+    {
+      "living-area-prices": [{"living_area": 100, "price": 145908}, ...],
+      "land-area-prices": [{"land_area": 500, "price": 255970}, ...]
+    }
+    """
+
     data_living_area = user_input.get_processed_input()
     data_land_area = user_input.get_processed_input()
     living_area = user_input.living_area
@@ -239,10 +266,12 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
     result_living_area = []
     result_land_area = []
 
-    factor = 0.5
+    # calculates the price of the property depending on the land and living areas.
+    # The area will range from 50% to 150% of the inputted area in 10% intervals.
+    percent = 0.5
     for i in range(11):
-        data_living_area['living_area'] = living_area * factor
-        data_land_area['land_area'] = land_area * factor
+        data_living_area['living_area'] = living_area * percent
+        data_land_area['land_area'] = land_area * percent
 
         result_living_area.append({
             'living_area': data_living_area['living_area'],
@@ -254,7 +283,7 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
             'price': make_prediction(model, data_land_area)
         })
 
-        factor += 0.1
+        percent += 0.1
 
     return {
         'living-area-prices': result_living_area,
@@ -264,6 +293,8 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
 
 @trace_exception
 def get_encoded_state_value(state: str):
+    """Returns the encoded value for the state. The encoded mappings from data processing have been stored
+    in the 'city_state_encoded_data_mappings' json file."""
     encoded_state_value = city_state_encoded_data_mappings[state.lower()]['encoded_value']
     return encoded_state_value
 
