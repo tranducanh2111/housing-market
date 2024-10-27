@@ -65,24 +65,33 @@ todo: make the fill color of the user's dot red
 </form>
 
 <script>
-    const marginTop = 20;
-    const marginRight = 50;
-    const marginBottom = 30;
-    const marginLeft = 65;
-
-    const width = 900;
-    const height = 500;
-
-    // Create an SVG container
-    const svg = d3.select('body')
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height);
 
     // todo: add id to inputted data
     Promise.all([d3.json('living_area-prices.json'), d3.json('land_area-prices.json')])
     .then(([livingAreaPrice, landAreaPrice]) =>
     {
+        drawLineChart(livingAreaPrice, landAreaPrice);
+    }).catch((error) =>
+    {
+        console.error(`Failed to create line chart: ${error}`);
+    });
+
+    function drawLineChart(livingAreaPrice, landAreaPrice)
+    {
+        const marginTop = 20;
+        const marginRight = 50;
+        const marginBottom = 30;
+        const marginLeft = 65;
+
+        const width = 900;
+        const height = 500;
+
+        // Create an SVG container
+        const svg = d3.select('body')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
         // initialize x and y axes scalers
         const x = d3.scaleLinear().range([marginLeft, width - marginRight]);
         const y = d3.scaleLinear().range([height - marginBottom, marginTop]);
@@ -256,11 +265,7 @@ todo: make the fill color of the user's dot red
 
             return [minPrice, maxPrice, minArea, maxArea];
         }
-
-    }).catch((error) =>
-    {
-        console.error(`Failed to create line chart: ${error}`);
-    });
+    }
 
 </script>
 </body>
