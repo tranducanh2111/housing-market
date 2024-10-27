@@ -3,9 +3,12 @@
 import React, { useState } from 'react';
 import ErrorBoundary from 'components/ErrorBoundary';
 import withErrorBoundary from 'hoc/withErrorBoundary';
+import { submitPropertyData } from '../api/propertyService';
+import PredictionResult from '../components/PredictionResult';
 
 const PersonalizeInsightContent = () => {
     const [formData, setFormData] = useState({
+        address: '',
         state: '',
         city: '',
         bedrooms: '',
@@ -18,6 +21,7 @@ const PersonalizeInsightContent = () => {
 
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [result, setResult] = useState(null); // State to hold the prediction result
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -25,11 +29,11 @@ const PersonalizeInsightContent = () => {
             ...prevData,
             [name]: value
         }));
-        setError(null); // Clear any previous errors when user starts typing
+        setError(null);
     };
 
     const validateForm = () => {
-        const requiredFields = ['state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'];
+        const requiredFields = ['address', 'state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'];
         const emptyFields = requiredFields.filter(field => !formData[field]);
         
         if (emptyFields.length > 0) {
@@ -45,38 +49,17 @@ const PersonalizeInsightContent = () => {
         e.preventDefault();
         setIsSubmitting(true);
         setError(null);
+        setResult(null); // Reset result on new submission
 
         try {
             validateForm();
-            const response = await submitFormData(formData);
-            
-            if (!response.ok) {
-                throw new Error('Failed to submit form. Please try again later.');
-            }
-
-            // Reset form on success
-            setFormData({
-                state: '',
-                city: '',
-                bedrooms: '',
-                bathrooms: '',
-                livingArea: '',
-                landSize: '',
-                lastSoldDate: '',
-                soldStatus: 'sold'
-            });
-
+            const predictionResult = await submitPropertyData(formData);
+            setResult(predictionResult); // Set the result state
         } catch (error) {
             setError(error.message);
         } finally {
             setIsSubmitting(false);
         }
-    };
-
-    // Simulate API call
-    const submitFormData = async (data) => {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        return Math.random() < 0.2 ? { ok: false } : { ok: true };
     };
 
     return (
@@ -90,10 +73,10 @@ const PersonalizeInsightContent = () => {
                     </div>
                 )}
 
-                {['state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'].map((field, index) => (
+                {['address', 'state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'].map((field, index) => (
                     <input
                         key={index}
-                        type={field === 'state' || field === 'city' ? 'text' : 'number'}
+                        type={field === 'state' || field === 'city' || field === 'address' ? 'text' : 'number'}
                         name={field}
                         placeholder={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
                         value={formData[field]}
@@ -127,14 +110,21 @@ const PersonalizeInsightContent = () => {
                     className={`w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary ${formData.soldStatus === 'not_sold' ? 'bg-gray-200 cursor-not-allowed' : ''}`}
                 />
 
-                <button type="submit" className="bg-primary text-white p-2 rounded w-full hover:bg-primary-dark transition duration-200">
-                    Submit
+                <button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className={`bg-primary text-white p-2 rounded w-full hover:bg-primary-dark transition duration-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
                 </button>
                 {/* Can try to uncomment this to test error boundary */}
                 {/* <button type="button" onClick={throwError} className="mt-4 bg-red-500 text-white p-2 rounded w-full hover:bg-red-600 transition duration-200">
                     Throw Error
                 </button> */}
             </form>
+
+            {/* Display the prediction result if available */}
+            <PredictionResult result={result} />
         </section>
     );
 };

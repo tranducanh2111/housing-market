@@ -17,3 +17,12 @@ npm run format
 npm install -D tailwindcss
 npm install -D postcss
 npm install -D autoprefixer
+
+<!-- Axios -->
+npm install axios
+
+
+<!-- Back-end -->
+
+cd backend
+uvicorn main:app --reload
