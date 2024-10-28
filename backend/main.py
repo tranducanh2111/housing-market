@@ -179,12 +179,13 @@ async def predict_house_price(street: str, city: str, state: str):
     try:
         living_area = house_data['livingArea'] * 0.09290304  # convert from square feet to square meters
         land_area = house_data['lotSize'] * 0.09290304  # convert from square feet to square meters
+        sold = True
         date_sold = house_data['dateSoldString']
 
-        # house hasn't been sold yet, so make the date yesterday. This will make the years_since_last_sold variable to 0.
-        # can't put today since pydantic validation requires a past date.
+        # if date_sold is empty, house hasn't been sold yet
         if date_sold == '':
-            date_sold = datetime.now() - timedelta(days=1)
+            sold = False
+            date_sold = None
 
         user_input = HousePricePredictionModelInput(
             state=state,
@@ -193,6 +194,7 @@ async def predict_house_price(street: str, city: str, state: str):
             baths=house_data['bathrooms'],
             living_area=living_area,
             land_area=land_area,
+            sold=sold,
             prev_sold_date=date_sold
         )
 
