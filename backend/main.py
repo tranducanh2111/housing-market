@@ -10,7 +10,7 @@ from fastapi import HTTPException
 from pydantic import BaseModel, Field, field_validator, ValidationInfo
 from typing import Optional
 from model import get_model, make_prediction
-from datetime import datetime, date, timedelta
+from datetime import date
 from utils import trace_exception, get_logger
 from states import *
 import json
