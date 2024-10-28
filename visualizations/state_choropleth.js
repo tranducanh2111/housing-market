@@ -7,34 +7,49 @@ Promise.all([d3.json('us-states.json'), d3.json('state-prices.json')])
     console.error(`Failed to create US state choropleth: ${error}`);
 })
 
+/*
+ * Function for creating the US state choropleth map.
+ * 
+ * @param {json} geoJson: Object that contains the geometry required for drawing the US states.
+ * @param {json} statePrices: Object that contains the model's price prediction for each US state.
+ */
 function drawChoropleth(geoJson, statePrices)
 {
-    const width = 1000;
-    const height = 600;
+    // create svg element
+    const svgWidth = 1000;
+    const svgHeight = 600;
 
     const svg = d3.select('body')
         .append('svg')
         .attr('id', 'state-choropleth-svg')
-        .attr('width', width)
-        .attr('height', height);
+        .attr('width', svgWidth)
+        .attr('height', svgHeight);
 
+    // hash map that maps each state to a price predicted by the model
     const priceMap = new Map(statePrices.map(d => [d['state'], d['price']]));
-
-    const projection = d3.geoAlbersUsa().scale([1000]).translate([width/2, height/2]);
-    const path = d3.geoPath().projection(projection);
+    
+    // geoAlbersUsa projection is used for transforming geo json geometry data into 2D screen coordinates
+    const projection = d3.geoAlbersUsa()
+        .scale([1000])
+        .translate([svgWidth / 2, svgHeight / 2]);
+    
+    // line generator that works with geo json data. Is used for generating the state borders.
+    const path = d3.geoPath()
+        .projection(projection);
 
     const minHousePrice = d3.min(statePrices, d => d['price']);
     const maxHousePrice = d3.max(statePrices, d => d['price']);
     const colorScale = d3.scaleSequential([minHousePrice, maxHousePrice], d3.interpolateBlues)
 
+    // zooming and panning functionality
     const zoom = d3.zoom()
         .scaleExtent([1, 6])
         .on('zoom', zoomed);
-
+    
     svg.call(zoom);
 
+    // create the map
     const g = svg.append('g');
-
     const states = g.selectAll('path')
         .data(geoJson['features'])
         .enter()
@@ -44,8 +59,10 @@ function drawChoropleth(geoJson, statePrices)
         .attr('id', getStateName)
         .attr('fill', getStateColor);
 
+    // prevent reset when user clicks on a state
     states.on('click', (event) => { event.stopPropagation(); });
 
+    // tooltip
     const tooltip = d3.select('body')
         .append('div')
         .attr('id', 'tooltip')
@@ -80,6 +97,7 @@ function drawChoropleth(geoJson, statePrices)
         tooltip.style('visibility', 'hidden');
     });
 
+    // resets map view when the user clicks on blank svg area
     svg.on('click', reset);
 
     // add color legend
@@ -113,7 +131,7 @@ function drawChoropleth(geoJson, statePrices)
         svg.transition().duration(500).call(
             zoom.transform,
             d3.zoomIdentity,
-            d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+            d3.zoomTransform(svg.node()).invert([svgWidth / 2, svgHeight / 2])
         );
     }
 }

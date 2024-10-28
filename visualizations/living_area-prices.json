@@ -8,5 +8,6 @@
   {"price": 500000, "living_area": 600},
   {"price": 550000, "living_area": 650},
   {"price": 580000, "living_area": 700},
-  {"price": 600000, "living_area": 750}
+  {"price": 600000, "living_area": 750},
+  {"price": 650000, "living_area": 800}
 ]

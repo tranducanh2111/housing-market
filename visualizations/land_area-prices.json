@@ -8,5 +8,6 @@
   {"price": 700000, "land_area": 6000},
   {"price": 750000, "land_area": 6500},
   {"price": 880000, "land_area": 7000},
-  {"price": 900000, "land_area": 7500}
+  {"price": 900000, "land_area": 7500},
+  {"price": 950000, "land_area": 8000}
 ]

@@ -7,6 +7,12 @@ Promise.all([d3.json('living_area-prices.json'), d3.json('land_area-prices.json'
     console.error(`Failed to create line chart: ${error}`);
 });
 
+/*
+ * Function for creating the line chart.
+ *
+ * @param {json} data: Object that contains the model's price prediction for different living/land area values.
+ * The values range from 50% to 150% of the inputted living/land area data.
+ */
 function drawLineChart(livingAreaPrice, landAreaPrice)
 {
     const marginTop = 20;
@@ -46,6 +52,7 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
         .attr('id', 'tooltip')
         .style('visibility', 'hidden');
 
+    // update the chart when the user selects a different radio button
     d3.selectAll('input[name="area"]').on('change', function() {
         update(this.value, 800);
     });
@@ -54,6 +61,7 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
     update('living_area', 0);
     update('living_area', 0); // this has to be called twice for the tooltip to work ¯\_(ツ)_/¯
 
+    // updates the chart whenever the user clicks a different radio button. Switches between land and lving area data
     function update(areaType, t)
     {
         const data = areaType === 'living_area' ? livingAreaPrice : landAreaPrice;
@@ -63,7 +71,8 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
         // set up the new domains for the scalers
         x.domain([minArea, maxArea]);
         y.domain([minPrice, maxPrice]);
-
+        
+        // create custom tick values for always keeping the tick positions consistent
         const xTickValues = d3.range(minArea, maxArea + 1, (maxArea - minArea) / 10)
         const yTickValues = d3.range(minPrice, maxPrice + 1, (maxPrice - minPrice) / 10);
 
@@ -146,7 +155,6 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
 
         // Update hover dots for tooltip
         const hoverDots = svg.selectAll('.line-chart-hover-dot').data(data);
-
         hoverDots.enter()
             .append('circle')
             .attr('class', 'line-chart-hover-dot')
@@ -182,17 +190,23 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
         });
     }
 
+    /*
+     * Calculates the domain values based on the area type.
+     * Also applies padding so that the line in the chart doesn't stick to the corners.
+     */
     function calculateDomainValues(data, areaType)
     {
         let minPrice = d3.min(data, d => d['price']);
         let maxPrice = d3.max(data, d => d['price']);
         let minArea = d3.min(data, d => d[areaType]);
         let maxArea = d3.max(data, d => d[areaType]);
-
+    
+        // y-axis padding (10%)
         const pricePadding = (maxPrice - minPrice) / 10;
         minPrice -= pricePadding;
         maxPrice += pricePadding;
 
+        // x-axis padding (10%)
         const areaPadding = (maxArea - minArea) / 10;
         minArea -= areaPadding;
         maxArea += areaPadding;
