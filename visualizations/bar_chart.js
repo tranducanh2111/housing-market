@@ -97,7 +97,7 @@ function drawBarChart(data)
         .call(yAxis)
         .call(g => g.select('.domain').remove());
 
-    // pan with zooming functionality
+    // pan by scrolling functionality
     let transform = d3.zoomIdentity;
     const maxPan = svgWidth - rangeLeft;
     svg.on('wheel', (event) =>

@@ -34,7 +34,7 @@ function drawChoropleth(geoJson, statePrices)
         .translate([svgWidth / 2, svgHeight / 2]);
     
     // line generator that works with geo json data. Is used for generating the state borders.
-    const path = d3.geoPath()
+    const geoLineGenerator = d3.geoPath()
         .projection(projection);
 
     const minHousePrice = d3.min(statePrices, d => d['price']);
@@ -55,11 +55,11 @@ function drawChoropleth(geoJson, statePrices)
         .enter()
         .append('path')
         .attr('class', 'state')
-        .attr('d', path)
+        .attr('d', geoLineGenerator)
         .attr('id', getStateName)
         .attr('fill', getStateColor);
 
-    // prevent reset when user clicks on a state
+    // prevents map reset when user clicks on a state. The user will have to click outside the geometry.
     states.on('click', (event) => { event.stopPropagation(); });
 
     // tooltip
@@ -70,12 +70,13 @@ function drawChoropleth(geoJson, statePrices)
 
     states.on('mouseover', (event, d) =>
     {
-        d3.select(event.target).raise();
+        d3.select(event.target).raise(); // raise the state so that its outline isn't abstracted by nearby geometry
 
         const state = getStateName(d);
         let price = getStatePrice(d);
         let tooltipText = `No data for ${state}`;
 
+        // if the price is -1, that means that there is no data for that state. This is guaranteed for Alaska.
         if (price !== -1)
         {
             tooltipText = `State: ${state}\nPrice: ${formatPrice(price)} USD`;
