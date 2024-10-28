@@ -17,3 +17,16 @@ npm run format
 npm install -D tailwindcss
 npm install -D postcss
 npm install -D autoprefixer
+
+<!-- Axios -->
+npm install axios
+
+
+<!-- Back-end -->
+
+cd backend
+pip install fastapi uvicorn
+pip install requests
+
+<!-- To run the backend -->
+uvicorn main:app --reload
