@@ -163,8 +163,10 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
         hoverDots.on('mouseover', (event, d) =>
         {
             d3.select(event.target).style('opacity', 1);
+            
+            const areaStr = areaType === 'living_area' ? 'Living area' : 'Land area';
             tooltip.style('visibility', 'visible')
-                .text(`Living area: ${d[areaType]} m²\nPrice: ${formatPrice(d['price'])} USD`);
+                .text(`${areaStr}: ${d[areaType]} m²\nPrice: ${formatPrice(d['price'])} USD`);
         });
 
         hoverDots.on('mousemove', (event) =>
