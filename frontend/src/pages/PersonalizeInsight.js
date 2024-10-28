@@ -54,6 +54,7 @@ const PersonalizeInsightContent = () => {
         try {
             validateForm();
             const predictionResult = await submitPropertyData(formData);
+            console.log('Prediction Result:', predictionResult); // Log the result
             setResult(predictionResult); // Set the result state
         } catch (error) {
             setError(error.message);

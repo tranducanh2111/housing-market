@@ -25,4 +25,8 @@ npm install axios
 <!-- Back-end -->
 
 cd backend
+pip install fastapi uvicorn
+pip install requests
+
+<!-- To run the backend -->
 uvicorn main:app --reload
