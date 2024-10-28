@@ -74,7 +74,7 @@ class HousePricePredictionModelInput(BaseModel):
             'city_encoded': self.encode_city_value()
         }
 
-    def getPropertyDetails(self):
+    def getPropertyDetails(self) -> dict:
         """Returns the inputted property details."""
         return {
             'state': self.state,

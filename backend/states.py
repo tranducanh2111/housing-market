@@ -1,3 +1,5 @@
+# a hardcoded list containing the U.S. state values
+
 STATES = [
     'Massachusetts',
     'Connecticut',
