@@ -7,7 +7,8 @@
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
-from pydantic import BaseModel, Field, field_validator, PastDate
+from pydantic import BaseModel, Field, field_validator, ValidationInfo
+from typing import Optional
 from model import get_model, make_prediction
 from datetime import datetime, date, timedelta
 from utils import trace_exception, get_logger
@@ -26,20 +27,36 @@ class HousePricePredictionModelInput(BaseModel):
     living_area: float = Field(..., gt=0, description='Living area in square meters')
     land_area: float = Field(..., gt=0, description='Total land area in square meters')
     sold: bool = Field(..., description='Flag that states if the property has ever been sold')
-    prev_sold_date: PastDate = Field(..., description='Previously sold date')
+    prev_sold_date: Optional[date] = Field(None, description='Previously sold date')
 
-    @classmethod
     @field_validator('state', 'city')
-    @trace_exception
-    def check_empty_string(cls, string_input: str):
+    def check_empty_string(cls, string_input: str) -> str:
         """Validator makes sure that the 'state' and 'city' fields are not empty."""
         if string_input.strip() == '':
-            raise ValueError("String is empty")
+            raise ValueError('String is empty')
         return string_input
+
+    @field_validator('prev_sold_date')
+    def validate_sold_date(cls, date_input: Optional[date], info: ValidationInfo) -> date:
+        """Validator for the 'prev_sold_date' field. Checks three things:
+               - If the property has been sold, ensures that the sold date is not null
+               - If the property has been sold, ensures that the sold date is not a future date
+               - If the property has not been sold, ensures that the sold date is null"""
+        if info.data['sold']:
+            if date_input is None:
+                raise ValueError('The property has been sold, but the sold date has not been set.')
+            elif date_input > date.today():
+                raise ValueError("The sold date is a future date.")
+        elif date_input is not None:
+            raise ValueError('The property has not been sold, but the sold date has been set.')
+        return date_input
 
     @trace_exception
     def years_since_last_sold(self) -> int:
         """Calculates the number of years since the property was last sold."""
+        if self.sold is False:
+            return 0
+
         current_date = date.today()
         difference = current_date - self.prev_sold_date
         return difference.days // 365
