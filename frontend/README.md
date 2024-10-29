@@ -21,8 +21,10 @@ npm install -D autoprefixer
 <!-- Axios -->
 npm install axios
 
+<!-- D3 -->
+npm install d3
 
-<!-- Back-end -->
+<!-- BACK-END -->
 
 cd backend
 pip install fastapi uvicorn

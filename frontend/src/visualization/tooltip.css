@@ -1,0 +1,14 @@
+#tooltip {
+    font-family: Helvetica, sans-serif;
+    background: rgba(69,77,93,.9);
+    border-radius: .5rem;
+    color: #fff;
+    box-shadow: 0 0 5px #999999;
+    display: block;
+    font-size: 14px;
+    padding: .2rem .4rem;
+    position: absolute;
+    text-overflow: ellipsis;
+    white-space: pre;
+    z-index: 300;
+}

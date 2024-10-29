@@ -37,6 +37,28 @@ class HousePricePredictionModelInput(BaseModel):
             raise ValueError("String is empty")
         return string_input
 
+    @field_validator('prev_sold_date')
+    def validate_sold_date(cls, date_input: Optional[date], info: ValidationInfo) -> date:
+        """Validator for the 'prev_sold_date' field. Checks three things:
+               - If the property has been sold, ensures that the sold date is not null
+               - If the property has been sold, ensures that the sold date is not a future date
+               - If the property has not been sold, ensures that the sold date is null"""
+        if info.data['sold']:
+            if date_input is None:
+                raise ValueError('The property has been sold, but the sold date has not been set.')
+            elif date_input > date.today():
+                raise ValueError("The sold date is a future date.")
+        elif date_input is not None:
+            raise ValueError('The property has not been sold, but the sold date has been set.')
+        return date_input
+
+    @field_validator('state')
+    def validate_state(cls, state_input: str) -> str:
+        """Validator for the 'state' field. Checks if the state is supported."""
+        if state_input.strip().title() not in STATES:
+            raise ValueError(f"State '{state_input}' is not supported. Please provide a valid US state.")
+        return state_input.strip().title()  # Return properly capitalized state name
+
     @trace_exception
     def years_since_last_sold(self) -> int:
         """Calculates the number of years since the property was last sold."""

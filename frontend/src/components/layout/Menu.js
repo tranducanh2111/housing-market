@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Use react-router for routing
 import HomeIcon from 'assets/icons/home-icon.svg';
 import DropdownIcon from 'assets/icons/dropdown.svg';
-import PeopleIcon from 'assets/icons/people.svg';
 import ResourceIcon from 'assets/icons/resource.svg';
-import ContactIcon from 'assets/icons/contact.svg';
-import BlogIcon from 'assets/icons/blog.svg';
 import ArrowHover from 'assets/icons/arrowhover.svg';
 import Arrow from 'assets/icons/arrow.svg';
 
@@ -19,8 +16,7 @@ const Menu = () => {
 
     const educationCenterMenu = [
         { name: 'Latest Research', isHovered: false, page: 'latest-research' },
-        { name: 'Nutrition Guidelines', isHovered: false, page: 'nutrition-guidelines' },
-        { name: 'Exercise Tips', isHovered: false, page: 'exercise-tips' },
+        { name: 'Personal Insight', isHovered: false, page: 'nutrition-guidelines' },
     ];
 
     const handleContestHoverOn = index => {
@@ -85,33 +81,6 @@ const Menu = () => {
                     ))}
                 </ul>
             </div>
-            {/* About Us */}
-            <button className="mb-4 hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between">
-                <Link to="/about">
-                    <div className="flex">
-                        <img src={PeopleIcon} alt="About Us" width={20} height={20} />
-                        <p className="ml-2 tracking-wide text-body-sm sm:text-body">About Us</p>
-                    </div>
-                </Link>
-            </button>
-            {/* Contact Us */}
-            <button className="mb-4 hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between">
-                <Link to="/contact">
-                    <div className="flex">
-                        <img src={ContactIcon} alt="Sponsors" width={20} height={20} />
-                        <p className="ml-2 tracking-wide text-body-sm sm:text-body">Contact Us</p>
-                    </div>
-                </Link>
-            </button>
-            {/* Blog */}
-            <button className="mb-4 hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between">
-                <Link to="/blog">
-                    <div className="flex">
-                        <img src={BlogIcon} alt="Blog" width={20} height={20} />
-                        <p className="ml-2 tracking-wide text-body-sm sm:text-body">Blog</p>
-                    </div>
-                </Link>
-            </button>
         </div>
     );
 };

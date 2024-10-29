@@ -32,11 +32,20 @@ export const submitPropertyData = async (formData) => {
         updateBarChart(barChartData);
 
         // Handle the line chart data
-        const lineChartData = result['line-chart-data'];
+        const lineChartData = response.data['line-chart-data'];
         updateLineChart(lineChartData);
 
         return response.data;
     } catch (error) {
+        if (error.response?.data?.detail) {
+            const errorDetail = error.response.data.detail[0];
+            // Use the msg from the error detail
+            throw new Error(errorDetail.msg);
+        }
+        if (error.response && error.response.status === 422) {
+            throw new Error('Provided address is not supported');
+        }
+        // Fallback for other errors
         throw new Error(error.response?.data?.detail || 'Failed to submit form');
     }
 };

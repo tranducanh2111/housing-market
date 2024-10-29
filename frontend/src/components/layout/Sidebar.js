@@ -3,18 +3,12 @@ import { Link } from 'react-router-dom';
 import Search from './Search';
 import SideLogo from 'assets/icons/Sidebar.svg';
 import HomeIcon from 'assets/icons/home-icon.svg';
-import PeopleIcon from 'assets/icons/people.svg';
 import ResourceIcon from 'assets/icons/resource.svg';
-import ContactIcon from 'assets/icons/contact.svg';
-import BlogIcon from 'assets/icons/blog.svg';
 import Menu from './Menu';
 
 const categories = [
     { href: '/', src: HomeIcon, alt: 'Home' },
     { href: '/education-center', src: ResourceIcon, alt: 'Education Center' },
-    { href: '/about', src: PeopleIcon, alt: 'About Us' },
-    { href: '/contact', src: ContactIcon, alt: 'Contact Us' },
-    { href: '/blog', src: BlogIcon, alt: 'Blog' },
 ];
 
 const SidebarModal = ({ isOpen, closeSidebar, openSidebar }) => {

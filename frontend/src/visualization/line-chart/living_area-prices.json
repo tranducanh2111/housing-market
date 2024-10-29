@@ -1,0 +1,12 @@
+[
+  {"price": 190000, "living_area": 300},
+  {"price": 220000, "living_area": 350},
+  {"price": 310000, "living_area": 400},
+  {"price": 370000, "living_area": 450},
+  {"price": 400000, "living_area": 500},
+  {"price": 440000, "living_area": 550},
+  {"price": 500000, "living_area": 600},
+  {"price": 550000, "living_area": 650},
+  {"price": 580000, "living_area": 700},
+  {"price": 600000, "living_area": 750}
+]
