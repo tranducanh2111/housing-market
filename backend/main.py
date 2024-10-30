@@ -208,6 +208,7 @@ async def predict_house_price(street: str, city: str, state: str):
 def get_result_data(userInput: HousePricePredictionModelInput) -> dict:
     """Calculates and returns all the data needed for the visualizations."""
     return {
+        'prediction': make_prediction(model, userInput.get_processed_input()),
         'property-details': userInput.getPropertyDetails(),
         'choropleth-chart-data': get_choropleth_chart_data(userInput),
         'bar-chart-data': get_bar_chart_data(userInput),
