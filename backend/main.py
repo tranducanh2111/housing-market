@@ -7,9 +7,10 @@
 import fastapi
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException
-from pydantic import BaseModel, Field, field_validator, PastDate
+from pydantic import BaseModel, Field, field_validator, ValidationInfo
+from typing import Optional
 from model import get_model, make_prediction
-from datetime import datetime, date, timedelta
+from datetime import date
 from utils import trace_exception, get_logger
 from states import *
 import json
@@ -26,15 +27,13 @@ class HousePricePredictionModelInput(BaseModel):
     living_area: float = Field(..., gt=0, description='Living area in square meters')
     land_area: float = Field(..., gt=0, description='Total land area in square meters')
     sold: bool = Field(..., description='Flag that states if the property has ever been sold')
-    prev_sold_date: PastDate = Field(..., description='Previously sold date')
+    prev_sold_date: Optional[date] = Field(None, description='Previously sold date')
 
-    @classmethod
     @field_validator('state', 'city')
-    @trace_exception
-    def check_empty_string(cls, string_input: str):
+    def check_empty_string(cls, string_input: str) -> str:
         """Validator makes sure that the 'state' and 'city' fields are not empty."""
         if string_input.strip() == '':
-            raise ValueError("String is empty")
+            raise ValueError('String is empty')
         return string_input
 
     @field_validator('prev_sold_date')
@@ -52,16 +51,12 @@ class HousePricePredictionModelInput(BaseModel):
             raise ValueError('The property has not been sold, but the sold date has been set.')
         return date_input
 
-    @field_validator('state')
-    def validate_state(cls, state_input: str) -> str:
-        """Validator for the 'state' field. Checks if the state is supported."""
-        if state_input.strip().title() not in STATES:
-            raise ValueError(f"State '{state_input}' is not supported. Please provide a valid US state.")
-        return state_input.strip().title()  # Return properly capitalized state name
-
     @trace_exception
     def years_since_last_sold(self) -> int:
         """Calculates the number of years since the property was last sold."""
+        if self.sold is False:
+            return 0
+
         current_date = date.today()
         difference = current_date - self.prev_sold_date
         return difference.days // 365
@@ -96,7 +91,7 @@ class HousePricePredictionModelInput(BaseModel):
             'city_encoded': self.encode_city_value()
         }
 
-    def getPropertyDetails(self):
+    def getPropertyDetails(self) -> dict:
         """Returns the inputted property details."""
         return {
             'state': self.state,
@@ -184,12 +179,13 @@ async def predict_house_price(street: str, city: str, state: str):
     try:
         living_area = house_data['livingArea'] * 0.09290304  # convert from square feet to square meters
         land_area = house_data['lotSize'] * 0.09290304  # convert from square feet to square meters
+        sold = True
         date_sold = house_data['dateSoldString']
 
-        # house hasn't been sold yet, so make the date yesterday. This will make the years_since_last_sold variable to 0.
-        # can't put today since pydantic validation requires a past date.
+        # if date_sold is empty, house hasn't been sold yet
         if date_sold == '':
-            date_sold = datetime.now() - timedelta(days=1)
+            sold = False
+            date_sold = None
 
         user_input = HousePricePredictionModelInput(
             state=state,
@@ -198,6 +194,7 @@ async def predict_house_price(street: str, city: str, state: str):
             baths=house_data['bathrooms'],
             living_area=living_area,
             land_area=land_area,
+            sold=sold,
             prev_sold_date=date_sold
         )
 
