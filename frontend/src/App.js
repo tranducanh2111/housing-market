@@ -10,6 +10,7 @@ import Footer from 'components/layout/Footer';
 import HomePage from 'pages/HomePage';
 import LatestResearch from 'pages/LatestResearch';
 import PersonalizeInsight from 'pages/PersonalizeInsight';
+import ResultDashboard from 'pages/ResultDashboard';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -67,10 +68,18 @@ const App = () => {
                             } 
                         />
                         <Route 
-                            path="/nutrition-guidelines" 
+                            path="/personalize-insight"
                             element={
                                 <ErrorBoundary>
                                     <PersonalizeInsight />
+                                </ErrorBoundary>
+                            } 
+                        />
+                        <Route 
+                            path="/result-dashboard" 
+                            element={
+                                <ErrorBoundary>
+                                    <ResultDashboard />
                                 </ErrorBoundary>
                             } 
                         />

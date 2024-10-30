@@ -50,6 +50,30 @@ export const submitPropertyData = async (formData) => {
     }
 };
 
+export const submitAddressData = async (formData) => {
+    try {
+        const transformedData = {
+            address: formData.address,
+            state: formData.state,
+            city: formData.city
+        };
+
+        console.log('Transformed Address Data:', transformedData);
+
+        const response = await api.post('/predict-by-address', transformedData);
+        return response.data;
+    } catch (error) {
+        if (error.response?.data?.detail) {
+            const errorDetail = error.response.data.detail[0];
+            throw new Error(errorDetail.msg);
+        }
+        if (error.response && error.response.status === 422) {
+            throw new Error('Provided address is not supported');
+        }
+        throw new Error(error.response?.data?.detail || 'Failed to submit form');
+    }
+};
+
 // Function to display property details
 const displayPropertyDetails = (details) => {
     // Update the UI with property details

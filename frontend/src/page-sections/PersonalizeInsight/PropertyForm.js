@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { submitPropertyData } from '../../api/propertyService';
+import { submitPropertyData, submitAddressData } from '../../api/propertyService';
+import FormInput from '../../components/FormInput';
 
 const PropertyForm = ({ onSubmitSuccess }) => {
+    const [formType, setFormType] = useState('address'); // 'address' or 'details'
     const [formData, setFormData] = useState({
         address: '',
         state: '',
@@ -11,7 +13,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
         livingArea: '',
         landSize: '',
         lastSoldDate: '',
-        soldStatus: 'sold'
+        soldStatus: 'not_sold'
     });
 
     const [error, setError] = useState(null);
@@ -27,7 +29,10 @@ const PropertyForm = ({ onSubmitSuccess }) => {
     };
 
     const validateForm = () => {
-        const requiredFields = ['address', 'state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'];
+        const requiredFields = formType === 'address' 
+            ? ['address', 'state', 'city']
+            : ['state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'];
+        
         const emptyFields = requiredFields.filter(field => !formData[field]);
         
         if (emptyFields.length > 0) {
@@ -42,7 +47,8 @@ const PropertyForm = ({ onSubmitSuccess }) => {
 
         try {
             validateForm();
-            const predictionResult = await submitPropertyData(formData);
+            const submitFunction = formType === 'address' ? submitAddressData : submitPropertyData;
+            const predictionResult = await submitFunction(formData);
             onSubmitSuccess(predictionResult);
         } catch (error) {
             setError(error.message);
@@ -51,57 +57,103 @@ const PropertyForm = ({ onSubmitSuccess }) => {
         }
     };
 
+    const renderInputs = (fields) => {
+        return fields.map((field) => (
+            <FormInput
+                key={field}
+                type={field === 'state' || field === 'city' || field === 'address' ? 'text' : 'number'}
+                name={field}
+                value={formData[field]}
+                onChange={handleChange}
+                label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
+                required
+            />
+        ));
+    };
+
     return (
-        <form onSubmit={handleSubmit} className="bg-gray-100 rounded-lg shadow-md p-6 w-full max-w-lg h-fit">
-            <h2 className="text-xl font-bold mb-4 text-center">Property Information</h2>
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8 w-full max-w-lg h-fit">
+            <div className="mb-8">
+                <div className="flex justify-between bg-gray-100 p-1 rounded-lg">
+                    <button
+                        type="button"
+                        className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
+                            formType === 'address' 
+                                ? 'bg-white shadow-md text-primary' 
+                                : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                        onClick={() => setFormType('address')}
+                    >
+                        By Address
+                    </button>
+                    <button
+                        type="button"
+                        className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
+                            formType === 'details' 
+                                ? 'bg-white shadow-md text-primary' 
+                                : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                        onClick={() => setFormType('details')}
+                    >
+                        By Details
+                    </button>
+                </div>
+            </div>
+
+            <h2 className="text-xl font-bold mb-6 text-center text-gray-800">
+                {formType === 'address' ? 'Property Address' : 'Property Details'}
+            </h2>
             
             {error && (
-                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-md">
                     {error}
                 </div>
             )}
 
-            {['address', 'state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'].map((field, index) => (
-                <input
-                    key={index}
-                    type={field === 'state' || field === 'city' || field === 'address' ? 'text' : 'number'}
-                    name={field}
-                    placeholder={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    className="w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-            ))}
+            {formType === 'address' 
+                ? renderInputs(['address', 'state', 'city'])
+                : (
+                    <>
+                        {renderInputs(['state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'])}
+                        <div className="flex items-center mb-6 mt-2">
+                            <input
+                                type="checkbox"
+                                name="soldStatus"
+                                checked={formData.soldStatus === 'sold'}
+                                onChange={(e) => {
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        soldStatus: e.target.checked ? 'sold' : 'not_sold'
+                                    }));
+                                }}
+                                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                            />
+                            <label className="ml-2 text-sm text-gray-600">
+                                Property has been sold
+                            </label>
+                        </div>
 
-            <div className="flex items-center mb-4">
-                <input
-                    type="checkbox"
-                    name="soldStatus"
-                    checked={formData.soldStatus === 'not_sold'}
-                    onChange={(e) => {
-                        setFormData((prevData) => ({
-                            ...prevData,
-                            soldStatus: e.target.checked ? 'not_sold' : 'sold'
-                        }));
-                    }}
-                    className="mr-2"
-                />
-                <label className="text-body-sm sm:text-body">Not sold yet</label>
-            </div>
-
-            <input
-                type="date"
-                name="lastSoldDate"
-                value={formData.lastSoldDate}
-                onChange={handleChange}
-                disabled={formData.soldStatus === 'not_sold'}
-                className={`w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary ${formData.soldStatus === 'not_sold' ? 'bg-gray-200 cursor-not-allowed' : ''}`}
-            />
+                        {formData.soldStatus === 'sold' && (
+                            <FormInput
+                                type="date"
+                                name="lastSoldDate"
+                                value={formData.lastSoldDate}
+                                onChange={handleChange}
+                                label="Sold Date"
+                            />
+                        )}
+                    </>
+                )
+            }
 
             <button 
                 type="submit" 
                 disabled={isSubmitting}
-                className={`bg-primary text-white p-2 rounded w-full hover:bg-primary-dark transition duration-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`w-full mt-6 py-3 px-4 bg-primary text-white rounded-md transition-all duration-200
+                    ${isSubmitting 
+                        ? 'opacity-50 cursor-not-allowed' 
+                        : 'hover:bg-primary-dark hover:shadow-lg'
+                    }`}
             >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>

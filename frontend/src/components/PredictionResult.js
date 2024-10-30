@@ -20,12 +20,12 @@ const PredictionResult = ({ result }) => {
                     <li><strong>Land Area:</strong> {propertyDetails['land-area']} m²</li>
                     <li><strong>Predicted Price:</strong> ${propertyDetails.price?.toFixed(2) || 'N/A'}</li>
                     {/* Debug information */}
-                    <li className="mt-4 pt-4 border-t border-gray-300">
+                    {/* <li className="mt-4 pt-4 border-t border-gray-300">
                         <strong>Full Response:</strong>
                         <pre className="mt-2 p-2 bg-gray-200 rounded overflow-auto text-xs">
                             {JSON.stringify(result, null, 2)}
                         </pre>
-                    </li>
+                    </li> */}
                 </ul>
             </div>
         );
