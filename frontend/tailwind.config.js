@@ -145,7 +145,11 @@ module.exports = {
       },
       colors: {
         paragraph: 'rgba(0,0,0,0.85)',
-        primary: "#0E4459",
+        // primary: "#0E4459",
+        primary: {
+          DEFAULT: '#0E4459',
+          dark: '#1557b0',
+        },
         secondary: "#2976A6",
         accent: '#73A9D9',
         "light-grey": "#687076",

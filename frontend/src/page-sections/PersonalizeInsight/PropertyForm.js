@@ -48,6 +48,16 @@ const PropertyForm = ({ onSubmitSuccess }) => {
         try {
             validateForm();
             const submitFunction = formType === 'address' ? submitAddressData : submitPropertyData;
+
+            // Debugging output for the endpoint
+            if (formType === 'address') {
+                const { address: street, city, state } = formData;
+                const endpoint = `/predict/${street}/${city}/${state}`;
+                console.log(`Method: GET, Endpoint: ${endpoint}`);
+            } else {
+                console.log('Method: POST, Endpoint: /predict');
+            }
+
             const predictionResult = await submitFunction(formData);
             onSubmitSuccess(predictionResult);
         } catch (error) {

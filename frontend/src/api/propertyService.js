@@ -14,27 +14,7 @@ export const submitPropertyData = async (formData) => {
             prev_sold_date: formData.soldStatus === 'sold' ? formData.lastSoldDate : null
         };
 
-        console.log('Transformed Data:', transformedData);
-
         const response = await api.post('/predict', transformedData);
-        const result = response.data.result;
-
-        // Handle the property details
-        const propertyDetails = result['property-details'];
-        displayPropertyDetails(propertyDetails);
-
-        // Handle the choropleth chart data
-        const choroplethData = result['choropleth-chart-data'];
-        updateChoroplethChart(choroplethData);
-
-        // Handle the bar chart data
-        const barChartData = result['bar-chart-data'];
-        updateBarChart(barChartData);
-
-        // Handle the line chart data
-        const lineChartData = response.data['line-chart-data'];
-        updateLineChart(lineChartData);
-
         return response.data;
     } catch (error) {
         if (error.response?.data?.detail) {
@@ -52,15 +32,9 @@ export const submitPropertyData = async (formData) => {
 
 export const submitAddressData = async (formData) => {
     try {
-        const transformedData = {
-            address: formData.address,
-            state: formData.state,
-            city: formData.city
-        };
-
-        console.log('Transformed Address Data:', transformedData);
-
-        const response = await api.post('/predict-by-address', transformedData);
+        const { address: street, city, state } = formData;
+        
+        const response = await api.get(`/predict/${street}/${city}/${state}`);
         return response.data;
     } catch (error) {
         if (error.response?.data?.detail) {
