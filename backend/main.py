@@ -145,7 +145,7 @@ async def predict_house_price(user_input: HousePricePredictionModelInput):
 
 RAPID_API_URL = "https://zillow56.p.rapidapi.com/search_address"
 RAPID_API_HEADERS = {
-    "x-rapidapi-key": "9863478a83msha7996ac4437a23cp15b609jsned259215371e",
+    "x-rapidapi-key": "7fe6ede6dcmsha5ef7a4b1eb6781p1d1f25jsn2cbe369ca4b7",
     "x-rapidapi-host": "zillow56.p.rapidapi.com"
 }
 
