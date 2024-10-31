@@ -30,8 +30,8 @@ const PropertyForm = ({ onSubmitSuccess }) => {
 
     const validateForm = () => {
         const requiredFields = formType === 'address' 
-            ? ['address', 'state', 'city']
-            : ['state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'];
+            ? ['address', 'city', 'state']
+            : ['city', 'state', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'];
         
         const emptyFields = requiredFields.filter(field => !formData[field]);
         

@@ -1,20 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './Choropleth.css';
-import usStates from './us-states.json';
-import statePrices from './state-prices.json';
 import { Legend } from './colorLegend';
-import { formatPrice } from '../utils';
+import { feature } from 'topojson-client';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-const Choropleth = () => {
+const Choropleth = ({ data, selectedState }) => {
     const chartRef = useRef(null);
     const { width, height } = useWindowDimensions();
 
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('en-US').format(price);
+    };
+
     useEffect(() => {
-        const drawChoropleth = async () => {
-            const containerWidth = width * 0.6; // 80% of window width
-            const containerHeight = height * 0.6; // 60% of window height
+        if (!data) return;
+
+        const drawChoropleth = async (geoJson, statePrices) => {
+            const containerWidth = width * 0.8;
+            const containerHeight = height * 0.6;
 
             // Clear any existing SVG
             d3.select(chartRef.current).selectAll('*').remove();
@@ -37,30 +41,40 @@ const Choropleth = () => {
 
             const path = d3.geoPath().projection(projection);
 
-            const priceMap = new Map(statePrices.map(d => [d['state'], d['price']]));
+            const priceMap = new Map(statePrices.map(d => [d.state, d.price]));
 
-            const minHousePrice = d3.min(statePrices, d => d['price']);
-            const maxHousePrice = d3.max(statePrices, d => d['price']);
-            const colorScale = d3.scaleSequential([minHousePrice, maxHousePrice], d3.interpolateBlues)
+            const minHousePrice = d3.min(statePrices, d => d.price);
+            const maxHousePrice = d3.max(statePrices, d => d.price);
+            const colorScale = d3.scaleSequential([minHousePrice, maxHousePrice], d3.interpolateBlues);
 
             const zoom = d3.zoom()
                 .scaleExtent([1, 6])
-                .on('zoom', zoomed);
+                .on('zoom', (event) => {
+                    g.attr('transform', event.transform);
+                });
 
             svg.call(zoom);
 
             const g = svg.append('g');
-
             const states = g.selectAll('path')
-                .data(usStates['features'])
+                .data(geoJson.features)
                 .enter()
                 .append('path')
                 .attr('class', 'state')
                 .attr('d', path)
-                .attr('id', getStateName)
-                .attr('fill', getStateColor);
+                .attr('id', d => d.properties.name)
+                .attr('fill', d => colorScale(priceMap.get(d.properties.name) || 0));
 
-            states.on('click', (event) => { event.stopPropagation(); });
+            // Outline the selected state in red on initial load
+            if (selectedState) {
+                states.filter(d => d.properties.name === selectedState)
+                    .style('stroke', 'red')
+                    .style('stroke-width', '2');
+            }
+
+            states.on('click', (event) => {
+                event.stopPropagation();
+            });
 
             const tooltip = d3.select('body')
                 .append('div')
@@ -69,14 +83,15 @@ const Choropleth = () => {
 
             states.on('mouseover', (event, d) => {
                 d3.select(event.target).raise();
+                d3.select(event.target)
+                    .style('stroke', 'yellow')
+                    .style('stroke-width', '2');
 
-                const state = getStateName(d);
-                let price = getStatePrice(d);
-                let tooltipText = `No data for ${state}`;
-
-                if (price !== -1) {
-                    tooltipText = `State: ${state}\nPrice: ${formatPrice(price)} USD`;
-                }
+                const state = d.properties.name;
+                const price = priceMap.get(state);
+                const tooltipText = price 
+                    ? `State: ${state}\nPrice: ${formatPrice(price)} USD`
+                    : `No data for ${state}`;
 
                 tooltip.style('visibility', 'visible')
                     .text(tooltipText);
@@ -87,18 +102,28 @@ const Choropleth = () => {
                     .style('left', event.pageX + 20 + 'px');
             });
 
-            states.on('mouseout', (event) => {
-                d3.select(event.target).attr('stroke-width', 0);
+            states.on('mouseout', (event, d) => {
+                const stateName = d.properties.name;
+                d3.select(event.target)
+                    .style('stroke', stateName === selectedState ? 'red' : 'white')
+                    .style('stroke-width', stateName === selectedState ? '2' : '1');
+
                 tooltip.style('visibility', 'hidden');
             });
 
-            svg.on('click', reset);
+            svg.on('click', () => {
+                svg.transition().duration(500).call(
+                    zoom.transform,
+                    d3.zoomIdentity,
+                    d3.zoomTransform(svg.node()).invert([containerWidth / 2, containerHeight / 2])
+                );
+            });
 
             // add color legend
             svg.append('g')
                 .attr('id', 'state-choropleth-legend')
-                .attr('transform', 'translate(610, 20)')
-                .append(() => Legend(colorScale, {title: 'Price (USD)', width: 260}));
+                .attr('transform', `translate(${containerWidth - 260}, 20)`)
+                .append(() => Legend(colorScale, { title: 'Price (USD)', width: 260 }));
 
             function getStateName(d) {
                 return d['properties']['NAME'];
@@ -111,22 +136,26 @@ const Choropleth = () => {
             function getStateColor(d) {
                 return colorScale(getStatePrice(d));
             }
+        };
 
-            function zoomed(event) {
-                g.attr('transform', event.transform);
-            }
-
-            function reset() {
-                svg.transition().duration(500).call(
-                    zoom.transform,
-                    d3.zoomIdentity,
-                    d3.zoomTransform(svg.node()).invert([containerWidth / 2, containerHeight / 2])
-                );
+        const fetchGeoData = async () => {
+            try {
+                const response = await fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json');
+                const us = await response.json();
+                const usStates = feature(us, us.objects.states);
+                drawChoropleth(usStates, data);
+            } catch (error) {
+                console.error('Error loading US states geometry:', error);
             }
         };
 
-        drawChoropleth();
-    }, [width, height]);
+        fetchGeoData();
+
+        // Cleanup function
+        return () => {
+            d3.select('body').selectAll('#tooltip').remove();
+        };
+    }, [data, width, height, selectedState]);
 
     return (
         <div className="choropleth-container w-full h-full">

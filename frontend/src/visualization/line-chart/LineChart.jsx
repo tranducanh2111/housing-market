@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import './LineChart.css';
-import livingAreaPrices from './living_area-prices.json';
-import landAreaPrices from './land_area-prices.json';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-const LineChart = () => {
+const LineChart = ({ livingAreaData, landAreaData }) => {
     const chartRef = useRef(null);
     const [areaType, setAreaType] = useState('living_area');
     const { width, height } = useWindowDimensions();
@@ -29,7 +27,7 @@ const LineChart = () => {
         // Clear any existing SVG
         d3.select(chartRef.current).selectAll('*').remove();
 
-        // Create SVG container
+        // Create SVG container with a foreign object for labels
         const svg = d3.select(chartRef.current)
             .append('svg')
             .attr('width', '100%')
@@ -53,18 +51,28 @@ const LineChart = () => {
             .attr('id', 'line-chart-y-axis')
             .attr('transform', `translate(${65}, 0)`);
 
-        // Add X-axis label
-        svg.append('text')
-            .attr('class', 'x-axis-label')
-            .attr('text-anchor', 'middle')
-            .attr('transform', `translate(${containerWidth / 2}, ${containerHeight - 10})`)
+        // Add X-axis label using foreignObject
+        svg.append('foreignObject')
+            .attr('x', containerWidth / 2 - 100)
+            .attr('y', containerHeight - 20)
+            .attr('width', 200)
+            .attr('height', 30)
+            .append('xhtml:div')
+            .style('text-align', 'center')
+            .style('font-size', '1rem')
             .text('Living/Land Area (m²)');
 
-        // Add Y-axis label
-        svg.append('text')
-            .attr('class', 'y-axis-label')
-            .attr('text-anchor', 'middle')
-            .attr('transform', `translate(20, ${containerHeight / 2}) rotate(-90)`)
+        // Add Y-axis label using foreignObject
+        svg.append('foreignObject')
+            .attr('x', -containerHeight / 2 - 50)
+            .attr('y', 0)
+            .attr('width', containerHeight)
+            .attr('height', 30)
+            .append('xhtml:div')
+            .style('text-align', 'center')
+            .style('font-size', '1rem')
+            .style('transform', 'rotate(-90deg)')
+            .style('transform-origin', 'center')
             .text('Price (USD)');
 
         // Tooltip
@@ -105,8 +113,7 @@ const LineChart = () => {
             // Horizontal grid lines
             svg.selectAll('line.line-chart-horizontal-gridline')
                 .data(yTickValues)
-                .enter()
-                .append('line')
+                .join('line')
                 .attr('class', 'line-chart-horizontal-gridline')
                 .attr('x1', 65)
                 .attr('y1', d => y(d))
@@ -118,8 +125,7 @@ const LineChart = () => {
             // Vertical grid lines
             svg.selectAll('line.line-chart-vertical-gridline')
                 .data(xTickValues)
-                .enter()
-                .append('line')
+                .join('line')
                 .attr('class', 'line-chart-vertical-gridline')
                 .attr('x1', d => x(d))
                 .attr('y1', containerHeight - 30)
@@ -134,11 +140,10 @@ const LineChart = () => {
                 .y(d => y(d['price']));
 
             // Update the line
-            const line = svg.selectAll('.chart-line').data([data]);
-            line.enter()
-                .append('path')
+            svg.selectAll('.chart-line')
+                .data([data])
+                .join('path')
                 .attr('class', 'chart-line')
-                .merge(line)
                 .transition()
                 .duration(t)
                 .attr('d', lineGenerator)
@@ -147,30 +152,25 @@ const LineChart = () => {
                 .attr('stroke-width', 2.5);
 
             // Update dots
-            const dots = svg.selectAll('.line-chart-dot').data(data);
-            dots.enter()
-                .append('circle')
+            const dots = svg.selectAll('.line-chart-dot')
+                .data(data)
+                .join('circle')
                 .attr('class', 'line-chart-dot')
                 .attr('fill', 'steelblue')
                 .attr('r', 4)
-                .merge(dots)
                 .transition()
                 .duration(t)
                 .attr('cx', d => x(d[areaType]))
                 .attr('cy', d => y(d['price']));
 
             // Update hover dots for tooltip
-            const hoverDots = svg.selectAll('.line-chart-hover-dot').data(data);
-
-            hoverDots.enter()
-                .append('circle')
+            const hoverDots = svg.selectAll('.line-chart-hover-dot')
+                .data(data)
+                .join('circle')
                 .attr('class', 'line-chart-hover-dot')
                 .attr('r', 10)
                 .attr('fill', 'steelblue')
                 .style('opacity', 0)
-                .merge(hoverDots)
-                .transition()
-                .duration(t)
                 .attr('cx', d => x(d[areaType]))
                 .attr('cy', d => y(d['price']));
 
@@ -194,8 +194,10 @@ const LineChart = () => {
     }, [width, height, areaType]);
 
     useEffect(() => {
-        drawLineChart(livingAreaPrices, landAreaPrices);
-    }, [drawLineChart]);
+        if (livingAreaData && landAreaData) {
+            drawLineChart(livingAreaData, landAreaData);
+        }
+    }, [drawLineChart, livingAreaData, landAreaData]);
 
     const handleAreaChange = (event) => {
         setAreaType(event.target.value);

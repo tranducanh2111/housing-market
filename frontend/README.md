@@ -24,6 +24,9 @@ npm install axios
 <!-- D3 -->
 npm install d3
 
+<!-- Converting TopoJSON data (which is what the US atlas data is in) to GeoJSON format for the D3 Choropleth -->
+npm install topojson-client
+
 <!-- BACK-END -->
 
 cd backend

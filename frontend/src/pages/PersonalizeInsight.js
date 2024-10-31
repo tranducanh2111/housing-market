@@ -18,8 +18,7 @@ const PersonalizeInsightContent = () => {
     useEffect(() => {
         const storedResult = localStorage.getItem('predictionResult');
         if (!storedResult) {
-            // Redirect to form if no result is found
-            navigate('/result-dashboard');
+            navigate('/');
             return;
         }
         setResult(JSON.parse(storedResult));
@@ -27,28 +26,41 @@ const PersonalizeInsightContent = () => {
 
     if (!result) return null;
 
+    const selectedState = result.result['property-details'].state;
+    const selectedCity = result.result['property-details'].city;
+
     return (
-        <section className="mx-auto flex flex-col items-center min-h-screen bg-white gap-y-12 p-4 md:p-8">
-            <section className='grid md:grid-cols-2 gap-8 w-full'>
+        <section className="flex flex-col gap-8 px-5">
+            <section className="grid grid-cols-1 md:grid-cols-[270px_1fr] gap-8">
                 <PredictionResult result={result} />
-                <section className='w-full bg-gray-50 rounded-lg p-4 overflow-auto shadow-md'>
-                    <h3 className="sm:text-h3 text-h3-sm text-center">How much would the same property cost in different states?</h3>
-                    <div className='h-[calc(100%-3rem)] sm:h-[calc(100%-4rem)]'>
-                        <Choropleth />
-                    </div>
-                </section>
-            </section>
-            <section className='grid md:grid-cols-2 gap-8 w-full'>
-                <div className="w-full max-h-[25rem] bg-gray-50 rounded-lg p-4 overflow-auto shadow-md">
-                    <h3 className="sm:text-h3 text-h3-sm text-center">House prices in different cities in the same state</h3>
-                    <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
-                        <BarChart />
+                <div className="bg-white rounded-lg shadow p-4 h-[500px]">
+                    <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">State Comparison</h3>
+                    <div className='h-[calc(100%-2.5rem)] sm:h-[calc(100%-3rem)]'>
+                        <Choropleth 
+                            data={result.result['choropleth-chart-data']} 
+                            selectedState={selectedState}
+                        />
                     </div>
                 </div>
-                <div className="w-full max-h-[25rem] bg-gray-50 rounded-lg p-4 overflow-auto shadow-md">
-                    <h3 className="sm:text-h3 text-h3-sm text-center">Price vs living/land area line chart</h3>
+            </section>
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <div className="bg-white rounded-lg shadow p-4 h-[500px]">
+                    <h3 className="text-xl font-semibold mb-4">City Comparison</h3>
                     <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
-                        <LineChart />
+                        <BarChart 
+                            data={result.result['bar-chart-data']} 
+                            selectedCity={selectedCity}
+                        />
+                    </div>
+                </div>
+                <div className="bg-white rounded-lg shadow p-4 h-[500px]">
+                    <h3 className="text-xl font-semibold mb-4">Area Impact</h3>
+                    <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
+                        <LineChart 
+                            livingAreaData={result.result['line-chart-data']['living-area-prices']}
+                            landAreaData={result.result['line-chart-data']['land-area-prices']}
+                        />
                     </div>
                 </div>
             </section>
