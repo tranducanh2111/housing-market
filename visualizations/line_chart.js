@@ -20,25 +20,27 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
     const marginBottom = 30;
     const marginLeft = 65;
 
-    const width = 900;
-    const height = 500;
+    const svgWidth = 900;
+    const svgHeight = 500;
 
     // Create an SVG container
     const svg = d3.select('body')
         .append('svg')
         .attr('id', 'line-chart-svg')
-        .attr('width', width)
-        .attr('height', height);
+        .attr('width', svgWidth)
+        .attr('height', svgHeight)
+        .attr('viewBox', [0, 0, svgWidth, svgHeight])
+        .attr('style', 'max-width: 100%; height: auto;');
 
     // initialize x and y axes scalers
-    const x = d3.scaleLinear().range([marginLeft, width - marginRight]);
-    const y = d3.scaleLinear().range([height - marginBottom, marginTop]);
+    const x = d3.scaleLinear().range([marginLeft, svgWidth - marginRight]);
+    const y = d3.scaleLinear().range([svgHeight - marginBottom, marginTop]);
 
     // initialize x-axis
     svg.append('g')
         .attr('class', 'line-chart-axis')
         .attr('id', 'line-chart-x-axis')
-        .attr('transform', `translate(0,${height - marginBottom})`);
+        .attr('transform', `translate(0,${svgHeight - marginBottom})`);
 
     // initialize y-axis
     svg.append('g')
@@ -104,7 +106,7 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
             .attr('class', 'line-chart-horizontal-gridline')
             .attr('x1', marginLeft)
             .attr('y1', d => y(d))  // Update y position to match tick values
-            .attr('x2', width - marginRight)
+            .attr('x2', svgWidth - marginRight)
             .attr('y2', d => y(d))  // Update y position to match tick values
             .attr('stroke', 'black')
             .attr('stroke-width', 0.5);
@@ -116,7 +118,7 @@ function drawLineChart(livingAreaPrice, landAreaPrice)
             .append('line')
             .attr('class', 'line-chart-vertical-gridline')
             .attr('x1', d => x(d))
-            .attr('y1', height - marginBottom)
+            .attr('y1', svgHeight - marginBottom)
             .attr('x2', d => x(d))
             .attr('y2', marginTop)
             .attr('stroke', 'black')
