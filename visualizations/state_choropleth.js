@@ -13,7 +13,7 @@ Promise.all([d3.json('us.json'), d3.json('state-prices.json')])
  * @param {json} geoJson: Object that contains the geometry required for drawing the US states.
  * @param {json} statePrices: Object that contains the model's price prediction for each US state.
  */
-function drawChoropleth(us, statePrices)
+function drawChoropleth(geoJSON, statePrices)
 {
     // hash map that maps each state to a price predicted by the model
     const priceMap = new Map(statePrices.map(d => [d['state'], d['price']]));
@@ -41,7 +41,7 @@ function drawChoropleth(us, statePrices)
     const g = svg.append('g');
     const states = g.append('g')
         .selectAll('path')
-        .data(topojson.feature(us, us.objects.states).features)
+        .data(topojson.feature(geoJSON, geoJSON.objects.states).features)
         .join('path')
         .attr('class', 'state')
         .attr('id', getStateName)
@@ -54,7 +54,7 @@ function drawChoropleth(us, statePrices)
         .attr('stroke', 'white')
         .attr('stroke-width', 1.2)
         .attr('stroke-linejoin', 'round')
-        .attr('d', geoLineGenerator(topojson.mesh(us, us.objects.states, (a, b) => a !== b)));
+        .attr('d', geoLineGenerator(topojson.mesh(geoJSON, geoJSON.objects.states, (a, b) => a !== b)));
 
     // zooming and panning functionality
     const zoom = d3.zoom()
