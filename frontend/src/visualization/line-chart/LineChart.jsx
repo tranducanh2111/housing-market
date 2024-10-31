@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import './LineChart.css';
 import useWindowDimensions from '../../hooks/useWindowDimensions';
 
-const LineChart = ({ livingAreaData, landAreaData }) => {
+const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
     const chartRef = useRef(null);
     const [areaType, setAreaType] = useState('living_area');
     const { width, height } = useWindowDimensions();
@@ -176,9 +176,12 @@ const LineChart = ({ livingAreaData, landAreaData }) => {
 
             // Update hover functionality
             hoverDots.on('mouseover', (event, d) => {
-                d3.select(event.target).style('opacity', 1);
+                d3.select(event.target)
+                    .style('opacity', 1)
+                    .style('fill', 'yellow');  // Change dot color to yellow on hover
+                
                 tooltip.style('visibility', 'visible')
-                    .text(`${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d[areaType]} m²\nPrice: ${formatPrice(d['price'])} USD`);
+                    .text(`${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d[areaType].toFixed(2)} m²\nPrice: ${formatPrice(d['price'].toFixed(2))} USD`);
             });
 
             hoverDots.on('mousemove', (event) => {
@@ -187,11 +190,61 @@ const LineChart = ({ livingAreaData, landAreaData }) => {
             });
 
             hoverDots.on('mouseout', (event) => {
-                d3.select(event.target).style('opacity', 0);
+                d3.select(event.target)
+                    .style('opacity', 0)
+                    .style('fill', 'steelblue');  // Revert dot color back to original on mouseout
+                
                 tooltip.style('visibility', 'hidden');
             });
+
+            // Add prediction point if available
+            if (predictionResult) {
+                const predictionPoint = {
+                    price: predictionResult.prediction,
+                    area: areaType === 'living_area' 
+                        ? predictionResult['property-details']['living-area']
+                        : predictionResult['property-details']['land-area']
+                };
+
+                svg.selectAll('.prediction-dot')
+                    .data([predictionPoint])
+                    .join('circle')
+                    .attr('class', 'prediction-dot')
+                    .attr('r', 12)
+                    .attr('fill', 'red')
+                    .attr('opacity', 0)
+                    .transition()
+                    .duration(t)
+                    .attr('opacity', 1)
+                    .attr('cx', d => x(d.area))
+                    .attr('cy', d => y(d.price));
+
+                // Add hover functionality for prediction dot
+                svg.selectAll('.prediction-hover-dot')
+                    .data([predictionPoint])
+                    .join('circle')
+                    .attr('class', 'prediction-hover-dot')
+                    .attr('r', 20)
+                    .attr('fill', 'yellow')
+                    .style('opacity', 0)
+                    .attr('cx', d => x(d.area))
+                    .attr('cy', d => y(d.price))
+                    .on('mouseover', (event, d) => {
+                        d3.select(event.target).style('opacity', 0.3);
+                        tooltip.style('visibility', 'visible')
+                            .text(`Predicted Property\n${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d.area.toFixed(2)} m²\nPrice: ${d3.format(",.2f")(d.price)} USD`);
+                    })
+                    .on('mousemove', (event) => {
+                        tooltip.style('top', event.pageY - 20 + 'px')
+                            .style('left', event.pageX + 20 + 'px');
+                    })
+                    .on('mouseout', (event) => {
+                        d3.select(event.target).style('opacity', 0);
+                        tooltip.style('visibility', 'hidden');
+                    });
+            }
         }
-    }, [width, height, areaType]);
+    }, [width, height, areaType, predictionResult]);
 
     useEffect(() => {
         if (livingAreaData && landAreaData) {

@@ -38,3 +38,18 @@
 .line-chart-axis text {
     font-size: 1rem;
 } */
+
+.prediction-dot {
+    fill: red;
+    stroke: white;
+    stroke-width: 2;
+}
+
+.prediction-hover-dot {
+    fill: red;
+    opacity: 0;
+}
+
+.prediction-hover-dot:hover {
+    opacity: 0.3;
+}

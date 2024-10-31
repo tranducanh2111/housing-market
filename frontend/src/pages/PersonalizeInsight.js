@@ -60,6 +60,7 @@ const PersonalizeInsightContent = () => {
                         <LineChart 
                             livingAreaData={result.result['line-chart-data']['living-area-prices']}
                             landAreaData={result.result['line-chart-data']['land-area-prices']}
+                            predictionResult={result.result}
                         />
                     </div>
                 </div>
