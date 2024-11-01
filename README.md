@@ -19,7 +19,11 @@
 - `npm install axios`
 # Execution
 ## Backend
-To run the backend, run the following from the `backend` folder: `uvicorn main:app --reload`
+To run the backend:
+1. Create a terminal instance in the `backend` folder.
+2. Either:
+- Start a `uvicorn` web server of `main.py` with: `uvicorn main:app --reload`
+- Run `main.py` directly. This also starts a `uvicorn` server.
 ## Frontend
 To run the frontend, run the following from the `frontend` folder: `npm run start`
 # Misc
