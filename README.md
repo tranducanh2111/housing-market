@@ -1,8 +1,7 @@
 # Setup
 ## Backend
 1. Setup a python environment for this project (I used VSCode + `pyenv`).
-2. Open a terminal and navigate to the `backend` folder.
-3. Run the following `pip` commands:
+2. In the python environment, run the following `pip` commands:
 - `pip install scikit-learn`
 - `pip install fastapi uvicorn`
 - `pip install requests`
