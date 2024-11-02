@@ -1,22 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import Banner1 from 'assets/images/banner-1.jpg';
-import Banner2 from 'assets/images/banner-2.jpg';
-import Banner3 from 'assets/images/banner-3.jpg';
-import Banner4 from 'assets/images/banner-4.jpg';
-import Banner5 from 'assets/images/banner-5.jpg';
+import Banner1 from '../../assets/images/7478054_0.jpg';
+import Banner2 from '../../assets/images/4196182_0.jpg';
+import Banner4 from '../../assets/images/genMid.2510113_0.jpg';
+import Banner5 from '../../assets/images/6618843-150-single-family-home-1.med.jpg';
 
 const Workshop = () => {
     // Array of image URLs
     const imageURLs = [
         Banner1,
         Banner2,
-        Banner3,
         Banner4,
         Banner5,
         Banner1,
         Banner2,
-        Banner3,
         Banner4,
         Banner5,
     ];
@@ -67,8 +64,8 @@ const Workshop = () => {
             <section className="space-y-1 w-full max-w-[34rem]">
                 <h2 className="text-h2-sm md:text-h2 text-center">Our Latest Research</h2>
                 <p className="text-grey text-center text-body-sm sm:text-body">
-                    Discover groundbreaking studies and insights into diabetes management,
-                    prevention, and treatment.
+                    Access groundbreaking studies and insights on effective management, prevention, and
+                    treatment strategies to empower your health journey.
                 </p>
             </section>
 

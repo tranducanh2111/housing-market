@@ -1,144 +1,96 @@
-import CardImage from 'assets/images/Ellipse-12.svg';
+import poitrait1 from 'assets/images/poitrait1.jpg';
+import poitrait2 from 'assets/images/poitrait2.jpg';
+import poitrait3 from 'assets/images/poitrait3.jpg';
+import poitrait4 from 'assets/images/poitrait4.jpg';
+import poitrait5 from 'assets/images/poitrait5.jpg';
+import poitrait6 from 'assets/images/poitrait6.jpg';
+import poitrait7 from 'assets/images/poitrait7.jpg';
+import poitrait8 from 'assets/images/poitrait8.jpg';
+import poitrait9 from 'assets/images/poitrait9.jpg';
 
 export const items = [
     {
         name: 'John Doe',
-        title: 'Data Scientist',
+        title: 'Financial Analyst',
         description:
-            "The platform's intuitive design makes exploring diabetes-related data effortless. It provides comprehensive insights that helped deepen my understanding of the condition.",
-        image: CardImage,
+            "The platform's intuitive design makes exploring price prediction data effortless. It provides comprehensive insights that have helped me make informed investment decisions.",
+        image: poitrait1,
     },
     {
         name: 'Jane Smith',
-        title: 'Healthcare Professional',
+        title: 'Investment Advisor',
         description:
-            'A reliable resource for analyzing diabetes trends. The data is well-organized, and the insights provided are invaluable for improving patient care.',
-        image: CardImage,
+            'A reliable resource for analyzing market trends. The data is well-organized, and the insights provided are invaluable for advising my clients with confidence.',
+        image: poitrait2,
     },
     {
         name: 'Alice Johnson',
-        title: 'Public Health Specialist',
+        title: 'Portfolio Manager',
         description:
-            'Impressed with the platform’s accuracy and ease of use. It offers vital information for understanding diabetes prevalence and risk factors.',
-        image: CardImage,
+            'Impressed with the platform’s accuracy and ease of use. It offers vital information for understanding market movements and risk management.',
+        image: poitrait3,
     },
     {
         name: 'Bob Williams',
-        title: 'Epidemiologist',
+        title: 'Economist',
         description:
-            'The website offers a wealth of diabetes data, helping to track patterns and predict trends effectively. A great tool for research and analysis.',
-        image: CardImage,
+            'The website offers a wealth of data, helping to track price trends and predict market shifts effectively. A great tool for macroeconomic analysis.',
+        image: poitrait4,
     },
     {
         name: 'Emily Davis',
-        title: 'Nutritionist',
+        title: 'Quantitative Analyst',
         description:
-            'An excellent resource for exploring how lifestyle factors impact diabetes. The platform’s data visualizations make it easy to draw actionable conclusions.',
-        image: CardImage,
+            'An excellent resource for exploring predictive models. The platform’s data visualizations make it easy to draw actionable conclusions and optimize strategies.',
+        image: poitrait5,
     },
     {
         name: 'Sarah Johnson',
-        title: 'Medical Researcher',
+        title: 'Market Researcher',
         description:
-            'The platform delivers high-quality data that’s crucial for my research. I particularly appreciate the detailed breakdown of diabetes-related factors.',
-        image: CardImage,
+            'The platform delivers high-quality data that’s crucial for my market studies. I particularly appreciate the detailed breakdown of predictive analytics.',
+        image: poitrait6,
     },
     {
         name: 'Michael Brown',
-        title: 'Endocrinologist',
+        title: 'Risk Manager',
         description:
-            'An essential tool for any healthcare professional working with diabetes patients. The depth of analysis provided here is truly remarkable.',
-        image: CardImage,
+            'An essential tool for any professional handling market risks. The depth of analysis provided here is truly remarkable and aids in creating solid risk assessments.',
+        image: poitrait7,
     },
     {
         name: 'Jessica Wilson',
-        title: 'Biostatistician',
+        title: 'Data Scientist',
         description:
-            'The data platform is incredibly user-friendly. I can easily access and analyze diabetes data to uncover important trends and patterns.',
-        image: CardImage,
+            'The data platform is incredibly user-friendly. I can easily access and analyze market data to uncover important trends and patterns for predictive modeling.',
+        image: poitrait8,
     },
     {
         name: 'David Lee',
-        title: 'Pharmacist',
+        title: 'Stock Trader',
         description:
-            'This platform provides valuable insights into diabetes management, offering data that is crucial for both research and clinical applications.',
-        image: CardImage,
+            'This platform provides valuable insights into market predictions, offering data that is crucial for both long-term strategies and short-term trading.',
+        image: poitrait9,
     },
     {
         name: 'Jennifer Martinez',
-        title: 'Diabetes Educator',
+        title: 'Investment Educator',
         description:
-            'A comprehensive tool that aids in educating both healthcare professionals and patients about the complexities of diabetes management.',
-        image: CardImage,
+            'A comprehensive tool that aids in teaching both new and seasoned investors about the complexities of market predictions and data-driven investment decisions.',
+        image: poitrait1,
     },
     {
         name: 'Mark Taylor',
-        title: 'Data Analyst',
+        title: 'Financial Planner',
         description:
-            'Fantastic experience using the platform. The interface is intuitive, and the diabetes data provided is detailed and accurate, perfect for analysis.',
-        image: CardImage,
+            'Fantastic experience using the platform. The interface is intuitive, and the market data provided is detailed and accurate, perfect for client strategies.',
+        image: poitrait2,
     },
     {
-        name: 'Linda Walker',
-        title: 'Clinical Researcher',
+        name: 'Lucas Ramirez',
+        title: 'Technical Analyst',
         description:
-            'This platform is a top resource for accessing and analyzing diabetes data. It’s a critical tool for research and improving patient outcomes.',
-        image: CardImage,
-    },
-    {
-        name: 'Robert Harris',
-        title: 'Healthcare Consultant',
-        description:
-            "I've had a great experience using this platform for diabetes data analysis. The insights help in understanding market trends in healthcare.",
-        image: CardImage,
-    },
-    {
-        name: 'Amanda Turner',
-        title: 'Public Health Advocate',
-        description:
-            'The platform is a valuable asset for analyzing public health trends related to diabetes. It provides critical insights for community interventions.',
-        image: CardImage,
-    },
-    {
-        name: 'Daniel Rodriguez',
-        title: 'Health Data Scientist',
-        description:
-            'Reliable and efficient platform for accessing diabetes data. The predictive models have helped us develop better strategies for disease management.',
-        image: CardImage,
-    },
-    {
-        name: 'Catherine Brown',
-        title: 'Health Policy Expert',
-        description:
-            'This website is a key resource for understanding diabetes trends and formulating health policies based on comprehensive data analysis.',
-        image: CardImage,
-    },
-    {
-        name: 'Steven Wilson',
-        title: 'Medical Software Developer',
-        description:
-            "Impressed with the platform's performance and ease of use. The depth of diabetes-related data exceeded my expectations, essential for application development.",
-        image: CardImage,
-    },
-    {
-        name: 'Grace Martinez',
-        title: 'UX Designer',
-        description:
-            'A well-designed platform that makes diabetes data accessible and easy to interpret. The insights are extremely valuable for healthcare design projects.',
-        image: CardImage,
-    },
-    {
-        name: 'Ethan Hall',
-        title: 'Patient Support Specialist',
-        description:
-            'I love using this platform to understand diabetes trends and better support patients. The data is comprehensive and easy to navigate.',
-        image: CardImage,
-    },
-    {
-        name: 'Sophia Adams',
-        title: 'Health Content Writer',
-        description:
-            "The platform's data is thorough and well-organized, helping me create accurate content on diabetes. It's a must-use for anyone in healthcare communications.",
-        image: CardImage,
-    },
+            'The insights and predictive capabilities of this platform have revolutionized my approach to technical analysis. Highly recommend it for market forecasters.',
+        image: poitrait3,
+    }
 ];

@@ -1,5 +1,6 @@
 // src/pages-section/HomePage.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import HeroDecorImage from '../../assets/images/hero-sub-image.png';
 import Button from '../../components/ultility/Button';
 import ArrowRight from '../../assets/icons/arrow-right-white.svg';
@@ -13,48 +14,60 @@ import { EffectCards, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-cards';
 
-import HeroImage from '../../assets/images/homepage-hero-image.png';
-import VenueImage from '../../assets/images/venue-general-1.png';
-import VenueImage2 from '../../assets/images/venue-image-1.png';
-import VenueImage3 from '../../assets/images/venue-image-2.png';
-import VenueImage4 from '../../assets/images/venue-image-3.png';
-import VenueImage5 from '../../assets/images/venue-image-4.png';
-import SmallLocationImage from '../../assets/images/small-image.png';
+import HeroImage from '../../assets/images/sub-hero-section.jpg';
+import VenueImage from '../../assets/images/7478054_0.jpg';
+import VenueImage2 from '../../assets/images/4196182_0.jpg';
+import VenueImage3 from '../../assets/images/streetview.jpg';
+import VenueImage4 from '../../assets/images/genMid.2510113_0.jpg';
+import VenueImage5 from '../../assets/images/6618843-150-single-family-home-1.med.jpg';
+import SmallLocationImage from '../../assets/images/6618843-150-single-family-home-1.med.jpg';
 
 const slidesData = [
     {
         image: VenueImage,
-        title: 'Obese',
-        rating: '4.5/5',
-        authorDate: 'By John Doe - 18/09/2024',
+        title: '1237 Citadel Dr NE, Atlanta, GA 30324',
+        bedroom: '5',
+        bathroom: '5',
+        price: '1,950,000',
+        link: 'https://www.zillow.com/homedetails/1237-Citadel-Dr-NE-Atlanta-GA-30324/14533056_zpid/'
     },
     {
         image: VenueImage2,
-        title: 'Obese',
-        rating: '4.5/5',
-        authorDate: 'By John Doe - 18/09/2024',
+        title: '5348 Rockwood Rd, Charlotte, NC 28216',
+        bedroom: '3',
+        bathroom: '2',
+        price: '374,990',
+        link: 'https://www.zillow.com/homedetails/5348-Rockwood-Rd-Charlotte-NC-28216/64999929_zpid/'
     },
     {
         image: VenueImage3,
-        title: 'Obese',
-        rating: '4.5/5',
-        authorDate: 'By John Doe - 18/09/2024',
+        title: '201 Sleepy Hollow Dr, Amherst, OH 44001',
+        bedroom: '4',
+        bathroom: '3',
+        price: '385,000',
+        link: 'https://www.zillow.com/homedetails/201-Sleepy-Hollow-Dr-Amherst-OH-44001/34571745_zpid/'
     },
     {
         image: VenueImage4,
-        title: 'Obese',
-        rating: '4.5/5',
-        authorDate: 'By John Doe - 18/09/2024',
+        title: '759 London Groveport Rd, Lockbourne, OH 43137',
+        bedroom: '4',
+        bathroom: '3',
+        price: '749,900',
+        link: 'https://www.zillow.com/homedetails/759-London-Groveport-Rd-Lockbourne-OH-43137/34036365_zpid/'
     },
     {
         image: VenueImage5,
-        title: 'Obese',
-        rating: '4.5/5',
-        authorDate: 'By John Doe - 18/09/2024',
+        title: '38655 Branch Ave, North Branch, MN 55056',
+        bedroom: '2',
+        bathroom: '3',
+        price: '155,000',
+        link: 'https://www.zillow.com/homedetails/38655-Branch-Ave-North-Branch-MN-55056/53220179_zpid/'
     },
 ];
 
 const HeroSection = () => {
+    const navigate = useNavigate();
+
     return (
         <main className="max-w-[78rem] mx-auto grid grid-cols-1 xl:grid-cols-2 gap-16 px-4">
             {/* Main Content Container */}
@@ -62,7 +75,7 @@ const HeroSection = () => {
                 {/* Heading */}
                 <section className="w-full">
                     <div className="flex flex-row items-center mb-6">
-                        <h1 className="text-h1-sm sm:text-h1">Your Health, Our Priority</h1>
+                        <h1 className="text-h1-sm sm:text-h1">Together, We Grow</h1>
                         <figure className="hidden xl:flex h-full items-center justify-center aspect-[97/120]">
                             <img
                                 src={HeroDecorImage}
@@ -73,7 +86,7 @@ const HeroSection = () => {
                     </div>
                     <div className="grid grid-cols-[auto_1fr] gap-x-10 xl:gap-x-16 items-end">
                         <h3 className="text-h3-sm sm:text-h3 font-bold">
-                            Your journey to better health starts here.
+                            Gain better investments now!
                         </h3>
                         <div className="hidden xs:block">
                             <svg width="100%" height="2" xmlns="http://www.w3.org/2000/svg">
@@ -93,13 +106,15 @@ const HeroSection = () => {
                 <section className="w-full grid sm:grid-cols-[1fr_auto] gap-x-10 gap-y-2 items-center">
                     <p className="text-body-sm sm:text-body">
                         We specialize in empowering you with personalized insights and tools to
-                        manage diabetes and enhance your well-being.
+                        optimize your price prediction strategies and enhance your investment
+                        success.
                     </p>
                     <Button
                         title="What's going on?"
                         icon={ArrowRight}
                         className="bg-primary w-fit"
                         textColor="text-white"
+                        onClick={() => navigate('/latest-research')}
                     />
                 </section>
                 {/* Statistic */}
@@ -127,7 +142,7 @@ const HeroSection = () => {
                     </div>
                     <div className="text-center xs:text-left h-fit">
                         <h2 className="text-h2-sm sm:text-h2 mb-2">24k+</h2>
-                        <p className="text-body-sm sm:text-body font-bold">Health Articles</p>
+                        <p className="text-body-sm sm:text-body font-bold">Properties</p>
                     </div>
                     {/* Vertical Line */}
                     <div className="hidden xs:block">
@@ -148,7 +163,7 @@ const HeroSection = () => {
                     </div>
                     <div className="text-center xs:text-left h-fit">
                         <h2 className="text-h2-sm sm:text-h2 mb-2">47k+</h2>
-                        <p className="text-body-sm sm:text-body font-bold">Property Sold</p>
+                        <p className="text-body-sm sm:text-body font-bold">Trusted Clients</p>
                     </div>
                 </section>
                 {/* Slider for the cards */}
@@ -186,10 +201,18 @@ const HeroSection = () => {
                                 <div className="absolute bottom-3 left-3 z-10">
                                     <div className="w-fit mb-2 px-2 py-1 bg-black bg-opacity-20 mix-blend-luminosity backdrop-blur-md rounded-lg">
                                         <p
-                                            id="swiper-rating"
+                                            id="swiper-bedroom"
                                             className="text-white text-footnote-sm sm:text-footnote line-clamp-1"
                                         >
-                                            Rating: {slide.rating}
+                                            Bedroom: {slide.bedroom}
+                                        </p>
+                                    </div>
+                                    <div className="w-fit mb-2 px-2 py-1 bg-black bg-opacity-20 mix-blend-luminosity backdrop-blur-md rounded-lg">
+                                        <p
+                                            id="swiper-bedroom"
+                                            className="text-white text-footnote-sm sm:text-footnote line-clamp-1"
+                                        >
+                                            Bathroom: {slide.bathroom}
                                         </p>
                                     </div>
                                     <div className="w-fit px-2 py-1 bg-black bg-opacity-20 mix-blend-luminosity backdrop-blur-md rounded-lg">
@@ -197,19 +220,21 @@ const HeroSection = () => {
                                             id="swiper-author-date"
                                             className="text-white text-footnote-sm sm:text-footnote line-clamp-1"
                                         >
-                                            {slide.authorDate}
+                                            Price: ${slide.price}
                                         </p>
                                     </div>
                                 </div>
-                                <Button
-                                    title="More Details"
-                                    icon={ArrowRight}
-                                    className="absolute bottom-3 right-3 z-10 mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md rounded-lg"
-                                    textColor="text-white"
-                                    style={{
-                                        padding: '2px 8px',
-                                    }}
-                                />
+                                <a href={slide.link} target="_blank" rel="noopener noreferrer">
+                                    <Button
+                                        title="More Details"
+                                        icon={ArrowRight}
+                                        className="absolute bottom-3 right-3 z-10 mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md rounded-lg"
+                                        textColor="text-white"
+                                        style={{
+                                            padding: '2px 8px',
+                                        }}
+                                    />
+                                </a>
                             </SwiperSlide>
                         ))}
                     </Swiper>
@@ -253,9 +278,7 @@ const HeroSection = () => {
                 <article className="p-3 mt-auto">
                     <div className="pl-2 border-l border-white border-opacity-70">
                         <p className="text-body text-white">
-                            Gain control of your diabetes with insights that fit your unique health
-                            profile. Stay on top of your goals, diet, and lifestyle choices with
-                            ease.
+                            Take charge of your price prediction strategy with tailored insights that match your unique market profile. Stay ahead of your forecasting goals, investment strategies, and data-driven decisions with confidence.
                         </p>
                     </div>
                     <div className="flex justify-between flex-wrap mt-4 gap-2">
@@ -264,12 +287,14 @@ const HeroSection = () => {
                             icon={Light}
                             className="flex-1 min-w-fit mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md border border-white rounded-md text-white"
                             textColor="text-white"
+                            onClick={() => navigate('/result-dashboard')}
                         />
                         <Button
                             title="Join our Survey"
                             icon={Hat}
                             className="flex-1 min-w-fit bg-primary rounded-md text-white"
                             textColor="text-white"
+                            onClick={() => navigate('/result-dashboard')}
                         />
                     </div>
                 </article>

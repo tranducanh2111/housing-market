@@ -22,11 +22,11 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
                             </div>
                         </Link>
                     </div>
-                    <div className="hidden md:flex flex-1 max-w-[37.5rem] px-[1.875rem]">
+                    <div className="hidden md:flex flex-1 max-w-[27.5rem] px-[1.875rem]">
                         <Search />
                     </div>
-                    <div className="flex justify-center items-center">
-                        <div className="flex items-center">
+                    <div className="flex md:hidden justify-center items-center">
+                        {/* <div className="flex items-center">
                             <Button
                                 title="Log In"
                                 onClick={handleLogin}
@@ -38,7 +38,7 @@ const Navbar = ({ openSidebar, toggleProfile }) => {
                                 className="bg-primary text-body-sm sm:text-body"
                                 textColor="text-white"
                             />
-                        </div>
+                        </div> */}
                         <button
                             className="ml-6 text-gray-600 hover:text-gray-900 block sm:hidden"
                             onClick={openSidebar}

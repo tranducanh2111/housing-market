@@ -55,7 +55,7 @@ const SponsorList = () => {
         <section className="overflow-hidden flex flex-col flex-wrap items-center gap-[2rem] md:gap-[3rem]">
             <div className="flex flex-col items-center flex-wrap px-5 gap-y-[0.75rem] md:gap-y-[1rem] max-w-[650px] mx-auto">
                 <h3 className="text-h3-sm md:text-h3 font-semibold text-center">
-                    Join our valued sponsors and empowering healthier communities with critical data
+                    Join our valued sponsors and empowering remarkable profits with critical data
                     insights
                 </h3>
                 <Button

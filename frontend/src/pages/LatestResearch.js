@@ -20,14 +20,14 @@ const imageList = [Banner1, Banner2, Banner3, Banner4, Banner5, Banner6];
 
 const LatestResearchContent = () => {
     return (
-        <section className="mx-auto flex flex-col items-center min-h-screen bg-white gap-y-24">
+        <section className="mx-auto flex flex-col items-center min-h-screen bg-white gap-y-24 pb-4">
             <BannerSection imageList={imageList} />
             <GallerySection />
             <ArticleSection
                 sectionName={'Resources'}
                 viewMoreLink={'#'}
                 description={
-                    "Explore the Latest Arrivals! Stay ahead of the curve with our newest products, innovations, and must-haves. From cutting-edge tech to timeless classics, find what's trending and elevate your lifestyle with our latest offerings."
+                    "Discover the Latest Insights in Housing Prices! Stay ahead of the market with our up-to-date analyses, trends, and must-know factors influencing property values. From innovative pricing models to timeless real estate strategies, explore what's shaping the housing landscape and enhance your investment decisions with our latest findings."
                 }
                 showFilter={true}
             />
