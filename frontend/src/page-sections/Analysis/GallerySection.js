@@ -5,6 +5,17 @@ import Banner2 from '../../assets/images/4196182_0.jpg';
 import Banner4 from '../../assets/images/genMid.2510113_0.jpg';
 import Banner5 from '../../assets/images/6618843-150-single-family-home-1.med.jpg';
 
+// Add this helper function at the top of the file
+const isElementInViewport = (el) => {
+    const rect = el.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+
 const Workshop = () => {
     // Array of image URLs
     const imageURLs = [
@@ -42,11 +53,14 @@ const Workshop = () => {
     // Scroll to the selected photo when it changes
     useEffect(() => {
         if (selectedPhotoRef.current) {
-            selectedPhotoRef.current.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'center',
-            });
+            const gallerySection = document.getElementById('sub-photo-container');
+            if (gallerySection && isElementInViewport(gallerySection)) {
+                selectedPhotoRef.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'center',
+                });
+            }
         }
     }, [selectedImageIndex]);
 
