@@ -261,7 +261,7 @@ def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
     for city in city_state_encoded_data_mappings[state.lower()]['cities']:
         data['city_encoded'] = city['encoded_value']
         result.append({
-            'city': city['city_name'],
+            'city': city['city_name'].title(),
             'price': make_prediction(model, data)
         })
 
