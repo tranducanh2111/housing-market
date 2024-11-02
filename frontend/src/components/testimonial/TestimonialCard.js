@@ -8,8 +8,9 @@ const TestimonialCard = ({ name, title, description, image }) => {
                 <figure className="w-[2.875rem] h-[2.875rem] overflow-hidden" style={{ borderRadius: '50%' }}>
                     <img
                         className="object-cover w-full h-full"
-                    src={image}
-                    alt={name}
+                        src={image}
+                        alt={name}
+                        loading='lazy'
                     />
                 </figure>
                 <div className="flex-col justify-center items-start inline-flex">

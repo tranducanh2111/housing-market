@@ -195,20 +195,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .ease(d3.easeLinear)
                 .attr('stroke-dashoffset', 0);
 
-            // Update dots with delayed appearance
-            const dots = svg.selectAll('.line-chart-dot')
-                .data(data)
-                .join('circle')
-                .attr('class', 'line-chart-dot')
-                .attr('fill', '#0E4459')
-                .attr('r', 0)  // Start with radius 0
-                .attr('cx', d => x(d[areaType]))
-                .attr('cy', d => y(d['price']))
-                .transition()
-                .delay((d, i) => i * 100)  // Stagger the appearance
-                .duration(500)
-                .attr('r', 4);  // Grow to final radius
-
             // Update hover dots for tooltip
             const hoverDots = svg.selectAll('.line-chart-hover-dot')
                 .data(data)

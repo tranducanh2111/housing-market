@@ -2,14 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom'; // Use react-router for routing
 import Logo from 'assets/icons/Logo.svg';
 import Search from './Search';
-import Button from '../ultility/Button';
 import SideLogo from 'assets/icons/Sidebar.svg';
 
-const Navbar = ({ openSidebar, toggleProfile }) => {
-    const handleLogin = () => {
-        // Placeholder for login functionality
-        console.log('Login clicked');
-    };
+const Navbar = ({ openSidebar }) => {
 
     return (
         <nav className="bg-white-800 py-3 h-[3.75rem] sm:h-[5.375rem] h-fit">

@@ -1,8 +1,7 @@
 import React from 'react';
 import SidebarModal from './Sidebar';
-import Profile from './Profile';
 
-const Layout = ({ children, isOpen, openSidebar, closeSidebar, isProfileOpen, closeProfile }) => {
+const Layout = ({ children, isOpen, openSidebar, closeSidebar }) => {
     return (
         <>
             <main className="flex justify-start overflow-x-hidden">
@@ -16,8 +15,7 @@ const Layout = ({ children, isOpen, openSidebar, closeSidebar, isProfileOpen, cl
                 {/* Content */}
                 {/* <div className="relative flex-1 min-h-[92rem] sm:min-h-[84rem] overflow-x-hidden sm:border-l-4"> */}
                 <div className="relative flex-1 min-h-screen overflow-x-hidden sm:border-l-4">
-                    <Profile isProfileOpen={isProfileOpen} closeProfile={closeProfile} />
-                    <div className={`relative ${isProfileOpen && 'hidden sm:block'}`}>
+                    <div className={`relative`}>
                         {children}
                     </div>
                 </div>

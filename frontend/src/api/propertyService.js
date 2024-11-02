@@ -47,28 +47,3 @@ export const submitAddressData = async (formData) => {
         throw new Error(error.response?.data?.detail || 'Failed to submit form');
     }
 };
-
-// Function to display property details
-const displayPropertyDetails = (details) => {
-    // Update the UI with property details
-    console.log('Property Details:', details);
-    // You can update specific elements in your UI here
-};
-
-// Function to update the choropleth chart
-const updateChoroplethChart = (data) => {
-    console.log('Choropleth Chart Data:', data);
-    // Implement the logic to update the choropleth chart
-};
-
-// Function to update the bar chart
-const updateBarChart = (data) => {
-    console.log('Bar Chart Data:', data);
-    // Implement the logic to update the bar chart
-};
-
-// Function to update the line chart
-const updateLineChart = (data) => {
-    console.log('Line Chart Data:', data);
-    // Implement the logic to update the line chart
-};
