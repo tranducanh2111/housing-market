@@ -214,7 +214,7 @@ const BarChart = ({ data, selectedCity }) => {
             .data(sortedData, d => d.city);
 
         // Helper function to determine bar color
-        const getBarColor = (d) => d.city.toLowerCase() === selectedCity.toLowerCase() ? 'red' : 'steelblue';
+        const getBarColor = (d) => d.city.toLowerCase() === selectedCity.toLowerCase() ? 'red' : '#0E4459';
 
         // Remove old bars
         bars.exit()

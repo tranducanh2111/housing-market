@@ -190,7 +190,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                 className={`w-full mt-6 py-3 px-4 bg-primary text-white rounded-md transition-all duration-200
                     ${isSubmitting 
                         ? 'opacity-50 cursor-not-allowed' 
-                        : 'hover:bg-primary-dark hover:shadow-lg'
+                        : 'hover:bg-secondary hover:shadow-lg'
                     }`}
             >
                 {isSubmitting ? 'Submitting...' : 'Submit'}

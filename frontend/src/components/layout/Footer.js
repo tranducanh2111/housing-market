@@ -82,7 +82,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="bg-secondary px-8 sm:px-[4.375rem] py-2">
+            <div className="bg-primary px-8 sm:px-[4.375rem] py-2">
                 <div className="max-w-[78rem] mx-auto text-center sm:flex justify-between w-full m-auto py-2 text-white">
                     <p className="text-footnote-sm sm:text-footnote">
                         &copy; {new Date().getFullYear()} NextHome. All rights reserved.
