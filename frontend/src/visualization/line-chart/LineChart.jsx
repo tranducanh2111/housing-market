@@ -1,12 +1,29 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import './LineChart.css';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
     const chartRef = useRef(null);
+    const containerRef = useRef(null);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [areaType, setAreaType] = useState('living_area');
-    const { width, height } = useWindowDimensions();
+
+    useEffect(() => {
+        if (!containerRef.current) return;
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                setDimensions({ width, height });
+            }
+        });
+
+        resizeObserver.observe(containerRef.current);
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, []);
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('en-US').format(price);
@@ -17,12 +34,22 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         const maxPrice = d3.max(data, d => d['price']);
         const minArea = d3.min(data, d => d[areaType]);
         const maxArea = d3.max(data, d => d[areaType]);
-        return [minPrice, maxPrice, minArea, maxArea];
+        
+        // Add 5% padding to both ends of the price and area ranges
+        const pricePadding = (maxPrice - minPrice) * 0.05;
+        const areaPadding = (maxArea - minArea) * 0.05;
+        
+        return [
+            minPrice - pricePadding,  // min price with padding
+            maxPrice + pricePadding,  // max price with padding
+            minArea - areaPadding,    // min area with padding
+            maxArea + areaPadding     // max area with padding
+        ];
     };
 
     const drawLineChart = useCallback((livingAreaPrice, landAreaPrice) => {
-        const containerWidth = width * 0.8;
-        const containerHeight = height * 0.6;
+        const containerWidth = dimensions.width;
+        const containerHeight = dimensions.height;
 
         // Clear any existing SVG
         d3.select(chartRef.current).selectAll('*').remove();
@@ -91,8 +118,17 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             x.domain([minArea, maxArea]);
             y.domain([minPrice, maxPrice]);
 
-            const xTickValues = d3.range(minArea, maxArea + 1, (maxArea - minArea) / 10);
-            const yTickValues = d3.range(minPrice, maxPrice + 1, (maxPrice - minPrice) / 10);
+            // Adjust tick values to account for the padding
+            const xTickValues = d3.range(
+                Math.ceil(minArea), 
+                Math.floor(maxArea), 
+                (maxArea - minArea) / 10
+            );
+            const yTickValues = d3.range(
+                Math.ceil(minPrice), 
+                Math.floor(maxPrice), 
+                (maxPrice - minPrice) / 10
+            );
 
             const xAxis = d3.axisBottom(x).tickSize(10).tickValues(xTickValues);
             const yAxis = d3.axisLeft(y).tickSize(10).tickValues(yTickValues);
@@ -178,7 +214,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             hoverDots.on('mouseover', (event, d) => {
                 d3.select(event.target)
                     .style('opacity', 1)
-                    .style('fill', 'steelblue');  // Change dot color to steelblue on hover
+                    .style('fill', 'steelblue');
                 
                 tooltip.style('visibility', 'visible')
                     .text(`${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d[areaType].toFixed(2)} m²\nPrice: ${formatPrice(d['price'].toFixed(2))} USD`);
@@ -192,7 +228,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             hoverDots.on('mouseout', (event) => {
                 d3.select(event.target)
                     .style('opacity', 0)
-                    .style('fill', 'steelblue');  // Revert dot color back to original on mouseout
+                    .style('fill', 'steelblue');
                 
                 tooltip.style('visibility', 'hidden');
             });
@@ -244,7 +280,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     });
             }
         }
-    }, [width, height, areaType, predictionResult]);
+    }, [dimensions, areaType, predictionResult]);
 
     useEffect(() => {
         if (livingAreaData && landAreaData) {
@@ -257,7 +293,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
     };
 
     return (
-        <div className="line-chart-container w-full max-h-[25rem] h-full">
+        <div ref={containerRef} className="w-full h-full">
             <form>
                 <label>
                     <input
@@ -281,7 +317,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     Land Area
                 </label>
             </form>
-
             <div ref={chartRef} className="w-full h-full"></div>
         </div>
     );

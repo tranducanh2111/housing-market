@@ -1,24 +1,41 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './Choropleth.css';
 import { Legend } from './colorLegend';
 import { feature } from 'topojson-client';
-import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const Choropleth = ({ data, selectedState }) => {
     const chartRef = useRef(null);
-    const { width, height } = useWindowDimensions();
+    const containerRef = useRef(null);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('en-US').format(price);
     };
 
     useEffect(() => {
-        if (!data) return;
+        if (!containerRef.current) return;
+
+        const resizeObserver = new ResizeObserver(entries => {
+            for (let entry of entries) {
+                const { width, height } = entry.contentRect;
+                setDimensions({ width, height });
+            }
+        });
+
+        resizeObserver.observe(containerRef.current);
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!data || !dimensions.width || !dimensions.height) return;
 
         const drawChoropleth = async (geoJson, statePrices) => {
-            const containerWidth = width;
-            const containerHeight = height;
+            const containerWidth = dimensions.width;
+            const containerHeight = dimensions.height;
 
             // Clear any existing SVG
             d3.select(chartRef.current).selectAll('*').remove();
@@ -151,14 +168,13 @@ const Choropleth = ({ data, selectedState }) => {
 
         fetchGeoData();
 
-        // Cleanup function
         return () => {
             d3.select('body').selectAll('#tooltip').remove();
         };
-    }, [data, width, height, selectedState]);
+    }, [data, dimensions, selectedState]);
 
     return (
-        <div className="choropleth-container w-full h-full">
+        <div ref={containerRef} className="w-full h-full">
             <div ref={chartRef} className="w-full h-full"></div>
         </div>
     );
