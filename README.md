@@ -17,6 +17,8 @@
 - `npm install -D postcss`
 - `npm install -D autoprefixer`
 - `npm install axios`
+- `npm install d3`
+- `npm install topojson-client`
 # Execution
 ## Backend
 To run the backend:
