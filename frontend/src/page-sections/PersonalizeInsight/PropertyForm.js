@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { submitPropertyData, submitAddressData } from '../../api/propertyService';
 import FormInput from '../../components/FormInput';
+import StateSelect from '../../components/StateSelect';
 
 const PropertyForm = ({ onSubmitSuccess }) => {
     const [formType, setFormType] = useState('address'); // 'address' or 'details'
@@ -18,6 +19,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
 
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessages, setErrorMessages] = useState({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -36,7 +38,14 @@ const PropertyForm = ({ onSubmitSuccess }) => {
         const emptyFields = requiredFields.filter(field => !formData[field]);
         
         if (emptyFields.length > 0) {
-            throw new Error(`Please fill in all required fields: ${emptyFields.join(', ')}`);
+            const messages = {};
+            emptyFields.forEach(field => {
+                messages[field] = `Please enter your ${field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase()}`;
+            });
+            setErrorMessages(messages);
+            throw new Error('Please fill in all required fields');
+        } else {
+            setErrorMessages({});
         }
     };
 
@@ -68,17 +77,31 @@ const PropertyForm = ({ onSubmitSuccess }) => {
     };
 
     const renderInputs = (fields) => {
-        return fields.map((field) => (
-            <FormInput
-                key={field}
-                type={field === 'state' || field === 'city' || field === 'address' ? 'text' : 'number'}
-                name={field}
-                value={formData[field]}
-                onChange={handleChange}
-                label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
-                required
-            />
-        ));
+        return fields.map((field) => {
+            if (field === 'state') {
+                return (
+                    <StateSelect
+                        key={field}
+                        value={formData[field]}
+                        onChange={handleChange}
+                        error={errorMessages[field]}
+                    />
+                );
+            }
+            return (
+                <div key={field} className="relative">
+                    <FormInput
+                        type={field === 'city' || field === 'address' ? 'text' : 'number'}
+                        name={field}
+                        value={formData[field]}
+                        onChange={handleChange}
+                        label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
+                        required
+                        error={errorMessages[field]}
+                    />
+                </div>
+            );
+        });
     };
 
     return (
@@ -115,10 +138,15 @@ const PropertyForm = ({ onSubmitSuccess }) => {
             </h2>
             
             {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-md">
+                <div className="mb-6 p-4 border border-red-500 bg-red-50 text-red-600 rounded-md">
                     {error}
                 </div>
             )}
+            {Object.keys(errorMessages).map((field) => (
+                <div key={field} className="mb-2 p-2 border border-red-500 bg-red-50 text-red-600 rounded-md">
+                    {errorMessages[field]}
+                </div>
+            ))}
 
             {formType === 'address' 
                 ? renderInputs(['address', 'state', 'city'])

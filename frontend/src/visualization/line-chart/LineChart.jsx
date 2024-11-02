@@ -178,7 +178,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             hoverDots.on('mouseover', (event, d) => {
                 d3.select(event.target)
                     .style('opacity', 1)
-                    .style('fill', 'yellow');  // Change dot color to yellow on hover
+                    .style('fill', 'steelblue');  // Change dot color to steelblue on hover
                 
                 tooltip.style('visibility', 'visible')
                     .text(`${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d[areaType].toFixed(2)} m²\nPrice: ${formatPrice(d['price'].toFixed(2))} USD`);

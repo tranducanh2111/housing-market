@@ -112,7 +112,7 @@ const BarChart = ({ data, selectedCity }) => {
         // Style the grid
         grid.selectAll('line')
             .style('stroke-dasharray', '2,2')
-            .style('stroke-opacity', '0.1');
+            .style('stroke-opacity', '0.3');
 
         // Remove the domain line (the thick line at the top)
         grid.select('.domain').remove();
@@ -145,7 +145,7 @@ const BarChart = ({ data, selectedCity }) => {
 
         xAxis.transition()
             .duration(TRANSITION_DURATION)
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x).tickSizeOuter(0));
 
         // Style x-axis line and ticks
         xAxis.select('.domain')

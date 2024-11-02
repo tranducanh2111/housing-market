@@ -17,8 +17,8 @@ const Choropleth = ({ data, selectedState }) => {
         if (!data) return;
 
         const drawChoropleth = async (geoJson, statePrices) => {
-            const containerWidth = width * 0.8;
-            const containerHeight = height * 0.6;
+            const containerWidth = width;
+            const containerHeight = height;
 
             // Clear any existing SVG
             d3.select(chartRef.current).selectAll('*').remove();
@@ -32,7 +32,7 @@ const Choropleth = ({ data, selectedState }) => {
                 .attr('preserveAspectRatio', 'xMidYMid meet');
 
             // Calculate the scale factor for the map projection
-            const scale = Math.min(containerWidth, containerHeight) * 1.2;
+            const scale = Math.min(containerWidth, containerHeight) * 1.8;
             
             // Update projection to use dynamic dimensions
             const projection = d3.geoAlbersUsa()
@@ -72,9 +72,9 @@ const Choropleth = ({ data, selectedState }) => {
                     .style('stroke-width', '2');
             }
 
-            states.on('click', (event) => {
-                event.stopPropagation();
-            });
+            // states.on('click', (event) => {
+            //     event.stopPropagation();
+            // });
 
             const tooltip = d3.select('body')
                 .append('div')

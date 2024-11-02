@@ -8,7 +8,7 @@ import Menu from './Menu';
 
 const categories = [
     { href: '/', src: HomeIcon, alt: 'Home' },
-    { href: '/education-center', src: ResourceIcon, alt: 'Education Center' },
+    { href: '/result-dashboard', src: ResourceIcon, alt: 'Education Center' },
 ];
 
 const SidebarModal = ({ isOpen, closeSidebar, openSidebar }) => {

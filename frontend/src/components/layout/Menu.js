@@ -16,7 +16,7 @@ const Menu = () => {
 
     const educationCenterMenu = [
         { name: 'Latest Research', isHovered: false, page: 'latest-research' },
-        { name: 'Personal Insight', isHovered: false, page: 'nutrition-guidelines' },
+        { name: 'Personal Insight', isHovered: false, page: 'result-dashboard' },
     ];
 
     const handleContestHoverOn = index => {
