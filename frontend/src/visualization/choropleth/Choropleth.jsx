@@ -73,6 +73,8 @@ const Choropleth = ({ data, selectedState }) => {
             svg.call(zoom);
 
             const g = svg.append('g');
+            
+            // Create states with initial transform
             const states = g.selectAll('path')
                 .data(geoJson.features)
                 .enter()
@@ -80,7 +82,20 @@ const Choropleth = ({ data, selectedState }) => {
                 .attr('class', 'state')
                 .attr('d', path)
                 .attr('id', d => d.properties.name)
-                .attr('fill', d => colorScale(priceMap.get(d.properties.name) || 0));
+                .attr('fill', d => colorScale(priceMap.get(d.properties.name) || 0))
+                .style('transform', `translateX(${containerWidth}px)`) // Start position
+                .style('opacity', 0);
+
+            // Animate states flying in
+            states.each(function(d, i) {
+                d3.select(this)
+                    .transition()
+                    .delay(i * 20) // Stagger the animations
+                    .duration(1000)
+                    .style('transform', 'translateX(0px)')
+                    .style('opacity', 1)
+                    .ease(d3.easeBackOut.overshoot(1.2)); // Add a slight bounce effect
+            });
 
             // Outline the selected state in red on initial load
             if (selectedState) {
@@ -88,10 +103,6 @@ const Choropleth = ({ data, selectedState }) => {
                     .style('stroke', 'red')
                     .style('stroke-width', '2');
             }
-
-            // states.on('click', (event) => {
-            //     event.stopPropagation();
-            // });
 
             const tooltip = d3.select('body')
                 .append('div')
@@ -141,18 +152,6 @@ const Choropleth = ({ data, selectedState }) => {
                 .attr('id', 'state-choropleth-legend')
                 .attr('transform', `translate(${containerWidth - 260}, 20)`)
                 .append(() => Legend(colorScale, { title: 'Price (USD)', width: 260 }));
-
-            function getStateName(d) {
-                return d['properties']['NAME'];
-            }
-
-            function getStatePrice(d) {
-                return priceMap.get(getStateName(d)) || -1;
-            }
-
-            function getStateColor(d) {
-                return colorScale(getStatePrice(d));
-            }
         };
 
         const fetchGeoData = async () => {
