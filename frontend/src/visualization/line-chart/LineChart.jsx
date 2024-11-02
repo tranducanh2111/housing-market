@@ -175,29 +175,39 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .x(d => x(d[areaType]))
                 .y(d => y(d['price']));
 
-            // Update the line
+            // Update the line with animation
             svg.selectAll('.chart-line')
                 .data([data])
                 .join('path')
                 .attr('class', 'chart-line')
-                .transition()
-                .duration(t)
-                .attr('d', lineGenerator)
                 .attr('fill', 'none')
                 .attr('stroke', 'steelblue')
-                .attr('stroke-width', 2.5);
+                .attr('stroke-width', 2.5)
+                .attr('d', lineGenerator)
+                .attr('stroke-dasharray', function() {
+                    return this.getTotalLength();
+                })
+                .attr('stroke-dashoffset', function() {
+                    return this.getTotalLength();
+                })
+                .transition()
+                .duration(1000)
+                .ease(d3.easeLinear)
+                .attr('stroke-dashoffset', 0);
 
-            // Update dots
+            // Update dots with delayed appearance
             const dots = svg.selectAll('.line-chart-dot')
                 .data(data)
                 .join('circle')
                 .attr('class', 'line-chart-dot')
                 .attr('fill', 'steelblue')
-                .attr('r', 4)
-                .transition()
-                .duration(t)
+                .attr('r', 0)  // Start with radius 0
                 .attr('cx', d => x(d[areaType]))
-                .attr('cy', d => y(d['price']));
+                .attr('cy', d => y(d['price']))
+                .transition()
+                .delay((d, i) => i * 100)  // Stagger the appearance
+                .duration(500)
+                .attr('r', 4);  // Grow to final radius
 
             // Update hover dots for tooltip
             const hoverDots = svg.selectAll('.line-chart-hover-dot')

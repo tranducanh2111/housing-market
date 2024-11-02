@@ -45,7 +45,7 @@ const BarChart = ({ data, selectedCity }) => {
                         inline: 'center'
                     });
                 }
-            }, TRANSITION_DURATION + 100);
+            }, TRANSITION_DURATION);
         }
     }, [selectedCity, sortOrder, data]);
 
@@ -71,7 +71,7 @@ const BarChart = ({ data, selectedCity }) => {
         ]);
 
         const sortedData = [...data].sort(orderMap.get(sortOrder));
-        
+
         // Calculate max and min values for y-axis
         const maxPrice = d3.max(sortedData, d => d.price) || 0;
         const minPrice = d3.min(sortedData, d => d.price) || 0;

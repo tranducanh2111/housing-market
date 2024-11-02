@@ -16,10 +16,12 @@
     fill: none;
     stroke: steelblue;
     stroke-width: 2.5;
+    animation: fadeIn 1s ease-in;
 }
 
 .line-chart-dot {
     fill: steelblue;
+    animation: fadeIn 1.5s ease-in;
 }
 
 .line-chart-hover-dot {
@@ -52,4 +54,22 @@
 
 .prediction-hover-dot:hover {
     opacity: 0.3;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.line-chart-axis {
+    animation: fadeIn 1s ease-in;
+}
+
+.line-chart-horizontal-gridline,
+.line-chart-vertical-gridline {
+    animation: fadeIn 1s ease-in;
 }
