@@ -81,7 +81,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         // Add X-axis label using foreignObject
         svg.append('foreignObject')
             .attr('x', containerWidth / 2 - 100)
-            .attr('y', containerHeight - 20)
+            .attr('y', containerHeight +10)
             .attr('width', 200)
             .attr('height', 30)
             .append('xhtml:div')
@@ -91,7 +91,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
         // Add Y-axis label using foreignObject
         svg.append('foreignObject')
-            .attr('x', -containerHeight / 2 - 50)
+            .attr('x', -containerHeight / 2 - 10)
             .attr('y', 0)
             .attr('width', containerHeight)
             .attr('height', 30)
@@ -231,8 +231,19 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             });
 
             hoverDots.on('mousemove', (event) => {
-                tooltip.style('top', event.pageY - 20 + 'px')
-                    .style('left', event.pageX + 20 + 'px');
+                const tooltipNode = tooltip.node();
+                const tooltipWidth = tooltipNode.offsetWidth;
+                const windowWidth = window.innerWidth;
+                const mouseX = event.pageX;
+                
+                // Check if tooltip would overflow on the right
+                const wouldOverflowRight = mouseX + tooltipWidth + 20 > windowWidth;
+                
+                tooltip
+                    .style('top', (event.pageY - 20) + 'px')
+                    .style('left', wouldOverflowRight 
+                        ? (mouseX - tooltipWidth - 10) + 'px' 
+                        : (mouseX + 20) + 'px');
             });
 
             hoverDots.on('mouseout', (event) => {

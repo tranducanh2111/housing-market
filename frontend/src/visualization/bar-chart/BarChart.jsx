@@ -257,9 +257,18 @@ const BarChart = ({ data, selectedCity }) => {
                     .attr('fill', 'yellow');
             })
             .on('mousemove', (event) => {
+                const tooltipNode = tooltip.node();
+                const tooltipWidth = tooltipNode.offsetWidth;
+                const windowWidth = window.innerWidth;
+                const mouseX = event.pageX;
+                
+                const wouldOverflowRight = mouseX + tooltipWidth + 20 > windowWidth;
+                
                 tooltip
                     .style('top', (event.pageY - 10) + 'px')
-                    .style('left', (event.pageX + 10) + 'px');
+                    .style('left', wouldOverflowRight 
+                        ? (mouseX - tooltipWidth - 10) + 'px'
+                        : (mouseX + 10) + 'px');
             })
             .on('mouseout', (event, d) => {
                 // Hide tooltip
@@ -289,9 +298,18 @@ const BarChart = ({ data, selectedCity }) => {
                     .attr('fill', 'yellow');
             })
             .on('mousemove', (event) => {
+                const tooltipNode = tooltip.node();
+                const tooltipWidth = tooltipNode.offsetWidth;
+                const windowWidth = window.innerWidth;
+                const mouseX = event.pageX;
+                
+                const wouldOverflowRight = mouseX + tooltipWidth + 20 > windowWidth;
+                
                 tooltip
                     .style('top', (event.pageY - 10) + 'px')
-                    .style('left', (event.pageX + 10) + 'px');
+                    .style('left', wouldOverflowRight 
+                        ? (mouseX - tooltipWidth - 10) + 'px'
+                        : (mouseX + 10) + 'px');
             })
             .on('mouseout', (event, d) => {
                 tooltip.style('visibility', 'hidden');
