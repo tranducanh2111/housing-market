@@ -17,7 +17,7 @@ const Navbar = ({ openSidebar }) => {
                             </div>
                         </Link>
                     </div>
-                    <div className="hidden md:flex flex-1 max-w-[27.5rem] px-[1.875rem]">
+                    <div className="hidden md:flex flex-1 max-w-[27.5rem] px-[1.875rem] md:px-0">
                         <Search />
                     </div>
                     <div className="flex md:hidden justify-center items-center">
