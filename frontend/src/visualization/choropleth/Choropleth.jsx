@@ -90,11 +90,11 @@ const Choropleth = ({ data, selectedState }) => {
             states.each(function(d, i) {
                 d3.select(this)
                     .transition()
-                    .delay(i * 20) // Stagger the animations
-                    .duration(1000)
+                    .delay(i * 30) // Stagger the animations
+                    .duration(1500)
                     .style('transform', 'translateX(0px)')
                     .style('opacity', 1)
-                    .ease(d3.easeBackOut.overshoot(1.2)); // Add a slight bounce effect
+                    .ease(d3.easeBackOut.overshoot(1.1)); // Add a slight bounce effect
             });
 
             // Outline the selected state in red on initial load
@@ -126,8 +126,18 @@ const Choropleth = ({ data, selectedState }) => {
             });
 
             states.on('mousemove', (event) => {
-                tooltip.style('top', event.pageY - 20 + 'px')
-                    .style('left', event.pageX + 20 + 'px');
+                const tooltipNode = tooltip.node();
+                const tooltipWidth = tooltipNode.offsetWidth;
+                const windowWidth = window.innerWidth;
+                const mouseX = event.pageX;
+                
+                const wouldOverflowRight = mouseX + tooltipWidth + 20 > windowWidth;
+                
+                tooltip
+                    .style('top', (event.pageY - 20) + 'px')
+                    .style('left', wouldOverflowRight
+                        ? (mouseX - tooltipWidth - 10) + 'px'
+                        : (mouseX + 20) + 'px');
             });
 
             states.on('mouseout', (event, d) => {

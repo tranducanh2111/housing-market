@@ -10,8 +10,8 @@ const PredictionResult = ({ result }) => {
 
     try {
         return (
-            <div className="mt-4 p-4 h-fit w-full border border-gray-300 rounded bg-gray-100">
-                <h3 className="text-lg font-bold">Prediction Result</h3>
+            <div className="p-4 h-fit w-full rounded shadow-md">
+                <h3 className="text-h3-sm sm:text-h3 font-bold mb-4">Prediction Result</h3>
                 <ul>
                     <li><p className='text-body-sm sm:text-body'><strong>State:</strong> {propertyDetails.state}</p></li>
                     <li><p className='text-body-sm sm:text-body'><strong>City:</strong> {propertyDetails.city}</p></li>
@@ -19,6 +19,7 @@ const PredictionResult = ({ result }) => {
                     <li><p className='text-body-sm sm:text-body'><strong>Baths:</strong> {propertyDetails.baths}</p></li>
                     <li><p className='text-body-sm sm:text-body'><strong>Living Area:</strong> {propertyDetails['living-area'].toFixed(2)} m²</p></li>
                     <li><p className='text-body-sm sm:text-body'><strong>Land Area:</strong> {propertyDetails['land-area'].toFixed(2)} m²</p></li>
+                    <hr className='my-2 border-black'/>
                     <li><p className='text-body-sm sm:text-body'><strong>Predicted Price:</strong> ${predictionPrice?.toFixed(2) || 'N/A'}</p></li>
                     {/* Debug information */}
                     {/* <li className="mt-4 pt-4 border-t border-gray-300">
