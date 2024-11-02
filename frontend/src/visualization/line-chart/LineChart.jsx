@@ -29,27 +29,14 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         return new Intl.NumberFormat('en-US').format(price);
     };
 
-    const calculateDomainValues = (data, areaType) => {
-        const minPrice = d3.min(data, d => d['price']);
-        const maxPrice = d3.max(data, d => d['price']);
-        const minArea = d3.min(data, d => d[areaType]);
-        const maxArea = d3.max(data, d => d[areaType]);
-        
-        // Add 5% padding to both ends of the price and area ranges
-        const pricePadding = (maxPrice - minPrice) * 0.05;
-        const areaPadding = (maxArea - minArea) * 0.05;
-        
-        return [
-            minPrice - pricePadding,  // min price with padding
-            maxPrice + pricePadding,  // max price with padding
-            minArea - areaPadding,    // min area with padding
-            maxArea + areaPadding     // max area with padding
-        ];
-    };
-
     const drawLineChart = useCallback((livingAreaPrice, landAreaPrice) => {
         const containerWidth = dimensions.width;
         const containerHeight = dimensions.height;
+
+        const marginTop = 20;
+        const marginRight = 50;
+        const marginBottom = 30;
+        const marginLeft = 65;
 
         // Clear any existing SVG
         d3.select(chartRef.current).selectAll('*').remove();
@@ -59,199 +46,208 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .append('svg')
             .attr('width', '100%')
             .attr('height', '100%')
-            .attr('viewBox', `-15 15 ${containerWidth} ${containerHeight}`)
+            .attr('viewBox', `0 0 ${containerWidth} ${containerHeight}`)
             .attr('preserveAspectRatio', 'xMidYMid meet');
 
-        // Initialize x and y axes scalers
-        const x = d3.scaleLinear().range([65, containerWidth - 50]);
-        const y = d3.scaleLinear().range([containerHeight - 30, 20]);
+        // get the min and max price from both datasets
+        const minPrice = Math.min(d3.min(livingAreaPrice, d => d['price']), d3.min(landAreaPrice, d => d['price']));
+        const maxPrice = Math.max(d3.max(livingAreaPrice, d => d['price']), d3.max(landAreaPrice, d => d['price']));
+        const xAxisDomainPadding = 10;
+        const yAxisDomainPadding = 10;
 
-        // Initialize x-axis
+        // initialize x-axis scaler
+        const xAxisScaler = d3.scaleLinear()
+            .range([marginLeft, containerWidth - marginRight]);
+
+        // initialize x-axis
         svg.append('g')
             .attr('class', 'line-chart-axis')
             .attr('id', 'line-chart-x-axis')
-            .attr('transform', `translate(0,${containerHeight - 30})`);
+            .attr('transform', `translate(0,${containerHeight - marginBottom})`);
 
-        // Initialize y-axis
+        // initialize y-axis scaler
+        const [yLowerBound, yUpperBound] = calculateAxisDomain(minPrice, maxPrice, yAxisDomainPadding);
+        const yAxisScaler = d3.scaleLinear()
+            .domain([yLowerBound, yUpperBound])
+            .range([containerHeight - marginBottom, marginTop]);
+
+        // create custom tick values for always keeping the tick positions consistent
+        const yTickValues = d3.range(yLowerBound, yUpperBound + 1, (yUpperBound - yLowerBound) / 10);
+
+        // create y-axis generator
+        const yAxisGenerator = d3.axisLeft(yAxisScaler)
+            .tickSize(10)
+            .tickValues(yTickValues);
+
+        // create y-axis
         svg.append('g')
             .attr('class', 'line-chart-axis')
             .attr('id', 'line-chart-y-axis')
-            .attr('transform', `translate(${65}, 0)`);
+            .attr('transform', `translate(${marginLeft}, 0)`)
+            .call(yAxisGenerator)
+            .select('.domain')
+            .remove();
 
-        // Add X-axis label
-        const xLabel = svg.append('text')
-            .attr('class', 'x-label')
-            .attr('text-anchor', 'middle')
-            .attr('x', containerWidth / 2)
-            .attr('y', containerHeight + 10)
-            .style('font-size', '16px')
-            .attr("font-weight", "700")
-            .style('fill', '#0E4459')
-            .text(areaType === 'living_area' ? 'Living Area (m²)' : 'Land Area (m²)');
+        // horizontal grid lines
+        svg.selectAll('line.line-chart-horizontal-gridline')
+            .data(yTickValues)
+            .enter()
+            .append('line')
+            .attr('class', 'line-chart-horizontal-gridline')
+            .attr('x1', marginLeft)
+            .attr('y1', d => yAxisScaler(d))
+            .attr('x2', containerWidth - marginRight)
+            .attr('y2', d => yAxisScaler(d))
+            .attr('stroke', 'black')
+            .attr('stroke-width', 0.5);
 
-        // Add Y-axis label
-        svg.append('text')
-            .attr('class', 'y-label')
-            .attr('text-anchor', 'middle')
-            .attr('transform', `rotate(-90) translate(${-containerHeight / 2}, 0)`)
-            .style('font-size', '16px')
-            .attr("font-weight", "700")
-            .style('fill', '#0E4459')
-            .text('Price (USD)');
+        // Add X-axis label using foreignObject
+        // svg.append('foreignObject')
+        //     .attr('x', containerWidth / 2 - 100)
+        //     .attr('y', containerHeight +10)
+        //     .attr('width', 200)
+        //     .attr('height', 30)
+        //     .append('xhtml:div')
+        //     .style('text-align', 'center')
+        //     .style('font-size', '1rem')
+        //     .text('Living/Land Area (m²)');
+
+        // Add Y-axis label using foreignObject
+        // svg.append('foreignObject')
+        //     .attr('x', -containerHeight / 2 - 10)
+        //     .attr('y', 0)
+        //     .attr('width', containerHeight)
+        //     .attr('height', 30)
+        //     .append('xhtml:div')
+        //     .style('text-align', 'center')
+        //     .style('font-size', '1rem')
+        //     .style('transform', 'rotate(-90deg)')
+        //     .style('transform-origin', 'center')
+        //     .text('Price (USD)');
+
+        // Remove any existing tooltips first
+        d3.select(containerRef.current).selectAll('#tooltip').remove();
 
         // Create new tooltip
         const tooltip = d3.select(containerRef.current)
             .append('div')
             .attr('id', 'tooltip')
-            .attr('class', 'line-chart-tooltip')
             .style('visibility', 'hidden');
 
         // Create graph
         update(areaType, 0);
+        update(areaType, 0); // this has to be called twice for the tooltip to work ¯\_(ツ)_/¯
 
-        function update(areaType, t) {
+        function update(areaType, t)
+        {
             const data = areaType === 'living_area' ? livingAreaPrice : landAreaPrice;
-            const [minPrice, maxPrice, minArea, maxArea] = calculateDomainValues(data, areaType);
 
-            x.domain([minArea, maxArea]);
-            y.domain([minPrice, maxPrice]);
+            // calculate min and max area
+            const minArea = d3.min(data, d => d[areaType]);
+            const maxArea = d3.max(data, d => d[areaType]);
 
-            // Update X-axis label based on area type
-            xLabel.text(areaType === 'living_area' ? 'Living Area (m²)' : 'Land Area (m²)');
+            // setup x-axis domain
+            const [xLowerBound, xUpperBound] = calculateAxisDomain(minArea, maxArea, xAxisDomainPadding);
+            xAxisScaler.domain([xLowerBound, xUpperBound]);
 
-            // Adjust tick values to account for the padding
-            const xTickValues = d3.range(
-                Math.ceil(minArea), 
-                Math.floor(maxArea), 
-                (maxArea - minArea) / 10
-            );
-            const yTickValues = d3.range(
-                Math.ceil(minPrice), 
-                Math.floor(maxPrice), 
-                (maxPrice - minPrice) / 10
-            );
+            // create custom tick values for always keeping the tick positions consistent
+            const xTickValues = d3.range(xLowerBound, xUpperBound + 1, (xUpperBound - xLowerBound) / 10)
 
-            const xAxis = d3.axisBottom(x).tickSize(10).tickValues(xTickValues);
-            const yAxis = d3.axisLeft(y).tickSize(10).tickValues(yTickValues);
+            // create x-axis generator
+            const xAxisGenerator = d3.axisBottom(xAxisScaler)
+                .tickSize(10)
+                .tickValues(xTickValues);
 
+            // update x-axis
             svg.select('#line-chart-x-axis')
                 .transition()
                 .duration(t)
-                .call(xAxis);
-
-            svg.select('#line-chart-y-axis')
-                .transition()
-                .duration(t)
-                .call(yAxis);
-
-            svg.select('#line-chart-x-axis .domain').remove();
-            svg.select('#line-chart-y-axis .domain').remove();
-
-            // Horizontal grid lines
-            svg.selectAll('line.line-chart-horizontal-gridline')
-                .data(yTickValues)
-                .join('line')
-                .attr('class', 'line-chart-horizontal-gridline')
-                .attr('x1', 65)
-                .attr('y1', d => y(d))
-                .attr('x2', containerWidth - 50)
-                .attr('y2', d => y(d))
-                .attr('stroke', 'black')
-                .attr('stroke-width', 0.5);
+                .call(xAxisGenerator);
+            svg.select('#line-chart-x-axis .domain')
+                .remove();
 
             // Vertical grid lines
             svg.selectAll('line.line-chart-vertical-gridline')
                 .data(xTickValues)
                 .join('line')
                 .attr('class', 'line-chart-vertical-gridline')
-                .attr('x1', d => x(d))
+                .attr('x1', d => xAxisScaler(d))
                 .attr('y1', containerHeight - 30)
-                .attr('x2', d => x(d))
+                .attr('x2', d => xAxisScaler(d))
                 .attr('y2', 20)
                 .attr('stroke', 'black')
                 .attr('stroke-width', 0.5);
 
             // Create the line generator
             const lineGenerator = d3.line()
-                .x(d => x(d[areaType]))
-                .y(d => y(d['price']));
+                .x(d => xAxisScaler(d[areaType]))
+                .y(d => yAxisScaler(d['price']));
 
-            // Update the line with animation
-            svg.selectAll('.chart-line')
-                .data([data])
-                .join('path')
+            // Update the line
+            const line = svg.selectAll('.chart-line').data([data]);
+            line.enter()
+                .append('path')
                 .attr('class', 'chart-line')
-                .attr('fill', 'none')
-                .attr('stroke', '#0E4459')
-                .attr('stroke-width', 2.5)
-                .attr('d', lineGenerator)
-                .attr('stroke-dasharray', function() {
-                    return this.getTotalLength();
-                })
-                .attr('stroke-dashoffset', function() {
-                    return this.getTotalLength();
-                })
+                .merge(line)
                 .transition()
-                .duration(1000)
-                .ease(d3.easeLinear)
-                .attr('stroke-dashoffset', 0);
+                .duration(t)
+                .attr('d', lineGenerator)
+                .attr('fill', 'none')
+                .attr('stroke', 'steelblue')
+                .attr('stroke-width', 2.5)
 
-            // Add the dots
-            const dots = svg.selectAll('.line-chart-dot')
-                .data(data)
-                .join('circle')
+            // Update dots
+            const dots = svg.selectAll('.line-chart-dot').data(data);
+            dots.enter()
+                .append('circle')
                 .attr('class', 'line-chart-dot')
                 .attr('fill', 'steelblue')
-                .attr('r', 0)  // Start with radius 0
-                .attr('cx', d => x(d[areaType]))
-                .attr('cy', d => y(d['price']))
+                .attr('r', 4)
+                .merge(dots)
                 .transition()
-                .delay((d, i) => i * 100)  // Stagger the appearance
-                .duration(300)
-                .attr('r', 4);  // Grow to final radius
+                .duration(t)
+                .attr('cx', d => xAxisScaler(d[areaType]))
+                .attr('cy', d => yAxisScaler(d['price']));
 
             // Update hover dots for tooltip
-            const hoverDots = svg.selectAll('.line-chart-hover-dot')
-                .data(data)
-                .join('circle')
+            const hoverDots = svg.selectAll('.line-chart-hover-dot').data(data);
+            hoverDots.enter()
+                .append('circle')
                 .attr('class', 'line-chart-hover-dot')
                 .attr('r', 10)
-                .attr('fill', '#0E4459')
+                .attr('fill', 'steelblue')
                 .style('opacity', 0)
-                .attr('cx', d => x(d[areaType]))
-                .attr('cy', d => y(d['price']));
+                .merge(hoverDots)
+                .transition()
+                .duration(t)
+                .attr('cx', d => xAxisScaler(d[areaType]))
+                .attr('cy', d => yAxisScaler(d['price']));
 
-            // Update hover functionality
+            // update hover functionality
             hoverDots.on('mouseover', (event, d) => {
+                d3.select(event.target).style('opacity', 1);
+
+                const areaStr = areaType === 'living_area' ? 'Living area' : 'Land area';
                 tooltip.style('visibility', 'visible')
-                    .text(`${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d[areaType].toFixed(2)} m²\nPrice: ${formatPrice(d['price'].toFixed(2))} USD`);
+                    .text(`${areaStr}: ${d[areaType]} m²\nPrice: ${formatPrice(d['price'])} USD`);
             });
 
             hoverDots.on('mousemove', (event) => {
-                const tooltipNode = tooltip.node();
-                const tooltipWidth = tooltipNode.offsetWidth;
-                const windowWidth = window.innerWidth;
-                const mouseX = event.pageX;
-                
-                // Check if tooltip would overflow on the right
-                const wouldOverflowRight = mouseX + tooltipWidth + 10 > windowWidth;
-                
-                tooltip
-                    .style('top', (event.pageY - 180) + 'px')
-                    .style('left', wouldOverflowRight 
-                        ? (mouseX - tooltipWidth - 15) + 'px' 
-                        : (mouseX - 50 + 5) + 'px');
+                tooltip.style('top', event.pageY - 20 + 'px')
+                    .style('left', event.pageX + 20 + 'px');
             });
 
             hoverDots.on('mouseout', (event) => {
+                d3.select(event.target).style('opacity', 0);
                 tooltip.style('visibility', 'hidden');
             });
 
             // Add prediction point if available
-            if (predictionResult) {
+            if (predictionResult)
+            {
                 const predictionPoint = {
                     price: predictionResult.prediction,
-                    area: areaType === 'living_area' 
+                    area: areaType === 'living_area'
                         ? predictionResult['property-details']['living-area']
                         : predictionResult['property-details']['land-area']
                 };
@@ -266,8 +262,8 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     .transition()
                     .duration(t)
                     .attr('opacity', 1)
-                    .attr('cx', d => x(d.area))
-                    .attr('cy', d => y(d.price));
+                    .attr('cx', d => xAxisScaler(d.area))
+                    .attr('cy', d => yAxisScaler(d.price));
 
                 // Add hover functionality for prediction dot
                 svg.selectAll('.prediction-hover-dot')
@@ -277,16 +273,16 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     .attr('r', 20)
                     .attr('fill', 'yellow')
                     .style('opacity', 0)
-                    .attr('cx', d => x(d.area))
-                    .attr('cy', d => y(d.price))
+                    .attr('cx', d => xAxisScaler(d.area))
+                    .attr('cy', d => yAxisScaler(d.price))
                     .on('mouseover', (event, d) => {
                         d3.select(event.target).style('opacity', 0.3);
                         tooltip.style('visibility', 'visible')
                             .text(`Predicted Property\n${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d.area.toFixed(2)} m²\nPrice: ${d3.format(",.2f")(d.price)} USD`);
                     })
                     .on('mousemove', (event) => {
-                        tooltip.style('top', event.pageY - 170 + 'px')
-                            .style('left', event.pageX - 40 + 'px');
+                        tooltip.style('top', event.pageY - 20 + 'px')
+                            .style('left', event.pageX + 20 + 'px');
                     })
                     .on('mouseout', (event) => {
                         d3.select(event.target).style('opacity', 0);
@@ -296,6 +292,15 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         }
     }, [dimensions, areaType, predictionResult]);
 
+    function calculateAxisDomain(lowerBound, upperBound, paddingPercent)
+    {
+        const padding = (upperBound - lowerBound) / paddingPercent;
+        const lb = lowerBound - padding;
+        const ub = upperBound + padding;
+
+        return [lb, ub];
+    }
+
     useEffect(() => {
         if (livingAreaData && landAreaData) {
             drawLineChart(livingAreaData, landAreaData);
@@ -303,8 +308,11 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         
         // Cleanup function
         return () => {
-            // Remove only line chart tooltips when component unmounts
-            d3.select(containerRef.current).selectAll('.line-chart-tooltip').remove();
+            // Remove all tooltips when component unmounts
+            d3.select(containerRef.current).selectAll('#tooltip').remove();
+            d3.selectAll('.bar-chart-tooltip').remove();
+            // Also remove any orphaned tooltips from the body
+            d3.select('body').selectAll('#tooltip').remove();
         };
     }, [drawLineChart, livingAreaData, landAreaData]);
 
