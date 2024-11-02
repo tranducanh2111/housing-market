@@ -57,6 +57,19 @@ const BarChart = ({ data, selectedCity }) => {
     }, []);
 
     /**
+     * Helper function to check if an element is in the viewport
+     */
+    const isElementInViewport = (el) => {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    };
+
+    /**
      * Handles scrolling to selected city after transitions
      */
     useEffect(() => {
@@ -65,7 +78,9 @@ const BarChart = ({ data, selectedCity }) => {
                 const selectedBar = Array.from(document.querySelectorAll('.bar')).find(bar => 
                     bar.getAttribute('data-city').toLowerCase() === selectedCity.toLowerCase()
                 );
-                if (selectedBar) {
+                
+                // Only scroll if both the bar and container are found and container is in viewport
+                if (selectedBar && scrollContainerRef.current && isElementInViewport(scrollContainerRef.current)) {
                     selectedBar.scrollIntoView({
                         behavior: 'smooth',
                         block: 'center',
