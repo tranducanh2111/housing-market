@@ -62,7 +62,9 @@ const Choropleth = ({ data, selectedState }) => {
 
             const minHousePrice = d3.min(statePrices, d => d.price);
             const maxHousePrice = d3.max(statePrices, d => d.price);
-            const colorScale = d3.scaleSequential([minHousePrice, maxHousePrice], d3.interpolateBlues);
+            const colorScale = d3.scaleSequential()
+                .domain([minHousePrice, maxHousePrice])
+                .interpolator(d3.interpolate('#E8EEF1', '#0E4459'));
 
             const zoom = d3.zoom()
                 .scaleExtent([1, 6])

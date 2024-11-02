@@ -30,7 +30,7 @@ const PersonalizeInsightContent = () => {
     const selectedCity = result.result['property-details'].city;
 
     return (
-        <section className="mx-auto max-w-[78rem] flex flex-col gap-8 px-5">
+        <section className="mx-auto max-w-[78rem] flex flex-col gap-8 px-5 mb-10">
             <section className="grid grid-cols-1 md:grid-cols-[270px_1fr] gap-8">
                 <PredictionResult result={result} />
                 <div className="bg-white rounded-lg shadow p-4 h-[500px]">

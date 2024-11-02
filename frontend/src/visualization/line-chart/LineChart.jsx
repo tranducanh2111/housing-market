@@ -181,7 +181,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .join('path')
                 .attr('class', 'chart-line')
                 .attr('fill', 'none')
-                .attr('stroke', 'steelblue')
+                .attr('stroke', '#0E4459')
                 .attr('stroke-width', 2.5)
                 .attr('d', lineGenerator)
                 .attr('stroke-dasharray', function() {
@@ -200,7 +200,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .data(data)
                 .join('circle')
                 .attr('class', 'line-chart-dot')
-                .attr('fill', 'steelblue')
+                .attr('fill', '#0E4459')
                 .attr('r', 0)  // Start with radius 0
                 .attr('cx', d => x(d[areaType]))
                 .attr('cy', d => y(d['price']))
@@ -215,7 +215,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .join('circle')
                 .attr('class', 'line-chart-hover-dot')
                 .attr('r', 10)
-                .attr('fill', 'steelblue')
+                .attr('fill', '#0E4459')
                 .style('opacity', 0)
                 .attr('cx', d => x(d[areaType]))
                 .attr('cy', d => y(d['price']));
@@ -224,7 +224,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             hoverDots.on('mouseover', (event, d) => {
                 d3.select(event.target)
                     .style('opacity', 1)
-                    .style('fill', 'steelblue');
+                    .style('fill', '#0E4459');
                 
                 tooltip.style('visibility', 'visible')
                     .text(`${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d[areaType].toFixed(2)} m²\nPrice: ${formatPrice(d['price'].toFixed(2))} USD`);
@@ -249,7 +249,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             hoverDots.on('mouseout', (event) => {
                 d3.select(event.target)
                     .style('opacity', 0)
-                    .style('fill', 'steelblue');
+                    .style('fill', '#0E4459');
                 
                 tooltip.style('visibility', 'hidden');
             });
