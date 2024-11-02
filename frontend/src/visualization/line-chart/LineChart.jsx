@@ -102,8 +102,11 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .style('transform-origin', 'center')
             .text('Price (USD)');
 
-        // Tooltip
-        const tooltip = d3.select('body')
+        // Remove any existing tooltips first
+        d3.select(containerRef.current).selectAll('#tooltip').remove();
+
+        // Create new tooltip
+        const tooltip = d3.select(containerRef.current)
             .append('div')
             .attr('id', 'tooltip')
             .style('visibility', 'hidden');
@@ -194,6 +197,21 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .duration(1000)
                 .ease(d3.easeLinear)
                 .attr('stroke-dashoffset', 0);
+
+
+            // Add the dots
+            const dots = svg.selectAll('.line-chart-dot')
+                .data(data)
+                .join('circle')
+                .attr('class', 'line-chart-dot')
+                .attr('fill', 'steelblue')
+                .attr('r', 0)  // Start with radius 0
+                .attr('cx', d => x(d[areaType]))
+                .attr('cy', d => y(d['price']))
+                .transition()
+                .delay((d, i) => i * 100)  // Stagger the appearance
+                .duration(300)
+                .attr('r', 4);  // Grow to final radius
 
             // Update hover dots for tooltip
             const hoverDots = svg.selectAll('.line-chart-hover-dot')
@@ -293,6 +311,15 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         if (livingAreaData && landAreaData) {
             drawLineChart(livingAreaData, landAreaData);
         }
+        
+        // Cleanup function
+        return () => {
+            // Remove all tooltips when component unmounts
+            d3.select(containerRef.current).selectAll('#tooltip').remove();
+            d3.selectAll('.bar-chart-tooltip').remove();
+            // Also remove any orphaned tooltips from the body
+            d3.select('body').selectAll('#tooltip').remove();
+        };
     }, [drawLineChart, livingAreaData, landAreaData]);
 
     const handleAreaChange = (event) => {
@@ -309,6 +336,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                         value="living_area"
                         checked={areaType === 'living_area'}
                         onChange={handleAreaChange}
+                        className='mr-2'
                     />
                     Living Area
                 </label>
@@ -320,6 +348,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                         value="land_area"
                         checked={areaType === 'land_area'}
                         onChange={handleAreaChange}
+                        className='mr-2'
                     />
                     Land Area
                 </label>

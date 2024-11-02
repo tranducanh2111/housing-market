@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropertyForm from 'page-sections/PersonalizeInsight/PropertyForm';
-import ErrorBoundary from 'components/ErrorBoundary';
+import ErrorBoundary from 'components/ultility/ErrorBoundary';
 import withErrorBoundary from 'hoc/withErrorBoundary';
 
 const ResultDashboardContent = () => {

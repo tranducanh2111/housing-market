@@ -1,20 +1,44 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 
+/**
+ * BarChart Component
+ * A responsive and interactive bar chart component built with D3.js and React
+ * Features include:
+ * - Responsive design with ResizeObserver
+ * - Interactive tooltips
+ * - Sorting capabilities (Alphabetical, Ascending, Descending)
+ * - Highlighting selected city
+ * - Smooth transitions
+ * - Fixed y-axis with scrollable content
+ * 
+ * @param {Object[]} data - Array of objects containing city and price data
+ * @param {string} selectedCity - Currently selected city to highlight
+ */
 const BarChart = ({ data, selectedCity }) => {
-    const yAxisRef = useRef(null);
-    const chartRef = useRef(null);
-    const containerRef = useRef(null);
-    const scrollContainerRef = useRef(null);
+    // Refs for DOM elements
+    const yAxisRef = useRef(null);          // Reference for fixed y-axis container
+    const chartRef = useRef(null);          // Reference for main chart container
+    const containerRef = useRef(null);       // Reference for outer container
+    const scrollContainerRef = useRef(null); // Reference for scrollable area
+    
+    // State management
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [sortOrder, setSortOrder] = useState('Alphabetical');
 
-    const TRANSITION_DURATION = 750;
+    // Constants
+    const TRANSITION_DURATION = 750; // Duration for animations in milliseconds
 
+    /**
+     * Formats price numbers with thousands separators
+     */
     const formatPrice = (price) => {
         return new Intl.NumberFormat('en-US').format(price);
     };
 
+    /**
+     * Sets up ResizeObserver to handle responsive behavior
+     */
     useEffect(() => {
         if (!containerRef.current) return;
 
@@ -32,6 +56,9 @@ const BarChart = ({ data, selectedCity }) => {
         };
     }, []);
 
+    /**
+     * Handles scrolling to selected city after transitions
+     */
     useEffect(() => {
         if (selectedCity && scrollContainerRef.current) {
             setTimeout(() => {
@@ -49,9 +76,18 @@ const BarChart = ({ data, selectedCity }) => {
         }
     }, [selectedCity, sortOrder, data]);
 
+    /**
+     * Main chart drawing function
+     * Handles creation and updates of all D3 elements including:
+     * - Scales and axes
+     * - Grid lines
+     * - Bars and transitions
+     * - Tooltips and interactions
+     */
     const drawBarChart = useCallback((data) => {
         if (!data || !dimensions.height) return;
         
+        // Chart dimensions and layout parameters
         const marginTop = 20;
         const marginRight = 20;
         const marginBottom = 80;
@@ -64,6 +100,7 @@ const BarChart = ({ data, selectedCity }) => {
         const containerHeight = dimensions.height;
         const totalWidth = marginLeft + (data.length * barStep) + marginRight;
 
+        // Sorting functions map
         const orderMap = new Map([
             ['Alphabetical', (a, b) => d3.ascending(a.city, b.city)],
             ['Ascending', (a, b) => d3.ascending(a.price, b.price)],
@@ -72,12 +109,11 @@ const BarChart = ({ data, selectedCity }) => {
 
         const sortedData = [...data].sort(orderMap.get(sortOrder));
 
-        // Calculate max and min values for y-axis
+        // Scale setup
         const maxPrice = d3.max(sortedData, d => d.price) || 0;
         const minPrice = d3.min(sortedData, d => d.price) || 0;
-        const yDomain = [minPrice, maxPrice * 1.2];
+        const yDomain = [minPrice * 1.2, maxPrice * 1.2]; // Add 20% padding to top of scale
 
-        // Create scales
         const x = d3.scaleBand()
             .domain(sortedData.map(d => d.city))
             .range([0, totalWidth - marginLeft - marginRight])
@@ -87,7 +123,7 @@ const BarChart = ({ data, selectedCity }) => {
             .domain(yDomain)
             .range([containerHeight - marginBottom, marginTop]);
 
-        // Handle Y-Axis (Fixed)
+        // Y-Axis setup and styling
         let yAxisSvg = d3.select(yAxisRef.current).select('svg');
         
         if (yAxisSvg.empty()) {
@@ -101,7 +137,7 @@ const BarChart = ({ data, selectedCity }) => {
             yAxisSvg.append('g').attr('class', 'grid');
         }
 
-        // Update y-axis
+        // Update y-axis with transitions
         const yAxis = yAxisSvg.select('.y-axis')
             .attr('transform', `translate(${marginLeft}, 0)`)
             .transition()
@@ -111,11 +147,11 @@ const BarChart = ({ data, selectedCity }) => {
                 .ticks(5)
             );
 
-        // Style y-axis and draw domain line
+        // Style axis elements
         yAxis.select('.domain')
             .style('stroke', '#333')
-            .style('stroke-width', '2px') // Make domain line more visible
-            .attr('d', `M0,${marginTop}V${containerHeight - marginBottom}`); // Draw vertical line from top to bottom
+            .style('stroke-width', '2px')
+            .attr('d', `M0,${marginTop}V${containerHeight - marginBottom}`);
 
         yAxis.selectAll('text')
             .style('font-size', '12px')
@@ -124,7 +160,7 @@ const BarChart = ({ data, selectedCity }) => {
         yAxis.selectAll('line')
             .style('stroke', '#333');
 
-        // Update grid lines in fixed y-axis container
+        // Grid lines setup
         const yGrid = yAxisSvg.select('.grid')
             .attr('transform', `translate(${marginLeft}, 0)`)
             .call(d3.axisLeft(y)
@@ -138,7 +174,7 @@ const BarChart = ({ data, selectedCity }) => {
             .style('stroke-dasharray', '2,2');
         yGrid.select('.domain').remove();
 
-        // Handle Scrollable Content (X-axis and Bars)
+        // Main chart SVG setup
         let mainSvg = d3.select(chartRef.current).select('svg');
         
         if (mainSvg.empty()) {
@@ -157,7 +193,7 @@ const BarChart = ({ data, selectedCity }) => {
                 .attr('height', containerHeight);
         }
 
-        // Update horizontal grid lines in main chart
+        // Horizontal grid setup
         const horizontalGrid = mainSvg.select('.horizontal-grid')
             .attr('transform', `translate(0, 0)`)
             .call(d3.axisLeft(y)
@@ -171,7 +207,7 @@ const BarChart = ({ data, selectedCity }) => {
             .style('stroke-dasharray', '2,2');
         horizontalGrid.select('.domain').remove();
 
-        // Update x-axis
+        // X-axis setup and styling
         const xAxis = mainSvg.select('.x-axis')
             .attr('transform', `translate(0,${containerHeight - marginBottom})`);
 
@@ -179,7 +215,7 @@ const BarChart = ({ data, selectedCity }) => {
             .duration(TRANSITION_DURATION)
             .call(d3.axisBottom(x).tickSizeOuter(0));
 
-        // Style x-axis
+        // Style x-axis elements
         xAxis.select('.domain')
             .style('stroke', '#333');
         xAxis.selectAll('text')
@@ -193,10 +229,10 @@ const BarChart = ({ data, selectedCity }) => {
         xAxis.selectAll('line')
             .style('stroke', '#333');
 
-        // Handle tooltip
-        let tooltip = d3.select('body').select('.bar-chart-tooltip');
+        // Tooltip setup
+        let tooltip = d3.select(containerRef.current).select('.bar-chart-tooltip');
         if (tooltip.empty()) {
-            tooltip = d3.select('body')
+            tooltip = d3.select(containerRef.current)
                 .append('div')
                 .attr('class', 'bar-chart-tooltip')
                 .style('position', 'absolute')
@@ -206,17 +242,18 @@ const BarChart = ({ data, selectedCity }) => {
                 .style('padding', '10px')
                 .style('border-radius', '4px')
                 .style('pointer-events', 'none')
-                .style('z-index', '1000');
+                .style('z-index', '1000')
+                .style('font-size', '14px');
         }
 
-        // Update bars (now on top of grid)
+        // Bar color helper
+        const getBarColor = (d) => d.city.toLowerCase() === selectedCity.toLowerCase() ? 'red' : '#0E4459';
+
+        // Bar chart update pattern (enter/update/exit)
         const bars = mainSvg.select('.bars').selectAll('.bar')
             .data(sortedData, d => d.city);
 
-        // Helper function to determine bar color
-        const getBarColor = (d) => d.city.toLowerCase() === selectedCity.toLowerCase() ? 'red' : '#0E4459';
-
-        // Remove old bars
+        // Remove old bars with transition
         bars.exit()
             .transition()
             .duration(TRANSITION_DURATION)
@@ -234,10 +271,10 @@ const BarChart = ({ data, selectedCity }) => {
             .attr('width', x.bandwidth())
             .attr('height', d => containerHeight - marginBottom - y(d.price));
 
-        // Add new bars
+        // Add new bars with hover interactions
         bars.enter()
             .append('rect')
-            .attr('class', 'bar')
+            .attr('class', 'bar cursor-pointer')
             .attr('data-city', d => d.city)
             .attr('fill', getBarColor)
             .attr('x', d => x(d.city))
@@ -245,12 +282,10 @@ const BarChart = ({ data, selectedCity }) => {
             .attr('y', containerHeight - marginBottom)
             .attr('height', 0)
             .on('mouseover', (event, d) => {
-                // Show tooltip
                 tooltip
                     .style('visibility', 'visible')
                     .html(`City: ${d.city}<br/>Price: $${formatPrice(d.price)}`);
                 
-                // Change bar color to yellow on hover
                 d3.select(event.target)
                     .transition()
                     .duration(200)
@@ -271,10 +306,8 @@ const BarChart = ({ data, selectedCity }) => {
                         : (mouseX + 10) + 'px');
             })
             .on('mouseout', (event, d) => {
-                // Hide tooltip
                 tooltip.style('visibility', 'hidden');
                 
-                // Return to original color based on selection state
                 d3.select(event.target)
                     .transition()
                     .duration(200)
@@ -322,15 +355,29 @@ const BarChart = ({ data, selectedCity }) => {
 
     }, [dimensions, sortOrder, selectedCity]);
 
+    /**
+     * Trigger chart redraw when data or dimensions change
+     */
     useEffect(() => {
         if (data && dimensions.height > 0) {
             drawBarChart(data);
         }
     }, [data, drawBarChart, dimensions]);
 
+    /**
+     * Handle sort order changes
+     */
     const handleSortChange = (event) => {
         setSortOrder(event.target.value);
     };
+
+    useEffect(() => {
+        // Cleanup function
+        return () => {
+            // Remove bar chart tooltip when component unmounts
+            d3.selectAll('.bar-chart-tooltip').remove();
+        };
+    }, []);
 
     return (
         <div ref={containerRef} className="bar-chart-container w-full h-full">
@@ -350,24 +397,15 @@ const BarChart = ({ data, selectedCity }) => {
             <div className="flex">
                 <div 
                     ref={yAxisRef}
-                    className="y-axis-container"
-                    style={{
-                        position: 'sticky',
-                        left: 0,
-                        zIndex: 1,
-                        backgroundColor: 'white'
-                    }}
+                    className="y-axis-container sticky left-0 z-10 bg-white"
                 ></div>
                 <div 
                     ref={scrollContainerRef} 
-                    className="overflow-x-auto flex-grow"
-                    style={{
-                        position: 'relative'
-                    }}
+                    className="overflow-x-auto flex-grow relative"
                 >
                     <div 
                         ref={chartRef}
-                        className="chart-container"
+                        className="chart-container min-w-full h-full"
                     ></div>
                 </div>
             </div>

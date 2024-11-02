@@ -6,19 +6,36 @@ import ResourceIcon from 'assets/icons/resource.svg';
 import ArrowHover from 'assets/icons/arrowhover.svg';
 import Arrow from 'assets/icons/arrow.svg';
 
+/**
+ * Menu Component
+ * Renders a navigation menu with expandable sections and hover effects
+ * Features a homepage link and an education center dropdown with sub-items
+ */
 const Menu = () => {
+    // State for controlling the education center submenu expansion
     const [educationCenterSubMenuOpen, setEducationCenterSubMenuOpen] = useState(false);
+    // State for tracking which education center item is being hovered
     const [educationCenterHoveredIndex, setEducationCenterHoveredIndex] = useState(-1);
 
+    /**
+     * Toggles the education center submenu open/closed state
+     */
     const toggleContestSubMenu = () => {
         setEducationCenterSubMenuOpen(!educationCenterSubMenuOpen);
     };
 
+    /**
+     * Configuration for education center submenu items
+     * Each item has a name, hover state, and target page
+     */
     const educationCenterMenu = [
         { name: 'Latest Research', isHovered: false, page: 'latest-research' },
         { name: 'Personal Insight', isHovered: false, page: 'result-dashboard' },
     ];
 
+    /**
+     * Handlers for hover states on education center menu items
+     */
     const handleContestHoverOn = index => {
         setEducationCenterHoveredIndex(index);
     };
@@ -29,7 +46,7 @@ const Menu = () => {
 
     return (
         <div className="w-[14.5rem] mt-2">
-            {/* Homepage */}
+            {/* Homepage navigation button */}
             <button className="mb-4 hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between">
                 <Link to="/">
                     <div className="flex">
@@ -38,7 +55,8 @@ const Menu = () => {
                     </div>
                 </Link>
             </button>
-            {/* Education Center Group */}
+
+            {/* Education Center dropdown trigger button */}
             <button
                 className={`text-${educationCenterSubMenuOpen ? 'primary' : 'black mb-4'} hover:text-primary focus:outline-none flex items-center w-full text-left py-2 justify-between`}
                 onClick={toggleContestSubMenu}
@@ -49,13 +67,15 @@ const Menu = () => {
                 </div>
                 <img src={DropdownIcon} alt="Logo" width={20} height={20} className="" />
             </button>
-            {/* Education Center Categories */}
+
+            {/* Education Center expandable submenu */}
             <div
                 className={`overflow-hidden w-full transition-all duration-300 ${
                     educationCenterSubMenuOpen ? 'h-auto' : 'h-0'
                 }`}
             >
                 <ul className="bg-white shadow-lg rounded">
+                    {/* Map through submenu items */}
                     {educationCenterMenu.map((item, index) => (
                         <li key={index}>
                             <a
@@ -68,6 +88,7 @@ const Menu = () => {
                                 onMouseEnter={() => handleContestHoverOn(index)}
                                 onMouseLeave={handleContestHoverOff}
                             >
+                                {/* Dynamic arrow icon based on hover state */}
                                 <img
                                     src={index === educationCenterHoveredIndex ? ArrowHover : Arrow}
                                     alt="Logo"

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { submitPropertyData, submitAddressData } from '../../api/propertyService';
-import FormInput from '../../components/FormInput';
+import FormInput from '../../components/ultility/FormInput';
 import StateSelect from '../../components/StateSelect';
 
 const PropertyForm = ({ onSubmitSuccess }) => {

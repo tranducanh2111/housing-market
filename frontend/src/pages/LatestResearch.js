@@ -5,7 +5,7 @@ import React from 'react';
 import BannerSection from 'page-sections/Analysis/BannerSection';
 import GallerySection from 'page-sections/Analysis/GallerySection';
 import ArticleSection from 'page-sections/Analysis/ArticleSection';
-import ErrorBoundary from 'components/ErrorBoundary';
+import ErrorBoundary from 'components/ultility/ErrorBoundary';
 import withErrorBoundary from 'hoc/withErrorBoundary';
 
 import Banner1 from 'assets/images/banner-1.jpg';

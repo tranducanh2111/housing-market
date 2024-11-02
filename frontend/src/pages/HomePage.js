@@ -5,7 +5,7 @@ import HeroSection from 'page-sections/Homepage/HeroSection';
 import TestimonialSection from 'page-sections/Homepage/TestimonialSection';
 import SponsorList from 'page-sections/Homepage/SponsorList';
 import ContactSection from 'page-sections/Homepage/ContactFormSection';
-import ErrorBoundary from 'components/ErrorBoundary';
+import ErrorBoundary from 'components/ultility/ErrorBoundary';
 import withErrorBoundary from 'hoc/withErrorBoundary';
 
 const HomePageContent = () => {
