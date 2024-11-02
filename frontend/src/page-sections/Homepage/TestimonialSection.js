@@ -15,7 +15,7 @@ const TestimonialSection = () => {
                             <h2 className="text-white text-h2-sm sm:text-h2">Testimonials</h2>
                             <p className="w-full text-white text-body-sm sm:text-body tracking-[0.02rem]">
                                 Discover how our data-driven insights have helped the community
-                                makes informed decisions on diabetes.
+                                makes informed decisions on real estate.
                             </p>
                         </div>
                     </div>

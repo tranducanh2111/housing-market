@@ -20,10 +20,11 @@ module.exports = {
         roboto: ['var(--font-roboto)'],
       },
       backgroundImage: {
+        'insight-form': "url('assets/images/insight-form.jpg')",
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "contact-section": "linear-gradient(to right bottom, rgb(0, 0, 0, 0.60), rgb(0, 0, 0, 0.60)),url(/contact-section.jpg)",
-        'contact-image': "url('assets/images/contact-section.jpg')",
+        'contact-image': "url('assets/images/contact-form.jpg')",
       },
       fontSize: {
         h1: [
