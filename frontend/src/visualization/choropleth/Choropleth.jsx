@@ -134,10 +134,10 @@ const Choropleth = ({ data, selectedState }) => {
             }
 
             // Create tooltip
-            const tooltip = d3.select('body').select('#tooltip');
-            if (!tooltip.empty()) {
-                tooltip.style('visibility', 'hidden');
-            }
+            const tooltip = d3.select('body')
+                .append('div')
+                .attr('id', 'tooltip')
+                .style('visibility', 'hidden');
 
             // Add hover interactions
             states.on('mouseover', (event, d) => {
@@ -218,12 +218,7 @@ const Choropleth = ({ data, selectedState }) => {
 
         // Cleanup tooltip on unmount
         return () => {
-            // Hide tooltip before removing
-            const tooltip = d3.select('body').select('#tooltip');
-            if (!tooltip.empty()) {
-                tooltip.style('visibility', 'hidden')
-                    .remove();
-            }
+            d3.select('body').selectAll('#tooltip').remove();
         };
     }, [data, dimensions, selectedState]);
 

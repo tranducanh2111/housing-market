@@ -198,7 +198,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .ease(d3.easeLinear)
                 .attr('stroke-dashoffset', 0);
 
-
             // Add the dots
             const dots = svg.selectAll('.line-chart-dot')
                 .data(data)

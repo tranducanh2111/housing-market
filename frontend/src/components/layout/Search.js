@@ -1,48 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import IconSearch from 'assets/icons/magnify.svg';
+import { debounce } from 'lodash';
 
 const Search = () => {
-    const [search, setSearch] = React.useState('');
-    const [isInputFocused, setInputFocused] = React.useState(false);
+    const [search, setSearch] = useState('');
+    const [isInputFocused, setInputFocused] = useState(false);
     const [showSpinningIcon, setShowSpinningIcon] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
 
-    const handleSearchSubmit = e => {
-        if (e.key === 'Enter') {
-            // Call API to search
-        }
-    };
-    useEffect(() => {
-        let typingTimeout = null;
-
-        if (search) {
-            setShowSpinningIcon(true);
-            if (typingTimeout) {
-                clearTimeout(typingTimeout);
+    const debouncedSearch = React.useCallback(
+        debounce(async (searchTerm) => {
+            if (!searchTerm) {
+                setSearchResults([]);
+                return;
             }
-            typingTimeout = setTimeout(() => {
+            
+            try {
+                setShowSpinningIcon(true);
+                const response = await fetch(`/api/search?q=${searchTerm}`);
+                const data = await response.json();
+                setSearchResults(data);
+            } catch (error) {
+                console.error('Search error:', error);
+            } finally {
                 setShowSpinningIcon(false);
-            }, 1000); // Hide spinning icon after 1000 milliseconds of inactivity
-        } else {
-            setShowSpinningIcon(false);
-        }
-
-        return () => {
-            if (typingTimeout) {
-                clearTimeout(typingTimeout);
             }
-        };
-    }, [search]);
+        }, 500),
+        []
+    );
+
+    useEffect(() => {
+        debouncedSearch(search);
+        return () => debouncedSearch.cancel();
+    }, [search, debouncedSearch]);
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value);
+    };
 
     return (
-        <div
-            className={`py-px pl-2 md:pl-4 flex border-2 justify-left items-center flex-1 rounded-md ${
-                isInputFocused ? 'border-primary' : 'border-[#B6B6B6]'
-            }`}
-        >
+        <div className={`py-px pl-2 md:pl-4 flex border-2 justify-left items-center flex-1 rounded-md ${
+            isInputFocused ? 'border-primary' : 'border-[#B6B6B6]'
+        }`}>
             <div className="icon mr-2 md:mr-4">
                 <img
-                    // src={isInputFocused || search ? IconFocus : IconBlur}
-                    src={isInputFocused || search ? IconSearch : IconSearch}
+                    src={IconSearch}
                     alt="Search Icon"
                     width={20}
                     height={20}
@@ -52,15 +54,18 @@ const Search = () => {
                 className="w-full h-[2.125rem] border-0 outline-none"
                 placeholder="What are you looking for?"
                 value={search}
-                onChange={e => setSearch(e.target.value)}
-                onKeyUp={handleSearchSubmit}
+                onChange={handleSearchChange}
                 onFocus={() => setInputFocused(true)}
                 onBlur={() => setInputFocused(false)}
             />
-
             {showSpinningIcon && (
                 <div className="icon mr-4">
                     <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-primary border-solid"></div>
+                </div>
+            )}
+            {searchResults.length > 0 && (
+                <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-b-md mt-1">
+                    {/* Render search results */}
                 </div>
             )}
         </div>
