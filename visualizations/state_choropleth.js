@@ -1,4 +1,4 @@
-Promise.all([d3.json('us-states.json'), d3.json('state-prices.json')])
+Promise.all([d3.json('us.json'), d3.json('state-prices.json')])
     .then(([geoJSON, statePrices]) =>
     {
         drawChoropleth(geoJSON, statePrices);
@@ -13,65 +13,66 @@ Promise.all([d3.json('us-states.json'), d3.json('state-prices.json')])
  * @param {json} geoJson: Object that contains the geometry required for drawing the US states.
  * @param {json} statePrices: Object that contains the model's price prediction for each US state.
  */
-function drawChoropleth(geoJson, statePrices)
+function drawChoropleth(geoJSON, statePrices)
 {
-    // create svg element
-    const svgWidth = 1000;
-    const svgHeight = 600;
-
-    const svg = d3.select('body')
-        .append('svg')
-        .attr('id', 'state-choropleth-svg')
-        .attr('width', svgWidth)
-        .attr('height', svgHeight);
-
     // hash map that maps each state to a price predicted by the model
     const priceMap = new Map(statePrices.map(d => [d['state'], d['price']]));
-    
-    // geoAlbersUsa projection is used for transforming geo json geometry data into 2D screen coordinates
-    const projection = d3.geoAlbersUsa()
-        .scale([1000])
-        .translate([svgWidth / 2, svgHeight / 2]);
-    
-    // line generator that works with geo json data. Is used for generating the state borders.
-    const geoLineGenerator = d3.geoPath()
-        .projection(projection);
 
+    // create color scale based on the min and max state price 
     const minHousePrice = d3.min(statePrices, d => d['price']);
     const maxHousePrice = d3.max(statePrices, d => d['price']);
     const colorScale = d3.scaleSequential([minHousePrice, maxHousePrice], d3.interpolateBlues)
 
+    // create svg element
+    const svgWidth = 975;
+    const svgHeight = 610;
+    const svg = d3.select('body')
+        .append('svg')
+        .attr('width', svgWidth)
+        .attr('height', svgHeight)
+        .attr('viewBox', [0, 0, svgWidth, svgHeight])
+        .attr('style', 'max-width: 100%; height: auto;')
+        .on('click', reset);
+
+    // line generator that works with geo json data. Is used for generating the state borders.
+    const geoLineGenerator = d3.geoPath();
+
+    // draw the states
+    const g = svg.append('g');
+    const states = g.append('g')
+        .selectAll('path')
+        .data(topojson.feature(geoJSON, geoJSON.objects.states).features)
+        .join('path')
+        .attr('class', 'state')
+        .attr('id', getStateName)
+        .attr('fill', getStateColor)
+        .attr('d', geoLineGenerator);
+
+    // draw borders
+    g.append('path')
+        .attr('fill', 'none')
+        .attr('stroke', 'white')
+        .attr('stroke-width', 1.2)
+        .attr('stroke-linejoin', 'round')
+        .attr('d', geoLineGenerator(topojson.mesh(geoJSON, geoJSON.objects.states, (a, b) => a !== b)));
+
     // zooming and panning functionality
     const zoom = d3.zoom()
-        .scaleExtent([1, 6])
-        .on('zoom', zoomed);
-    
+        .scaleExtent([1, 8])
+        .on('zoom', (event) => { g.attr('transform', event.transform); });
     svg.call(zoom);
-
-    // create the map
-    const g = svg.append('g');
-    const states = g.selectAll('path')
-        .data(geoJson['features'])
-        .enter()
-        .append('path')
-        .attr('class', 'state')
-        .attr('d', geoLineGenerator)
-        .attr('id', getStateName)
-        .attr('fill', getStateColor);
-
-    // prevents map reset when user clicks on a state. The user will have to click outside the geometry.
-    states.on('click', (event) => { event.stopPropagation(); });
 
     // tooltip
     const tooltip = d3.select('body')
         .append('div')
         .attr('id', 'tooltip')
-        .style('visibility', 'hidden');
-
+        .style('user-select', 'none')
+        .style('pointer-events', 'none')
+        .style('opacity', 0);
+    
     states.on('mouseover', (event, d) =>
     {
-        d3.select(event.target).raise(); // raise the state so that its outline isn't abstracted by nearby geometry
-
+        tooltip.interrupt();
         const state = getStateName(d);
         let price = getStatePrice(d);
         let tooltipText = `No data for ${state}`;
@@ -82,7 +83,8 @@ function drawChoropleth(geoJson, statePrices)
             tooltipText = `State: ${state}\nPrice: ${formatPrice(price)} USD`;
         }
 
-        tooltip.style('visibility', 'visible')
+        tooltip
+            .style('opacity', 1)
             .text(tooltipText);
     });
 
@@ -92,24 +94,34 @@ function drawChoropleth(geoJson, statePrices)
             .style('left', event.pageX + 20 + 'px');
     });
 
-    states.on('mouseout', (event) =>
+    states.on('mouseout', () =>
     {
-        d3.select(event.target).attr('stroke-width', 0);
-        tooltip.style('visibility', 'hidden');
+        // tooltip fades out on exit
+        tooltip
+            .transition()
+            .duration(400)
+            .style('opacity', 0);
     });
-
-    // resets map view when the user clicks on blank svg area
-    svg.on('click', reset);
-
-    // add color legend
+    
+    // color legend
     svg.append('g')
         .attr('id', 'state-choropleth-legend')
-        .attr('transform', 'translate(610, 20)')
+        .attr('transform', 'translate(620, 0)')
         .append(() => Legend(colorScale, {title: 'Price (USD)', width: 260}));
+
+    // resets map view when the user clicks on the svg
+    function reset()
+    {
+        svg.transition().duration(400).call(
+            zoom.transform,
+            d3.zoomIdentity,
+            d3.zoomTransform(svg.node()).invert([svgWidth / 2, svgHeight / 2])
+        );
+    }
 
     function getStateName(d)
     {
-        return d['properties']['NAME'];
+        return d['properties']['name'];
     }
 
     function getStatePrice(d)
@@ -120,19 +132,5 @@ function drawChoropleth(geoJson, statePrices)
     function getStateColor(d)
     {
         return colorScale(getStatePrice(d));
-    }
-
-    function zoomed(event)
-    {
-        g.attr('transform', event.transform);
-    }
-
-    function reset()
-    {
-        svg.transition().duration(500).call(
-            zoom.transform,
-            d3.zoomIdentity,
-            d3.zoomTransform(svg.node()).invert([svgWidth / 2, svgHeight / 2])
-        );
     }
 }

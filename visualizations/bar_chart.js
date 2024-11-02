@@ -36,7 +36,9 @@ function drawBarChart(data)
         .append('svg')
         .attr('id', 'bar-chart-svg')
         .attr('width', svgWidth)
-        .attr('height', svgHeight);
+        .attr('height', svgHeight)
+        .attr('viewBox', [0, 0, svgWidth, svgHeight])
+        .attr('style', 'max-width: 100%; height: auto;');
 
     // x-axis scaler
     const x = getXaxisScaler();

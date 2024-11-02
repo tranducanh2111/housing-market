@@ -1,0 +1,12 @@
+[
+  {"price": 290000, "land_area": 3000},
+  {"price": 320000, "land_area": 3500},
+  {"price": 410000, "land_area": 4000},
+  {"price": 570000, "land_area": 4500},
+  {"price": 600000, "land_area": 5000},
+  {"price": 640000, "land_area": 5500},
+  {"price": 700000, "land_area": 6000},
+  {"price": 750000, "land_area": 6500},
+  {"price": 880000, "land_area": 7000},
+  {"price": 900000, "land_area": 7500}
+]

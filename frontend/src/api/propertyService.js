@@ -14,29 +14,36 @@ export const submitPropertyData = async (formData) => {
             prev_sold_date: formData.soldStatus === 'sold' ? formData.lastSoldDate : null
         };
 
-        console.log('Transformed Data:', transformedData);
-
         const response = await api.post('/predict', transformedData);
-        const result = response.data.result;
-
-        // Handle the property details
-        const propertyDetails = result['property-details'];
-        displayPropertyDetails(propertyDetails);
-
-        // Handle the choropleth chart data
-        const choroplethData = result['choropleth-chart-data'];
-        updateChoroplethChart(choroplethData);
-
-        // Handle the bar chart data
-        const barChartData = result['bar-chart-data'];
-        updateBarChart(barChartData);
-
-        // Handle the line chart data
-        const lineChartData = result['line-chart-data'];
-        updateLineChart(lineChartData);
-
         return response.data;
     } catch (error) {
+        if (error.response?.data?.detail) {
+            const errorDetail = error.response.data.detail[0];
+            // Use the msg from the error detail
+            throw new Error(errorDetail.msg);
+        }
+        if (error.response && error.response.status === 422) {
+            throw new Error('Provided address is not supported');
+        }
+        // Fallback for other errors
+        throw new Error(error.response?.data?.detail || 'Failed to submit form');
+    }
+};
+
+export const submitAddressData = async (formData) => {
+    try {
+        const { address: street, city, state } = formData;
+        
+        const response = await api.get(`/predict/${street}/${city}/${state}`);
+        return response.data;
+    } catch (error) {
+        if (error.response?.data?.detail) {
+            const errorDetail = error.response.data.detail[0];
+            throw new Error(errorDetail.msg);
+        }
+        if (error.response && error.response.status === 422) {
+            throw new Error('Provided address is not supported');
+        }
         throw new Error(error.response?.data?.detail || 'Failed to submit form');
     }
 };

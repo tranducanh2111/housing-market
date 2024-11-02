@@ -1,0 +1,55 @@
+.line-chart-axis g line {
+    stroke-width: 0.5;
+}
+
+#tooltip {
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    pointer-events: none;
+    white-space: pre-line;
+}
+
+.chart-line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2.5;
+}
+
+.line-chart-dot {
+    fill: steelblue;
+}
+
+.line-chart-hover-dot {
+    fill: steelblue;
+    opacity: 0;
+}
+
+.line-chart-hover-dot:hover {
+    opacity: 1;
+}
+
+/* .axis-label, .tick text {
+    font-size: 1rem;
+}
+
+.line-chart-axis text {
+    font-size: 1rem;
+} */
+
+.prediction-dot {
+    fill: red;
+    stroke: white;
+    stroke-width: 2;
+}
+
+.prediction-hover-dot {
+    fill: red;
+    opacity: 0;
+}
+
+.prediction-hover-dot:hover {
+    opacity: 0.3;
+}
