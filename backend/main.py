@@ -288,10 +288,10 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
 
     # calculates the price of the property depending on the land and living areas.
     # The area will range from 50% to 150% of the inputted area in 10% intervals.
-    percent = 0.5
+    percent = 50
     for i in range(11):
-        data_living_area['living_area'] = living_area * percent
-        data_land_area['land_area'] = land_area * percent
+        data_living_area['living_area'] = living_area * percent / 100
+        data_land_area['land_area'] = land_area * percent / 100
 
         result_living_area.append({
             'living_area': data_living_area['living_area'],
@@ -303,7 +303,7 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
             'price': make_prediction(model, data_land_area)
         })
 
-        percent += 0.1
+        percent += 10
 
     return {
         'living-area-prices': result_living_area,
