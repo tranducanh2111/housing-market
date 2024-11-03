@@ -105,14 +105,14 @@ const BarChart = ({ data, selectedCity }) => {
         // Chart dimensions and layout parameters
         const marginTop = 20;
         const marginRight = 20;
-        const marginBottom = 80;
+        const marginBottom = 60;
         const marginLeft = 80;
 
         const barWidth = 20;
         const barGap = 4;
         const barStep = barWidth + barGap;
 
-        const containerHeight = dimensions.height;
+        const containerHeight = dimensions.height - 40;
         const totalWidth = marginLeft + (data.length * barStep) + marginRight;
 
         // Sorting functions map
@@ -216,16 +216,15 @@ const BarChart = ({ data, selectedCity }) => {
             mainSvg.append('g').attr('class', 'bars');
 
             // Add x-axis label
-            mainSvg.append('text')
-                .attr('class', 'x-axis-label')
-                .attr('text-anchor', 'middle')
-                // .attr('x', (totalWidth - marginLeft) / 2)
-                .attr('x', 20)
-                .attr('y', containerHeight - marginBottom / 3)
-                .style('font-size', '16px')
-                .attr("font-weight", "700")
-                .style('fill', '#0E4459')
-                .text('City');
+            // mainSvg.append('text')
+            //     .attr('class', 'x-axis-label')
+            //     .attr('text-anchor', 'middle')
+            //     .attr('x', 20)
+            //     .attr('y', containerHeight - marginBottom / 3)
+            //     .style('font-size', '16px')
+            //     .attr("font-weight", "700")
+            //     .style('fill', '#0E4459')
+            //     .text('City');
         } else {
             mainSvg
                 .attr('width', totalWidth - marginLeft)
@@ -419,7 +418,8 @@ const BarChart = ({ data, selectedCity }) => {
     }, []);
 
     return (
-        <div ref={containerRef} className="bar-chart-container w-full h-full">
+        <div ref={containerRef} className="bar-chart-container w-full h-full flex flex-col">
+            {/* Sort controls */}
             <form id="plot-form" className="mb-4">
                 <label htmlFor="bar-chart-order" className="mr-2 text-body-sm sm:text-body">Sort by</label>
                 <select 
@@ -433,20 +433,33 @@ const BarChart = ({ data, selectedCity }) => {
                     <option value="Descending">Descending</option>
                 </select>
             </form>
-            <div className="flex">
-                <div 
-                    ref={yAxisRef}
-                    className="y-axis-container sticky left-0 z-10 bg-white"
-                ></div>
-                <div 
-                    ref={scrollContainerRef} 
-                    className="overflow-x-auto flex-grow relative"
-                >
+            
+            {/* Chart wrapper - flex-grow to take remaining space */}
+            <div className="flex-grow flex flex-col min-h-0">
+                {/* Main chart area */}
+                <div className="flex-grow flex min-h-0">
                     <div 
-                        ref={chartRef}
-                        className="chart-container min-w-full h-full"
+                        ref={yAxisRef}
+                        className="y-axis-container sticky left-0 z-10 bg-white"
                     ></div>
+                    <div 
+                        ref={scrollContainerRef} 
+                        className="overflow-x-auto flex-grow relative"
+                    >
+                        <div 
+                            ref={chartRef}
+                            className="chart-container min-w-full h-full"
+                        ></div>
+                    </div>
                 </div>
+                
+                {/* X-axis label - fixed height */}
+                <div className="min-h-[40px] w-[400px] flex items-center justify-center">
+                    <span className="text-body font-bold text-primary block whitespace-nowrap">
+                        City
+                    </span>
+                </div>
+
             </div>
         </div>
     );
