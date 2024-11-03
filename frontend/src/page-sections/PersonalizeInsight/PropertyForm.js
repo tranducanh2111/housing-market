@@ -1,10 +1,11 @@
+// PropertyForm.js
 import React, { useState } from 'react';
 import { submitPropertyData, submitAddressData } from '../../api/propertyService';
 import FormInput from '../../components/ultility/FormInput';
 import StateSelect from '../../components/StateSelect';
 
 const PropertyForm = ({ onSubmitSuccess }) => {
-    const [formType, setFormType] = useState('address'); // 'address' or 'details'
+    const [formType, setFormType] = useState('address');
     const [formData, setFormData] = useState({
         address: '',
         state: '',
@@ -20,6 +21,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessages, setErrorMessages] = useState({});
+    const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,7 +29,23 @@ const PropertyForm = ({ onSubmitSuccess }) => {
             ...prevData,
             [name]: value
         }));
-        setError(null);
+        
+        // Clear error for this field if form has been submitted once
+        if (hasAttemptedSubmit) {
+            setErrorMessages((prev) => ({
+                ...prev,
+                [name]: ''
+            }));
+        }
+    };
+
+    const handleInputFocus = (fieldName) => {
+        if (hasAttemptedSubmit) {
+            setErrorMessages((prev) => ({
+                ...prev,
+                [fieldName]: ''
+            }));
+        }
     };
 
     const validateForm = () => {
@@ -35,38 +53,36 @@ const PropertyForm = ({ onSubmitSuccess }) => {
             ? ['address', 'city', 'state']
             : ['city', 'state', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'];
         
-        const emptyFields = requiredFields.filter(field => !formData[field]);
+        const messages = {};
+        let hasErrors = false;
         
-        if (emptyFields.length > 0) {
-            const messages = {};
-            emptyFields.forEach(field => {
-                messages[field] = `Please enter your ${field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase()}`;
-            });
-            setErrorMessages(messages);
-            throw new Error('Please fill in all required fields');
-        } else {
-            setErrorMessages({});
-        }
+        requiredFields.forEach(field => {
+            if (!formData[field]) {
+                const fieldName = field.charAt(0).toUpperCase() + 
+                    field.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase();
+                messages[field] = `${fieldName} is required`;
+                hasErrors = true;
+            }
+        });
+
+        setErrorMessages(messages);
+        return !hasErrors;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setHasAttemptedSubmit(true);
         setIsSubmitting(true);
         setError(null);
 
+        const isValid = validateForm();
+        if (!isValid) {
+            setIsSubmitting(false);
+            return;
+        }
+
         try {
-            validateForm();
             const submitFunction = formType === 'address' ? submitAddressData : submitPropertyData;
-
-            // Debugging output for the endpoint
-            if (formType === 'address') {
-                const { address: street, city, state } = formData;
-                const endpoint = `/predict/${street}/${city}/${state}`;
-                console.log(`Method: GET, Endpoint: ${endpoint}`);
-            } else {
-                console.log('Method: POST, Endpoint: /predict');
-            }
-
             const predictionResult = await submitFunction(formData);
             onSubmitSuccess(predictionResult);
         } catch (error) {
@@ -85,6 +101,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                         value={formData[field]}
                         onChange={handleChange}
                         error={errorMessages[field]}
+                        onFocus={() => handleInputFocus(field)}
                     />
                 );
             }
@@ -96,8 +113,9 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                         value={formData[field]}
                         onChange={handleChange}
                         label={field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}
-                        required
+                        required={true}
                         error={errorMessages[field]}
+                        onFocus={handleInputFocus}
                     />
                 </div>
             );
@@ -105,7 +123,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8 w-full max-w-lg h-fit">
+        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8 w-full max-w-lg h-fit" noValidate>
             <div className="mb-8">
                 <div className="flex justify-between bg-gray-100 p-1 rounded-lg">
                     <button
@@ -142,11 +160,6 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                     {error}
                 </div>
             )}
-            {Object.keys(errorMessages).map((field) => (
-                <div key={field} className="mb-2 p-2 border border-red-500 bg-red-50 text-red-600 rounded-md">
-                    {errorMessages[field]}
-                </div>
-            ))}
 
             {formType === 'address' 
                 ? renderInputs(['address', 'state', 'city'])
