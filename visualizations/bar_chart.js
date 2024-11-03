@@ -149,7 +149,7 @@ function drawBarChart(data)
     function getXaxisScaler()
     {
         const dataLength = data.length;
-        const maxBars = 37;
+        const maxBars = 25;
 
         const maxDimensions = d3.scaleBand()
             .domain(d3.range(maxBars).map(i => `${i + 1}`))

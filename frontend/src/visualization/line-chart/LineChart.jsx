@@ -31,7 +31,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         const containerHeight = dimensions.height;
 
         const marginTop = 20;
-        const marginRight = 50;
+        const marginRight = 20;
         const marginBottom = 30;
         const marginLeft = 65;
 
@@ -205,7 +205,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
             hoverDots.on('mousemove', (event) => {
                 tooltip.style('top', event.pageY - 20 + 'px')
-                    .style('left', event.pageX + 20 + 'px');
+                    .style('left', event.pageX + 40 + 'px');
             });
 
             hoverDots.on('mouseout', (event) => {
@@ -249,7 +249,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     })
                     .on('mousemove', (event) => {
                         tooltip.style('top', event.pageY - 20 + 'px')
-                            .style('left', event.pageX + 20 + 'px');
+                            .style('left', event.pageX + 40 + 'px');
                     })
                     .on('mouseout', (event) => {
                         d3.select(event.target).style('opacity', 0);
