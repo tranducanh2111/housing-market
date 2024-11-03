@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import {formatPrice} from '../utils.js'
 import * as d3 from 'd3';
 import './LineChart.css';
 
@@ -24,10 +25,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             resizeObserver.disconnect();
         };
     }, []);
-
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-US').format(price);
-    };
 
     const drawLineChart = useCallback((livingAreaPrice, landAreaPrice) => {
         const containerWidth = dimensions.width;

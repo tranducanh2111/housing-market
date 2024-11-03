@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { formatPrice} from "../utils";
 import * as d3 from 'd3';
 
 /**
@@ -28,13 +29,6 @@ const BarChart = ({ data, selectedCity }) => {
 
     // Constants
     const TRANSITION_DURATION = 750; // Duration for animations in milliseconds
-
-    /**
-     * Formats price numbers with thousands separators
-     */
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-US').format(price);
-    };
 
     /**
      * Sets up ResizeObserver to handle responsive behavior
@@ -322,7 +316,7 @@ const BarChart = ({ data, selectedCity }) => {
             .on('mouseover', (event, d) => {
                 tooltip
                     .style('visibility', 'visible')
-                    .html(`City: ${d.city}<br/>Price: $${formatPrice(d.price)}`);
+                    .html(`City: ${d.city}<br/>Price: ${formatPrice(d.price)}`);
                 
                 d3.select(event.target)
                     .transition()
@@ -361,7 +355,7 @@ const BarChart = ({ data, selectedCity }) => {
             .on('mouseover', (event, d) => {
                 tooltip
                     .style('visibility', 'visible')
-                    .html(`City: ${d.city}<br/>Price: $${formatPrice(d.price)}`);
+                    .html(`City: ${d.city}<br/>Price: ${formatPrice(d.price)}`);
                 
                 d3.select(event.target)
                     .transition()

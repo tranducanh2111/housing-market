@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Legend } from './colorLegend';
 import { feature } from 'topojson-client';
+import { formatPrice } from "../utils";
 
 /**
  * Choropleth Component
@@ -18,15 +19,6 @@ const Choropleth = ({ data, selectedState }) => {
     
     // State for managing responsive dimensions
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-    /**
-     * Formats price numbers with appropriate commas
-     * @param {number} price - The price to format
-     * @returns {string} Formatted price string
-     */
-    const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-US').format(price);
-    };
 
     // Set up ResizeObserver for responsive behavior
     useEffect(() => {
