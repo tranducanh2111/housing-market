@@ -108,7 +108,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .style('visibility', 'hidden');
 
         d3.selectAll('input[name="area"]')
-            .on('change', function () { console.log('picked'); update(this.value, 800); });
+            .on('change', function () { update(this.value, 800); });
 
         // Create graph
         update('living_area', 0);
