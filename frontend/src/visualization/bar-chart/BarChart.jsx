@@ -152,7 +152,6 @@ const BarChart = ({ data, selectedCity}) =>
             transform = transform.translate(-event.deltaY * 0.6, 0);
             transform.x = Math.max(maxPan, Math.min(0, transform.x));
 
-            console.log(event.deltaY);
             svg.select('#bar-chart-x-axis').attr('transform', `translate(${transform.x}, ${containerHeight - marginBottom})`);
             svg.selectAll('.bar').attr('transform', `translate(${transform.x}, 0)`);
         });
@@ -225,16 +224,16 @@ const BarChart = ({ data, selectedCity}) =>
             // create new domain for x-axis
             xAxisScaler.domain(data.map(d => d['city']));
 
+            const t = d3.transition().duration(2000);
+
             // transition for the x-axis
             svg.select('#bar-chart-x-axis')
-                .transition()
-                .duration(800)
+                .transition(t)
                 .call(xAxisGenerator);
 
             // transition for the bars
             svg.selectAll('.bar')
-                .transition()
-                .duration(800)
+                .transition(t)
                 .attr('x', d => xAxisScaler(d['city']));
         }
 
