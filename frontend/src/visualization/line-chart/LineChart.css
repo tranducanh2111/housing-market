@@ -12,18 +12,6 @@
     white-space: pre-line;
 }
 
-.chart-line {
-    fill: none;
-    stroke: #0E4459;
-    stroke-width: 2.5;
-    animation: fadeIn 1s ease-in;
-}
-
-.line-chart-dot {
-    fill: #0E4459;
-    animation: fadeIn 1.5s ease-in;
-}
-
 .line-chart-hover-dot {
     fill: #0E4459;
     opacity: 0;
@@ -32,14 +20,6 @@
 .line-chart-hover-dot:hover {
     opacity: 1;
 }
-
-/* .axis-label, .tick text {
-    font-size: 1rem;
-}
-
-.line-chart-axis text {
-    font-size: 1rem;
-} */
 
 .prediction-dot {
     fill: red;

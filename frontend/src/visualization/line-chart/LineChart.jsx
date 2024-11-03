@@ -6,7 +6,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
     const chartRef = useRef(null);
     const containerRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-    const [areaType, setAreaType] = useState('living_area');
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -101,42 +100,21 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .attr('stroke', 'black')
             .attr('stroke-width', 0.5);
 
-        // Add X-axis label using foreignObject
-        // svg.append('foreignObject')
-        //     .attr('x', containerWidth / 2 - 100)
-        //     .attr('y', containerHeight +10)
-        //     .attr('width', 200)
-        //     .attr('height', 30)
-        //     .append('xhtml:div')
-        //     .style('text-align', 'center')
-        //     .style('font-size', '1rem')
-        //     .text('Living/Land Area (m²)');
-
-        // Add Y-axis label using foreignObject
-        // svg.append('foreignObject')
-        //     .attr('x', -containerHeight / 2 - 10)
-        //     .attr('y', 0)
-        //     .attr('width', containerHeight)
-        //     .attr('height', 30)
-        //     .append('xhtml:div')
-        //     .style('text-align', 'center')
-        //     .style('font-size', '1rem')
-        //     .style('transform', 'rotate(-90deg)')
-        //     .style('transform-origin', 'center')
-        //     .text('Price (USD)');
-
         // Remove any existing tooltips first
         d3.select(containerRef.current).selectAll('#tooltip').remove();
 
         // Create new tooltip
-        const tooltip = d3.select(containerRef.current)
+        const tooltip = d3.select('body')
             .append('div')
             .attr('id', 'tooltip')
             .style('visibility', 'hidden');
 
+        d3.selectAll('input[name="area"]')
+            .on('change', function () { update(this.value, 800); });
+
         // Create graph
-        update(areaType, 0);
-        update(areaType, 0); // this has to be called twice for the tooltip to work ¯\_(ツ)_/¯
+        update('living_area', 0);
+        update('living_area', 0); // this has to be called twice for the tooltip to work ¯\_(ツ)_/¯
 
         function update(areaType, t)
         {
@@ -258,10 +236,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     .attr('class', 'prediction-dot')
                     .attr('r', 12)
                     .attr('fill', 'red')
-                    .attr('opacity', 0)
-                    .transition()
-                    .duration(t)
-                    .attr('opacity', 1)
                     .attr('cx', d => xAxisScaler(d.area))
                     .attr('cy', d => yAxisScaler(d.price));
 
@@ -290,7 +264,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     });
             }
         }
-    }, [dimensions, areaType, predictionResult]);
+    }, [dimensions, predictionResult]);
 
     function calculateAxisDomain(lowerBound, upperBound, paddingPercent)
     {
@@ -316,34 +290,15 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         };
     }, [drawLineChart, livingAreaData, landAreaData]);
 
-    const handleAreaChange = (event) => {
-        setAreaType(event.target.value);
-    };
-
     return (
         <div ref={containerRef} className="w-full h-full">
             <form>
                 <label>
-                    <input
-                        type="radio"
-                        name="area"
-                        value="living_area"
-                        checked={areaType === 'living_area'}
-                        onChange={handleAreaChange}
-                        className='mr-2'
-                    />
+                    <input type="radio" name="area" value="living_area" className='mr-2' checked/>
                     Living Area
-                </label>
-                <br />
+                </label><br/>
                 <label>
-                    <input
-                        type="radio"
-                        name="area"
-                        value="land_area"
-                        checked={areaType === 'land_area'}
-                        onChange={handleAreaChange}
-                        className='mr-2'
-                    />
+                    <input type="radio" name="area" value="land_area" className='mr-2'/>
                     Land Area
                 </label>
             </form>
