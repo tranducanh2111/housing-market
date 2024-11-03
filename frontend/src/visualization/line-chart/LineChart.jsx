@@ -241,8 +241,11 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     .attr('cy', d => yAxisScaler(d['price']))
                     .on('mouseover', (event, d) => {
                         d3.select(event.target).style('opacity', 0.3);
+                        const areaTypeText = areaType === 'living_area' ? 'Living area' : 'Land area';
                         tooltip.style('visibility', 'visible')
-                            .text(`Predicted Property\n${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d.area.toFixed(2)} m²\nPrice: ${d3.format(",.2f")(d.price)} USD`);
+                            .text(`Predicted Property
+                                   ${areaTypeText}: ${d['area']} m²
+                                   Price: ${formatPrice(d['price'])} USD`);
                     })
                     .on('mousemove', (event) => {
                         tooltip.style('top', event.pageY - 20 + 'px')
