@@ -141,13 +141,13 @@ const Choropleth = ({ data, selectedState }) => {
                 const mouseX = event.pageX;
                 
                 // Prevent tooltip from overflowing window
-                const wouldOverflowRight = mouseX + tooltipWidth + 20 > windowWidth;
+                const wouldOverflowRight = mouseX + tooltipWidth + 40 > windowWidth;
                 
                 tooltip
                     .style('top', (event.pageY - 20) + 'px')
                     .style('left', wouldOverflowRight
-                        ? (mouseX - tooltipWidth - 10) + 'px'
-                        : (mouseX + 20) + 'px');
+                        ? (mouseX - tooltipWidth - 30) + 'px'
+                        : (mouseX + 40) + 'px');
             });
 
             // Handle mouseout events
