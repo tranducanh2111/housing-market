@@ -99,13 +99,11 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .style('fill', '#0E4459')
             .text('Price (USD)');
 
-        // Remove any existing tooltips first
-        d3.select(containerRef.current).selectAll('#tooltip').remove();
-
         // Create new tooltip
         const tooltip = d3.select(containerRef.current)
             .append('div')
             .attr('id', 'tooltip')
+            .attr('class', 'line-chart-tooltip')
             .style('visibility', 'hidden');
 
         // Create graph
@@ -225,10 +223,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
             // Update hover functionality
             hoverDots.on('mouseover', (event, d) => {
-                d3.select(event.target)
-                    .style('opacity', 1)
-                    .style('fill', '#0E4459');
-                
                 tooltip.style('visibility', 'visible')
                     .text(`${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d[areaType].toFixed(2)} m²\nPrice: ${formatPrice(d['price'].toFixed(2))} USD`);
             });
@@ -240,20 +234,16 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 const mouseX = event.pageX;
                 
                 // Check if tooltip would overflow on the right
-                const wouldOverflowRight = mouseX + tooltipWidth + 20 > windowWidth;
+                const wouldOverflowRight = mouseX + tooltipWidth + 10 > windowWidth;
                 
                 tooltip
-                    .style('top', (event.pageY - 20) + 'px')
+                    .style('top', (event.pageY - 180) + 'px')
                     .style('left', wouldOverflowRight 
-                        ? (mouseX - tooltipWidth - 10) + 'px' 
-                        : (mouseX + 20) + 'px');
+                        ? (mouseX - tooltipWidth - 15) + 'px' 
+                        : (mouseX - 50 + 5) + 'px');
             });
 
             hoverDots.on('mouseout', (event) => {
-                d3.select(event.target)
-                    .style('opacity', 0)
-                    .style('fill', '#0E4459');
-                
                 tooltip.style('visibility', 'hidden');
             });
 
@@ -295,8 +285,8 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                             .text(`Predicted Property\n${areaType === 'living_area' ? 'Living' : 'Land'} area: ${d.area.toFixed(2)} m²\nPrice: ${d3.format(",.2f")(d.price)} USD`);
                     })
                     .on('mousemove', (event) => {
-                        tooltip.style('top', event.pageY - 20 + 'px')
-                            .style('left', event.pageX + 20 + 'px');
+                        tooltip.style('top', event.pageY - 170 + 'px')
+                            .style('left', event.pageX - 40 + 'px');
                     })
                     .on('mouseout', (event) => {
                         d3.select(event.target).style('opacity', 0);
@@ -313,11 +303,8 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         
         // Cleanup function
         return () => {
-            // Remove all tooltips when component unmounts
-            d3.select(containerRef.current).selectAll('#tooltip').remove();
-            d3.selectAll('.bar-chart-tooltip').remove();
-            // Also remove any orphaned tooltips from the body
-            d3.select('body').selectAll('#tooltip').remove();
+            // Remove only line chart tooltips when component unmounts
+            d3.select(containerRef.current).selectAll('.line-chart-tooltip').remove();
         };
     }, [drawLineChart, livingAreaData, landAreaData]);
 
