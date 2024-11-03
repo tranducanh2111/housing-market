@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import {formatPrice} from '../utils.js'
+import {formatPrice, observeContainerSize} from '../utils.js'
 import * as d3 from 'd3';
 import './LineChart.css';
 
@@ -9,22 +9,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [selectedArea, setSelectedArea] = useState('living_area');
 
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                const { width, height } = entry.contentRect;
-                setDimensions({ width, height });
-            }
-        });
-
-        resizeObserver.observe(containerRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
-    }, []);
+    useEffect(() => observeContainerSize(containerRef, setDimensions), [containerRef]);
 
     const drawLineChart = useCallback((livingAreaPrice, landAreaPrice) => {
         const containerWidth = dimensions.width;

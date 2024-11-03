@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Legend } from './colorLegend';
 import { feature } from 'topojson-client';
-import { formatPrice } from "../utils";
+import { formatPrice, observeContainerSize } from "../utils";
 
 /**
  * Choropleth Component
@@ -21,22 +21,7 @@ const Choropleth = ({ data, selectedState }) => {
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     // Set up ResizeObserver for responsive behavior
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                const { width, height } = entry.contentRect;
-                setDimensions({ width, height });
-            }
-        });
-
-        resizeObserver.observe(containerRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
-    }, []);
+    useEffect(() => observeContainerSize(containerRef, setDimensions), [containerRef]);
 
     // Main effect for drawing and updating the choropleth map
     useEffect(() => {

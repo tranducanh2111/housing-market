@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { formatPrice } from "../utils";
+import {formatPrice, observeContainerSize} from "../utils";
 import * as d3 from 'd3';
 import './BarChart.css';
 
@@ -24,23 +24,7 @@ const BarChart = ({ data, selectedCity}) =>
     const containerRef = useRef(null);       // Reference for outer container
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-    useEffect(() =>
-    {
-        if (!containerRef.current) return;
-
-        const resizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                const { width, height } = entry.contentRect;
-                setDimensions({ width, height });
-            }
-        });
-
-        resizeObserver.observe(containerRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
-    }, []);
+    useEffect(() => observeContainerSize(containerRef, setDimensions), [containerRef]);
 
     const drawBarChart = useCallback((data) =>
     {
