@@ -105,7 +105,7 @@ const BarChart = ({ data, selectedCity }) => {
         // Chart dimensions and layout parameters
         const marginTop = 20;
         const marginRight = 20;
-        const marginBottom = 60;
+        const marginBottom = 80;
         const marginLeft = 80;
 
         const barWidth = 20;
@@ -444,7 +444,7 @@ const BarChart = ({ data, selectedCity }) => {
                     ></div>
                     <div 
                         ref={scrollContainerRef} 
-                        className="overflow-x-auto flex-grow relative"
+                        className="overflow-x-auto flex-grow relative scroll-container"
                     >
                         <div 
                             ref={chartRef}
