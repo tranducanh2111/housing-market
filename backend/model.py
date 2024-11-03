@@ -19,7 +19,7 @@ def get_model() -> LinearRegression:
 
 
 @trace_exception
-def make_prediction(model: LinearRegression, prediction_data: dict) -> float:
+def make_prediction(model: LinearRegression, prediction_data: dict) -> int:
     """
     Makes the price prediction on a property.
 
@@ -31,4 +31,4 @@ def make_prediction(model: LinearRegression, prediction_data: dict) -> float:
     """
     X = list(prediction_data.values())
     prediction = model.predict([X])
-    return prediction[0]
+    return int(prediction[0])
