@@ -45,7 +45,7 @@ const PersonalizeInsightContent = () => {
             </section>
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 
-                <div className="bg-white rounded-lg shadow p-4 h-[500px]">
+                <div className="bg-white rounded-lg shadow p-4 h-[540px]">
                     <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">City Comparison</h3>
                     <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
                         <BarChart 
@@ -54,7 +54,7 @@ const PersonalizeInsightContent = () => {
                         />
                     </div>
                 </div>
-                <div className="bg-white rounded-lg shadow p-4 h-[500px]">
+                <div className="bg-white rounded-lg shadow p-4 h-[540px]">
                     <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">Area Impact</h3>
                     <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
                         <LineChart 

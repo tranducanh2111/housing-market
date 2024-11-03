@@ -52,8 +52,8 @@ const BarChart = ({ data, selectedCity}) =>
 
         const marginTop = 40;
         const marginRight = 20;
-        const marginBottom = 60;
-        const marginLeft = 65;
+        const marginBottom = 80;
+        const marginLeft = 60;
 
         // hash map containing the sorting functions for the chart's order
         const orderMap = new Map([
@@ -130,14 +130,14 @@ const BarChart = ({ data, selectedCity}) =>
             .attr('class', 'legend-text')
             .attr('id', 'x-axis-legend-text')
             .attr('x', containerWidth / 2)
-            .attr('y', containerHeight + 10)
+            .attr('y', containerHeight - 4)
             .text('City')
 
         // y-axis legend
         svg.append('text')
             .attr('class', 'legend-text')
             .attr('id', 'y-axis-legend-text')
-            .attr('x', 20)
+            .attr('x', 18)
             .attr('y', 20)
             .text('↑ Price (USD)')
 

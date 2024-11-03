@@ -32,8 +32,8 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
         const marginTop = 40;
         const marginRight = 20;
-        const marginBottom = 30;
-        const marginLeft = 65;
+        const marginBottom = 50;
+        const marginLeft = 60;
 
         // Clear any existing SVG
         d3.select(chartRef.current).selectAll('*').remove();
@@ -102,14 +102,14 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .attr('class', 'legend-text')
             .attr('id', 'x-axis-legend-text')
             .attr('x', containerWidth / 2)
-            .attr('y', containerHeight + 10)
+            .attr('y', containerHeight - 4)
             .text('Area m²')
 
         // y-axis legend
         svg.append('text')
             .attr('class', 'legend-text')
             .attr('id', 'y-axis-legend-text')
-            .attr('x', 10)
+            .attr('x', 8)
             .attr('y', 20)
             .text('↑ Price (USD)')
 
