@@ -2,18 +2,17 @@
     stroke-width: 0.5;
 }
 
-#tooltip {
-    position: absolute;
-    padding: 10px;
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 5px;
-    pointer-events: none;
-    white-space: pre-line;
+.chart-line {
+    stroke: steelblue;
+    stroke-width: 2.5;
+}
+
+.line-chart-dot {
+    fill: steelblue;
 }
 
 .line-chart-hover-dot {
-    fill: #0E4459;
+    fill: steelblue;
     opacity: 0;
 }
 
@@ -23,8 +22,6 @@
 
 .prediction-dot {
     fill: red;
-    stroke: white;
-    stroke-width: 2;
 }
 
 .prediction-hover-dot {
@@ -34,4 +31,14 @@
 
 .prediction-hover-dot:hover {
     opacity: 0.3;
+}
+
+#tooltip {
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    pointer-events: none;
+    white-space: pre-line;
 }

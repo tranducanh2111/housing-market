@@ -171,16 +171,13 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .transition()
                 .duration(t)
                 .attr('d', lineGenerator)
-                .attr('fill', 'none')
-                .attr('stroke', 'steelblue')
-                .attr('stroke-width', 2.5)
+                .attr('fill', 'none');
 
             // Update dots
             const dots = svg.selectAll('.line-chart-dot').data(data);
             dots.enter()
                 .append('circle')
                 .attr('class', 'line-chart-dot')
-                .attr('fill', 'steelblue')
                 .attr('r', 4)
                 .merge(dots)
                 .transition()
@@ -194,8 +191,6 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .append('circle')
                 .attr('class', 'line-chart-hover-dot')
                 .attr('r', 10)
-                .attr('fill', 'steelblue')
-                .style('opacity', 0)
                 .merge(hoverDots)
                 .transition()
                 .duration(t)
@@ -235,21 +230,18 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     .data([predictionPoint])
                     .join('circle')
                     .attr('class', 'prediction-dot')
-                    .attr('r', 12)
-                    .attr('fill', 'red')
-                    .attr('cx', d => xAxisScaler(d.area))
-                    .attr('cy', d => yAxisScaler(d.price));
+                    .attr('r', 10)
+                    .attr('cx', d => xAxisScaler(d['area']))
+                    .attr('cy', d => yAxisScaler(d['price']));
 
                 // Add hover functionality for prediction dot
                 svg.selectAll('.prediction-hover-dot')
                     .data([predictionPoint])
                     .join('circle')
                     .attr('class', 'prediction-hover-dot')
-                    .attr('r', 20)
-                    .attr('fill', 'yellow')
-                    .style('opacity', 0)
-                    .attr('cx', d => xAxisScaler(d.area))
-                    .attr('cy', d => yAxisScaler(d.price))
+                    .attr('r', 16)
+                    .attr('cx', d => xAxisScaler(d['area']))
+                    .attr('cy', d => yAxisScaler(d['price']))
                     .on('mouseover', (event, d) => {
                         d3.select(event.target).style('opacity', 0.3);
                         tooltip.style('visibility', 'visible')
