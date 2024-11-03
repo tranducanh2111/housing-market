@@ -30,7 +30,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         const containerWidth = dimensions.width;
         const containerHeight = dimensions.height;
 
-        const marginTop = 20;
+        const marginTop = 40;
         const marginRight = 20;
         const marginBottom = 30;
         const marginLeft = 65;
@@ -82,8 +82,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .attr('id', 'line-chart-y-axis')
             .attr('transform', `translate(${marginLeft}, 0)`)
             .call(yAxisGenerator)
-            .select('.domain')
-            .remove();
+            .call(g => g.select(".domain").remove());
 
         // horizontal grid lines
         svg.selectAll('line.line-chart-horizontal-gridline')
@@ -98,7 +97,23 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .attr('stroke', 'black')
             .attr('stroke-width', 0.5);
 
-        // Remove any existing tooltips first
+        // x-axis legend
+        svg.append('text')
+            .attr('class', 'legend-text')
+            .attr('id', 'x-axis-legend-text')
+            .attr('x', containerWidth / 2)
+            .attr('y', containerHeight + 10)
+            .text('Area m²')
+
+        // y-axis legend
+        svg.append('text')
+            .attr('class', 'legend-text')
+            .attr('id', 'y-axis-legend-text')
+            .attr('x', 10)
+            .attr('y', 20)
+            .text('↑ Price (USD)')
+
+        // Remove any existing tooltips
         d3.select(containerRef.current).selectAll('#tooltip').remove();
 
         // Create new tooltip
@@ -148,9 +163,9 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .join('line')
                 .attr('class', 'line-chart-vertical-gridline')
                 .attr('x1', d => xAxisScaler(d))
-                .attr('y1', containerHeight - 30)
+                .attr('y1', containerHeight - marginBottom)
                 .attr('x2', d => xAxisScaler(d))
-                .attr('y2', 20)
+                .attr('y2', marginTop)
                 .attr('stroke', 'black')
                 .attr('stroke-width', 0.5);
 

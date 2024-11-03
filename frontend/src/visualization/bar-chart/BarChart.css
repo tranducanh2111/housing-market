@@ -13,3 +13,18 @@
     stroke-width: 2;
     stroke: black;
 }
+
+#bar-chart-x-axis .tick text {
+    text-anchor: end;
+    transform: translate(-5px, 0) rotate(-30deg);
+}
+
+.legend-text {
+    fill: black;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#x-axis-legend-text {
+    text-anchor: middle;
+}

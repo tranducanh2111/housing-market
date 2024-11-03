@@ -50,8 +50,8 @@ const BarChart = ({ data, selectedCity}) =>
         const containerWidth = dimensions.width;
         const containerHeight = dimensions.height;
 
-        const marginTop = 20;
-        const marginRight = 50;
+        const marginTop = 40;
+        const marginRight = 20;
         const marginBottom = 60;
         const marginLeft = 65;
 
@@ -80,6 +80,7 @@ const BarChart = ({ data, selectedCity}) =>
         // y-axis scaler
         const yAxisScaler = d3.scaleLinear()
             .domain([0, d3.max(data, d => d['price'])])
+            .nice()
             .range([containerHeight - marginBottom, marginTop]);
 
         // axes generators
@@ -114,10 +115,7 @@ const BarChart = ({ data, selectedCity}) =>
             .attr('class', 'bar-chart-axis')
             .attr('id', 'bar-chart-x-axis')
             .attr('transform', `translate(0, ${containerHeight - marginBottom})`)
-            .call(xAxisGenerator)
-            .selectAll('text')
-            .style('text-anchor', 'end')
-            .attr('transform', 'translate(-5, 0) rotate(-30)');
+            .call(xAxisGenerator);
 
         // y-axis creation
         svg.append('g')
@@ -126,6 +124,22 @@ const BarChart = ({ data, selectedCity}) =>
             .attr('transform', `translate(${marginLeft}, 0)`)
             .call(yAxisGenerator)
             .call(g => g.select('.domain').remove());
+
+        // x-axis legend
+        svg.append('text')
+            .attr('class', 'legend-text')
+            .attr('id', 'x-axis-legend-text')
+            .attr('x', containerWidth / 2)
+            .attr('y', containerHeight + 10)
+            .text('City')
+
+        // y-axis legend
+        svg.append('text')
+            .attr('class', 'legend-text')
+            .attr('id', 'y-axis-legend-text')
+            .attr('x', 20)
+            .attr('y', 20)
+            .text('↑ Price (USD)')
 
         // pan by scrolling functionality
         let transform = d3.zoomIdentity;
