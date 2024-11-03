@@ -59,7 +59,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .append('svg')
             .attr('width', '100%')
             .attr('height', '100%')
-            .attr('viewBox', `0 0 ${containerWidth} ${containerHeight}`)
+            .attr('viewBox', `-15 15 ${containerWidth} ${containerHeight}`)
             .attr('preserveAspectRatio', 'xMidYMid meet');
 
         // Initialize x and y axes scalers
@@ -78,28 +78,25 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .attr('id', 'line-chart-y-axis')
             .attr('transform', `translate(${65}, 0)`);
 
-        // Add X-axis label using foreignObject
-        svg.append('foreignObject')
-            .attr('x', containerWidth / 2 - 100)
-            .attr('y', containerHeight +10)
-            .attr('width', 200)
-            .attr('height', 30)
-            .append('xhtml:div')
-            .style('text-align', 'center')
-            .style('font-size', '1rem')
-            .text('Living/Land Area (m²)');
+        // Add X-axis label
+        const xLabel = svg.append('text')
+            .attr('class', 'x-label')
+            .attr('text-anchor', 'middle')
+            .attr('x', containerWidth / 2)
+            .attr('y', containerHeight + 10)
+            .style('font-size', '16px')
+            .attr("font-weight", "700")
+            .style('fill', '#0E4459')
+            .text(areaType === 'living_area' ? 'Living Area (m²)' : 'Land Area (m²)');
 
-        // Add Y-axis label using foreignObject
-        svg.append('foreignObject')
-            .attr('x', -containerHeight / 2 - 10)
-            .attr('y', 0)
-            .attr('width', containerHeight)
-            .attr('height', 30)
-            .append('xhtml:div')
-            .style('text-align', 'center')
-            .style('font-size', '1rem')
-            .style('transform', 'rotate(-90deg)')
-            .style('transform-origin', 'center')
+        // Add Y-axis label
+        svg.append('text')
+            .attr('class', 'y-label')
+            .attr('text-anchor', 'middle')
+            .attr('transform', `rotate(-90) translate(${-containerHeight / 2}, 0)`)
+            .style('font-size', '16px')
+            .attr("font-weight", "700")
+            .style('fill', '#0E4459')
             .text('Price (USD)');
 
         // Remove any existing tooltips first
@@ -120,6 +117,9 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
             x.domain([minArea, maxArea]);
             y.domain([minPrice, maxPrice]);
+
+            // Update X-axis label based on area type
+            xLabel.text(areaType === 'living_area' ? 'Living Area (m²)' : 'Land Area (m²)');
 
             // Adjust tick values to account for the padding
             const xTickValues = d3.range(

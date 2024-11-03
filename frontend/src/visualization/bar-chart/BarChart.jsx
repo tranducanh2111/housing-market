@@ -150,6 +150,18 @@ const BarChart = ({ data, selectedCity }) => {
 
             yAxisSvg.append('g').attr('class', 'y-axis');
             yAxisSvg.append('g').attr('class', 'grid');
+
+            // Add y-axis label
+            yAxisSvg.append('text')
+                .attr('class', 'y-axis-label')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', marginLeft / 3 - 10)
+                .attr('x', -(containerHeight - marginBottom - 20) / 2)
+                .attr('text-anchor', 'middle')
+                .style('font-size', '16px')
+                .attr("font-weight", "700")
+                .style('fill', '#0E4459')
+                .text('Price (USD)');
         }
 
         // Update y-axis with transitions
@@ -202,6 +214,18 @@ const BarChart = ({ data, selectedCity }) => {
             mainSvg.append('g').attr('class', 'x-axis');
             mainSvg.append('g').attr('class', 'horizontal-grid');
             mainSvg.append('g').attr('class', 'bars');
+
+            // Add x-axis label
+            mainSvg.append('text')
+                .attr('class', 'x-axis-label')
+                .attr('text-anchor', 'middle')
+                // .attr('x', (totalWidth - marginLeft) / 2)
+                .attr('x', 20)
+                .attr('y', containerHeight - marginBottom / 3)
+                .style('font-size', '16px')
+                .attr("font-weight", "700")
+                .style('fill', '#0E4459')
+                .text('City');
         } else {
             mainSvg
                 .attr('width', totalWidth - marginLeft)
