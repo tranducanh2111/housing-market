@@ -6,6 +6,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
     const chartRef = useRef(null);
     const containerRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const [selectedArea, setSelectedArea] = useState('living_area');
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -110,7 +111,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .style('visibility', 'hidden');
 
         d3.selectAll('input[name="area"]')
-            .on('change', function () { update(this.value, 800); });
+            .on('change', function () { console.log('picked'); update(this.value, 800); });
 
         // Create graph
         update('living_area', 0);
@@ -294,11 +295,21 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         <div ref={containerRef} className="w-full h-full">
             <form>
                 <label>
-                    <input type="radio" name="area" value="living_area" className='mr-2' checked/>
+                    <input type="radio"
+                           name="area"
+                           value="living_area"
+                           className='mr-2'
+                           checked={selectedArea === 'living_area'}
+                           onChange={() => setSelectedArea('living_area')}/>
                     Living Area
                 </label><br/>
                 <label>
-                    <input type="radio" name="area" value="land_area" className='mr-2'/>
+                    <input type="radio"
+                           name="area"
+                           value="land_area"
+                           className='mr-2'
+                           checked={selectedArea === 'land_area'}
+                           onChange={() => setSelectedArea('land_area')}/>
                     Land Area
                 </label>
             </form>
