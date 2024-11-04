@@ -5,7 +5,7 @@ import StateSelect from 'components/StateSelect';
 import InfoIcon from 'assets/icons/info.svg';
 
 const PropertyForm = ({ onSubmitSuccess }) => {
-    const [formType, setFormType] = useState('address');
+    const [formType, setFormType] = useState('details');
     const [formData, setFormData] = useState({
         address: '',
         state: '',
@@ -133,17 +133,6 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                     <button
                         type="button"
                         className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
-                            formType === 'address' 
-                                ? 'bg-white shadow-md text-primary' 
-                                : 'text-gray-600 hover:bg-gray-50'
-                        }`}
-                        onClick={() => setFormType('address')}
-                    >
-                        By Address
-                    </button>
-                    <button
-                        type="button"
-                        className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
                             formType === 'details' 
                                 ? 'bg-white shadow-md text-primary' 
                                 : 'text-gray-600 hover:bg-gray-50'
@@ -151,6 +140,17 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                         onClick={() => setFormType('details')}
                     >
                         By Details
+                    </button>
+                    <button
+                        type="button"
+                        className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
+                            formType === 'address' 
+                                ? 'bg-white shadow-md text-primary' 
+                                : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                        onClick={() => setFormType('address')}
+                    >
+                        By Address
                     </button>
                 </div>
             </div>
@@ -175,7 +175,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                 ? renderInputs(['address', 'state', 'city'])
                 : (
                     <>
-                        {renderInputs(['state', 'city', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'])}
+                        {renderInputs(['city', 'state', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'])}
                         <div className="flex items-center mb-6 mt-2">
                             <input
                                 type="checkbox"
