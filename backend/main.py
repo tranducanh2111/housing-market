@@ -205,14 +205,14 @@ async def predict_house_price(street: str, city: str, state: str):
 
 
 @trace_exception
-def get_result_data(userInput: HousePricePredictionModelInput) -> dict:
+def get_result_data(user_input: HousePricePredictionModelInput) -> dict:
     """Calculates and returns all the data needed for the visualizations."""
     return {
-        'prediction': make_prediction(model, userInput.get_processed_input()),
-        'property-details': userInput.getPropertyDetails(),
-        'choropleth-chart-data': get_choropleth_chart_data(userInput),
-        'bar-chart-data': get_bar_chart_data(userInput),
-        'line-chart-data': get_line_chart_data(userInput)
+        'prediction': make_prediction(model, user_input.get_processed_input()),
+        'property-details': user_input.getPropertyDetails(),
+        'choropleth-chart-data': get_choropleth_chart_data(user_input),
+        'bar-chart-data': get_bar_chart_data(user_input),
+        'line-chart-data': get_line_chart_data(user_input)
     }
 
 
@@ -255,14 +255,28 @@ def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
 
     state = user_input.state
     data = user_input.get_processed_input()
+    inputted_city_name = user_input.city.title()
     result = []
 
     # get a price prediction for every city in the inputted state
+    inputted_city_added = False
     for city in city_state_encoded_data_mappings[state.lower()]['cities']:
         data['city_encoded'] = city['encoded_value']
+        city_name = city['city_name'].title()
+
+        if inputted_city_name == city_name:
+            inputted_city_added = True
+
         result.append({
-            'city': city['city_name'].title(),
+            'city': city_name,
             'price': make_prediction(model, data)
+        })
+
+    # if the inputted city isn't included in the dataset, it won't be in the encoded mappings so we have to add it here
+    if not inputted_city_added:
+        result.append({
+            'city': inputted_city_name,
+            'price': make_prediction(model, user_input.get_processed_input())
         })
 
     return result
