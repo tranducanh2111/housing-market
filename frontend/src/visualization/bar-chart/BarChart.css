@@ -8,7 +8,17 @@
     fill: steelblue;
 }
 
+#selected-city {
+    fill: red;
+}
+
 .bar:hover {
+    fill: bisque;
+    stroke-width: 2;
+    stroke: black;
+}
+
+#selected-city:hover {
     fill: bisque;
     stroke-width: 2;
     stroke: black;
@@ -27,4 +37,11 @@
 
 #x-axis-legend-text {
     text-anchor: middle;
+}
+
+#bar-chart-button {
+    display: inline-block;
+    color: blue;
+    background: green;
+    border-radius: 4px;
 }

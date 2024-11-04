@@ -83,12 +83,16 @@ const BarChart = ({ data, selectedCity}) =>
             .attr('y2', d => yAxisScaler(d));
 
         // bars
+        const getBarID = (d) => d['city'].toLowerCase() === selectedCity.toLowerCase()
+            ? 'selected-city'
+            : d['city'];
+
         const bars = svg.selectAll('.bar')
             .data(data)
             .enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('id', d => d['city'])
+            .attr('id', getBarID)
             .attr('x', d => xAxisScaler(d['city']))
             .attr('y', d => yAxisScaler(d['price']))
             .attr('width', xAxisScaler.bandwidth())
@@ -142,6 +146,11 @@ const BarChart = ({ data, selectedCity}) =>
 
         // handle bar sorting
         d3.select('#bar-chart-order').on('change', (event) => orderBars(event.target.value));
+
+        // handle panning to red bar
+        d3.select("#bar-chart-button").on("click", panToRedBar);
+
+        panToRedBar();
 
         // tooltip
         const tooltip = d3.select('body')
@@ -202,13 +211,17 @@ const BarChart = ({ data, selectedCity}) =>
         * */
         function orderBars(order)
         {
+            disableTransitions();
+
             // sort the data
             data.sort(orderMap.get(order));
 
             // create new domain for x-axis
             xAxisScaler.domain(data.map(d => d['city']));
 
-            const t = d3.transition().duration(2000);
+            const t = d3.transition()
+                .duration(2000)
+                .on('end', enableTransitions);
 
             // transition for the x-axis
             svg.select('#bar-chart-x-axis')
@@ -219,6 +232,44 @@ const BarChart = ({ data, selectedCity}) =>
             svg.selectAll('.bar')
                 .transition(t)
                 .attr('x', d => xAxisScaler(d['city']));
+        }
+
+        function panToRedBar()
+        {
+            const redBarX = +d3.select('#selected-city').attr('x');
+            const middle = containerWidth / 2;
+            const xOffset = middle - redBarX - xAxisScaler.bandwidth() / 2;
+
+            if (xOffset === transform.x)
+                return;
+
+            disableTransitions();
+
+            transform.x = Math.max(maxPan, Math.min(0, xOffset));
+
+            const t = d3.transition()
+                .duration(1000)
+                .on('end', enableTransitions);
+
+            svg.select('#bar-chart-x-axis')
+                .transition(t)
+                .attr('transform', `translate(${transform.x}, ${containerHeight - marginBottom})`);
+
+            svg.selectAll('.bar')
+                .transition(t)
+                .attr('transform', `translate(${transform.x}, 0)`);
+        }
+
+        function disableTransitions()
+        {
+            d3.select('#bar-chart-order').attr('disabled', true);
+            d3.select('#bar-chart-button').attr('disabled', true);
+        }
+
+        function enableTransitions()
+        {
+            d3.select('#bar-chart-order').attr('disabled', null);
+            d3.select('#bar-chart-button').attr('disabled', null);
         }
 
     }, [dimensions, selectedCity]);
@@ -248,6 +299,7 @@ const BarChart = ({ data, selectedCity}) =>
                     <option value="Ascending">Ascending</option>
                     <option value="Descending">Descending</option>
                 </select>
+                <button type="button" id="bar-chart-button">Pan to inputted city</button>
             </form>
             <div ref={chartRef} className="chart-container min-w-full h-full"></div>
         </div>
