@@ -15,7 +15,7 @@ const Layout = ({ children, isOpen, openSidebar, closeSidebar }) => {
 
                 {/* Content Area */}
                 {/* This div serves as the main content area that will adjust based on sidebar visibility */}
-                <div className="relative flex-1 min-h-screen overflow-x-hidden sm:border-l-4">
+                <div className="relative flex-1 overflow-x-hidden sm:border-l-4">
                     <div className={`relative`}>
                         {children} {/* Render the children passed to the Layout component */}
                     </div>

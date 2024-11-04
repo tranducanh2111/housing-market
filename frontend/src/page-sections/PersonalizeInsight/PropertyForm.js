@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { submitPropertyData, submitAddressData } from '../../api/propertyService';
-import FormInput from '../../components/ultility/FormInput';
-import StateSelect from '../../components/StateSelect';
-import InfoIcon from '../../assets/icons/info.svg';
+import { submitPropertyData, submitAddressData } from 'api/propertyService';
+import FormInput from 'components/ultility/FormInput';
+import StateSelect from 'components/StateSelect';
+import InfoIcon from 'assets/icons/info.svg';
 
 const PropertyForm = ({ onSubmitSuccess }) => {
     const [formType, setFormType] = useState('address');

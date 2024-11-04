@@ -5,7 +5,8 @@
             "assets/*": ["assets/*"],
             "page-sections/*": ["page-sections/*"],
             "components/*": ["components/*"],
-            "sample_data/*": ["sample_data/*"]
+            "sample_data/*": ["sample_data/*"],
+            "api/*": ["api/*"]
         }
     }
 }
