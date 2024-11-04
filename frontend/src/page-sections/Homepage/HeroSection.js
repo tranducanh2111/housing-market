@@ -1,12 +1,12 @@
 // src/pages-section/HomePage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import HeroDecorImage from '../../assets/images/hero-sub-image.png';
-import Button from '../../components/ultility/Button';
-import ArrowRight from '../../assets/icons/arrow-right-white.svg';
-import ArrowUpTilt from '../../assets/icons/arrow-up-tilt.svg';
-import Hat from '../../assets/icons/hat.svg';
-import Light from '../../assets/icons/light.svg';
+import HeroDecorImage from 'assets/images/hero-sub-image.png';
+import Button from 'components/ultility/Button';
+import ArrowRight from 'assets/icons/arrow-right-white.svg';
+import ArrowUpTilt from 'assets/icons/arrow-up-tilt.svg';
+// import Hat from 'assets/icons/hat.svg';
+import Light from 'assets/icons/light.svg';
 
 // Swiper
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -14,13 +14,13 @@ import { EffectCards, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-cards';
 
-import HeroImage from '../../assets/images/sub-hero-section.jpg';
-import VenueImage from '../../assets/images/7478054_0.jpg';
-import VenueImage2 from '../../assets/images/4196182_0.jpg';
-import VenueImage3 from '../../assets/images/streetview.jpg';
-import VenueImage4 from '../../assets/images/genMid.2510113_0.jpg';
-import VenueImage5 from '../../assets/images/6618843-150-single-family-home-1.med.jpg';
-import SmallLocationImage from '../../assets/images/6618843-150-single-family-home-1.med.jpg';
+import HeroImage from 'assets/images/sub-hero-section.jpg';
+import VenueImage from 'assets/images/7478054_0.jpg';
+import VenueImage2 from 'assets/images/4196182_0.jpg';
+import VenueImage3 from 'assets/images/streetview.jpg';
+import VenueImage4 from 'assets/images/genMid.2510113_0.jpg';
+import VenueImage5 from 'assets/images/6618843-150-single-family-home-1.med.jpg';
+import SmallLocationImage from 'assets/images/6618843-150-single-family-home-1.med.jpg';
 
 const slidesData = [
     {
@@ -289,13 +289,13 @@ const HeroSection = () => {
                             textColor="text-white"
                             onClick={() => navigate('/result-dashboard')}
                         />
-                        <Button
+                        {/* <Button
                             title="Join our Survey"
                             icon={Hat}
                             className="flex-1 min-w-fit bg-primary rounded-md text-white"
                             textColor="text-white"
                             onClick={() => navigate('/result-dashboard')}
-                        />
+                        /> */}
                     </div>
                 </article>
             </section>

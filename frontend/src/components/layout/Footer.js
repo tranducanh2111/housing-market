@@ -31,14 +31,14 @@ const Footer = () => {
     ];
 
     const aboutCategories = [
-        { name: 'About NextHome', link: '/about' },
-        { name: 'Meet Our Team', link: '/teams' },
-        { name: 'Contact Us', link: '/contact' },
+        { name: 'About NextHome', link: '/' },
+        { name: 'Meet Our Team', link: '/' },
+        { name: 'Contact Us', link: '/' },
     ];
 
     const supportUsCategories = [
-        { name: 'Raise Fund', link: '/donate' },
-        { name: 'Collaborate', link: '/volunteer' },
+        { name: 'Raise Fund', link: '/' },
+        { name: 'Collaborate', link: '/' },
     ];
 
     return (
