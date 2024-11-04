@@ -61,7 +61,7 @@ const SponsorList = () => {
                 <Button
                     title="Be our sponsors"
                     icon={ThinArrow}
-                    className="text-primary text-body-sm sm:text-body"
+                    className="text-primary text-body-sm sm:text-body hover:text-secondary hover:scale-110 transition duration-200"
                 />
             </div>
 

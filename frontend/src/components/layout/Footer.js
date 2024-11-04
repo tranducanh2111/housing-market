@@ -74,7 +74,7 @@ const Footer = () => {
                     <article className="flex flex-col gap-2">
                         <h3 className="text-primary text-h3-sm sm:text-h3 mb-2">Support Us</h3>
                         {supportUsCategories.map((item, index) => (
-                            <Link key={index} to={item.link} className="text-body-sm sm:text-body">
+                            <Link key={index} to={item.link} className="text-body-sm sm:text-body hover:text-secondary transition duration-200">
                                 {item.name}
                             </Link>
                         ))}

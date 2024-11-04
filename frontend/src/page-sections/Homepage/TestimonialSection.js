@@ -5,10 +5,10 @@ import { items } from 'components/testimonial/TestimonialItems';
 
 const TestimonialSection = () => {
     return (
-        <section className="relative w-screen sm:w-testimonial overflow-hidden h-[23.25rem] sm:h-[26.25rem]">
+        <section className="relative w-screen sm:w-testimonial overflow-hidden h-[24.25rem] sm:h-[28.25rem]">
             <div className="w-full h-[16.5rem] sm:h-[19.5rem] bg-primary absolute " />
 
-            <div className="max-w-[78rem] h-[15.875rem] sm:h-[18.875rem] flex flex-col mx-auto mt-16 mb-10 xl:px-0 px-4">
+            <div className="max-w-[78rem] h-[14.875rem] sm:h-[17.875rem] flex flex-col mx-auto mt-16 mb-10 xl:px-0 px-4">
                 <div className="max-w-[78rem] items-center w-full h-[18.875rem] mx-auto flex flex-col inline-flex absolute top-16 xl:px-5">
                     <div className="w-full">
                         <div className="w-full sm:w-96 h-[5.375rem] flex flex-col items-start gap-1 inline-flex">
@@ -23,13 +23,13 @@ const TestimonialSection = () => {
             </div>
 
             <Swiper
-                className="justify-start items-start gap-6 inline-flex bottom-[11.5rem] h-[12.5rem]"
+                className="justify-start items-start gap-6 inline-flex bottom-[11.5rem] h-[14.5rem]"
                 spaceBetween={24}
                 slidesPerView="auto"
             >
                 {items.map((item, index) => (
                     <SwiperSlide
-                        className="px-4 py-2 bg-white rounded-xl shadow-lg flex-col justify-start items-start gap-1 inline-flex"
+                        className="mt-4 px-4 py-2 bg-white rounded-xl shadow-lg flex-col justify-start items-start gap-1 inline-flex hover:scale-110 transition duration-200"
                         key={index}
                         style={{ maxWidth: '18.75rem', width: '100%', height: '11rem' }}
                     >

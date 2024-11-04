@@ -37,17 +37,17 @@ const ContactSection = () => {
                             <input
                                 type={'text'}
                                 placeholder={'Full name'}
-                                className="text-body-sm sm:text-body focus:border-primary hover:border-primary w-full rounded-md px-3 py-2 border border-light-grey placeholder:text-light-grey placeholder:text-body-sm sm:placeholder:text-body outline-none"
+                                className="text-body-sm sm:text-body focus:border-primary hover:border-primary w-full rounded-md px-3 py-2 border border-light-grey placeholder:text-light-grey placeholder:text-body-sm sm:placeholder:text-body outline-none hover:border-primary transition duration-200"
                             ></input>
                             <input
                                 type={'text'}
                                 placeholder={'Email'}
-                                className="text-body-sm sm:text-body focus:border-primary hover:border-primary w-full rounded-md px-3 py-2 border border-light-grey placeholder:text-light-grey placeholder:text-body-sm sm:placeholder:text-body outline-none"
+                                className="text-body-sm sm:text-body focus:border-primary hover:border-primary w-full rounded-md px-3 py-2 border border-light-grey placeholder:text-light-grey placeholder:text-body-sm sm:placeholder:text-body outline-none hover:border-primary transition duration-200"
                             ></input>
                             <PhoneInput
                                 country="au"
                                 placeholder="Phone number*"
-                                inputClass="phone-input text-body-sm sm:text-body placeholder:text-body-sm sm:placeholder:text-body"
+                                inputClass="phone-input text-body-sm sm:text-body placeholder:text-body-sm sm:placeholder:text-body hover:border-primary transition duration-200"
                                 buttonClass="phone-input-dropdown"
                                 searchClass="phone-input-flag"
                                 value={null}
@@ -55,14 +55,14 @@ const ContactSection = () => {
                             <input
                                 type={'text'}
                                 placeholder={'Message'}
-                                className="text-body-sm sm:text-body focus:border-primary hover:border-primary w-full rounded-md px-3 py-2 border border-light-grey placeholder:text-light-grey placeholder:text-body-sm sm:placeholder:text-body outline-none"
+                                className="text-body-sm sm:text-body focus:border-primary w-full rounded-md px-3 py-2 border border-light-grey placeholder:text-light-grey placeholder:text-body-sm sm:placeholder:text-body outline-none hover:border-primary transition duration-200"
                             ></input>
 
                             <div className="flex flex-row items-start text-body focus:border-primary">
                                 <input
                                     type={'checkbox'}
                                     placeholder={'Message'}
-                                    className="outline-none w-5 h-5 mr-3"
+                                    className="outline-none w-5 h-5 mr-3 hover:border-primary transition duration-200"
                                 ></input>
                                 <p className="text-body-sm sm:text-body">
                                     I have read and accept the <strong>Terms of Service</strong> and{' '}
@@ -72,7 +72,7 @@ const ContactSection = () => {
                         </div>
                         <Button
                             title="Submit"
-                            className="bg-primary w-full text-white text-h5-sm sm:text-h5 justify-center"
+                            className="bg-primary w-full text-white text-h5-sm sm:text-h5 justify-center hover:bg-secondary transition duration-200"
                         />
                     </div>
                 </div>

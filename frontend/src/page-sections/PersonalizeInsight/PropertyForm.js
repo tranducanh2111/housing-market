@@ -134,7 +134,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                         type="button"
                         className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
                             formType === 'details' 
-                                ? 'bg-white shadow-md text-primary' 
+                                ? 'bg-white shadow-md text-primary hover:bg-secondary hover:text-white' 
                                 : 'text-gray-600 hover:bg-gray-50'
                         }`}
                         onClick={() => setFormType('details')}
@@ -145,7 +145,7 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                         type="button"
                         className={`flex-1 py-2 px-4 rounded-md transition-all duration-200 ${
                             formType === 'address' 
-                                ? 'bg-white shadow-md text-primary' 
+                                ? 'bg-white shadow-md text-primary hover:bg-secondary hover:text-white' 
                                 : 'text-gray-600 hover:bg-gray-50'
                         }`}
                         onClick={() => setFormType('address')}

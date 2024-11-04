@@ -112,7 +112,7 @@ const HeroSection = () => {
                     <Button
                         title="What's going on?"
                         icon={ArrowRight}
-                        className="bg-primary w-fit"
+                        className="bg-primary hover:bg-secondary w-fit"
                         textColor="text-white"
                         onClick={() => navigate('/latest-research')}
                     />
@@ -228,7 +228,7 @@ const HeroSection = () => {
                                     <Button
                                         title="More Details"
                                         icon={ArrowRight}
-                                        className="absolute bottom-3 right-3 z-10 mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md rounded-lg"
+                                        className="absolute bottom-3 right-3 z-10 mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md rounded-lg hover:bg-secondary hover:bg-opacity-100 hover:mix-blend-normal transition duration-200"
                                         textColor="text-white"
                                         style={{
                                             padding: '2px 8px',
@@ -254,7 +254,7 @@ const HeroSection = () => {
                         </h4>
                         <Button
                             icon={ArrowUpTilt}
-                            className="bg-primary w-fit h-[2.5rem] aspect-square"
+                            className="bg-primary w-fit h-[2.5rem] aspect-square hover:bg-secondary transition duration-200"
                             textColor="text-white"
                             style={{
                                 padding: '4px',
@@ -285,7 +285,7 @@ const HeroSection = () => {
                         <Button
                             title="Personalized Insight"
                             icon={Light}
-                            className="flex-1 min-w-fit mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md border border-white rounded-md text-white"
+                            className="flex-1 min-w-fit bg-black mix-blend-luminosity bg-opacity-20 backdrop-blur-md border border-white rounded-md text-white hover:bg-secondary hover:border-0 hover:bg-opacity-100 hover:mix-blend-normal transition duration-200"
                             textColor="text-white"
                             onClick={() => navigate('/result-dashboard')}
                         />
