@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { submitPropertyData, submitAddressData } from '../../api/propertyService';
 import FormInput from '../../components/ultility/FormInput';
 import StateSelect from '../../components/StateSelect';
+import InfoIcon from '../../assets/icons/info.svg';
 
 const PropertyForm = ({ onSubmitSuccess }) => {
     const [formType, setFormType] = useState('address');
@@ -156,6 +157,12 @@ const PropertyForm = ({ onSubmitSuccess }) => {
 
             <h2 className="text-xl font-bold mb-6 text-center text-gray-800">
                 {formType === 'address' ? 'Property Address' : 'Property Details'}
+                <span className="relative inline-block ml-2 cursor-pointer group">
+                    <img src={InfoIcon} alt="info" className="w-4 h-4" />
+                    <div className="absolute left-1/2 transform -translate-x-1/2 mt-1 w-40 p-2 bg-gray-700 text-white text-footnote-sm sm:text-footnote rounded-md opacity-0 transition-opacity duration-200 group-hover:opacity-100 z-10">
+                        Only US addresses are supported.
+                    </div>
+                </span>
             </h2>
             
             {error && (
