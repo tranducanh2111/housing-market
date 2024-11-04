@@ -35,10 +35,12 @@ const StateSelect = ({
         );
     };
 
-    const filteredStates = statesData.states.filter(state =>
-        state.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        state.toLowerCase() !== searchTerm.toLowerCase()
-    );
+    const filteredStates = statesData.states
+        .filter(state =>
+            state.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            state.toLowerCase() !== searchTerm.toLowerCase()
+        )
+        .sort((a, b) => a.localeCompare(b)); // Sort states alphabetically
 
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
