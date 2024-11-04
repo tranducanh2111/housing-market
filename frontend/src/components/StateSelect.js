@@ -6,7 +6,7 @@ const StateSelect = ({
     onChange,
     error,
     label = "State",
-    required = false,
+    required = true,
     name = "state",
     onFocus
 }) => {
@@ -15,20 +15,47 @@ const StateSelect = ({
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const inputRef = useRef(null);
+    const [localError, setLocalError] = useState('');
 
     // Update searchTerm when value changes externally
     useEffect(() => {
         setSearchTerm(value || '');
+        setLocalError('');
     }, [value]);
+
+    // Helper function to check if a state is valid
+    const isValidState = (input) => {
+        return statesData.states.some(
+            state => state.toLowerCase() === input.toLowerCase()
+        );
+    };
 
     const filteredStates = statesData.states.filter(state =>
         state.toLowerCase().includes(searchTerm.toLowerCase()) &&
         state.toLowerCase() !== searchTerm.toLowerCase()
     );
 
+    const handleInputChange = (e) => {
+        const inputValue = e.target.value;
+        setSearchTerm(inputValue);
+        setIsOpen(true);
+        
+        if (inputValue.trim() === '') {
+            setLocalError(required ? 'State is required' : '');
+            onChange({ target: { name, value: '' } });
+        } else if (!isValidState(inputValue)) {
+            setLocalError('Only US state is supported');
+            onChange({ target: { name, value: '' } });
+        } else {
+            setLocalError('');
+            onChange({ target: { name, value: inputValue } });
+        }
+    };
+
     const handleStateSelect = (state) => {
-        onChange({ target: { name, value: state } });
         setSearchTerm(state);
+        setLocalError('');
+        onChange({ target: { name, value: state } });
         setIsOpen(false);
         setIsFocused(false);
         inputRef.current?.blur();
@@ -56,6 +83,13 @@ const StateSelect = ({
     const handleBlur = () => {
         setTimeout(() => {
             if (!isOpen) {
+                if (searchTerm.trim() === '') {
+                    setLocalError(required ? 'State is required' : '');
+                } else if (!isValidState(searchTerm)) {
+                    setLocalError('Only US state is supported');
+                } else {
+                    setLocalError('');
+                }
                 setIsFocused(false);
             }
         }, 200);
@@ -69,6 +103,7 @@ const StateSelect = ({
     }, []);
 
     const showDropdown = isOpen && filteredStates.length > 0;
+    const displayError = error || localError;
 
     return (
         <div className="relative mb-8 cursor-text" ref={dropdownRef} onClick={handleContainerClick}>
@@ -78,22 +113,17 @@ const StateSelect = ({
                     type="text"
                     name={name}
                     value={searchTerm}
-                    onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        setIsOpen(true);
-                        // Trigger onChange with empty value to indicate field has been modified
-                        onChange({ target: { name, value: '' } });
-                    }}
+                    onChange={handleInputChange}
                     onFocus={handleInputFocus}
                     onBlur={handleBlur}
                     className={`block w-full px-3 pt-6 pb-2 text-gray-900 bg-white border rounded-md appearance-none focus:outline-none focus:ring-0 peer ${
-                        error
+                        displayError
                             ? 'border-red-500 hover:border-red-500 focus:border-red-500'
                             : 'border-gray-300 hover:border-primary focus:border-primary'
                     }`}
                     placeholder=" "
-                    aria-invalid={!!error}
-                    aria-describedby={error ? `${name}-error` : undefined}
+                    aria-invalid={!!displayError}
+                    aria-describedby={displayError ? `${name}-error` : undefined}
                 />
                 <label
                     className={`absolute text-sm duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-3 
@@ -101,7 +131,7 @@ const StateSelect = ({
                         peer-placeholder-shown:translate-y-0 
                         peer-focus:scale-75 
                         peer-focus:-translate-y-3
-                        ${error
+                        ${displayError
                             ? 'text-red-500'
                             : isFocused ? 'text-primary' : 'text-gray-500'
                         }
@@ -127,7 +157,7 @@ const StateSelect = ({
                 </div>
             )}
 
-            {error && (
+            {displayError && (
                 <div 
                     id={`${name}-error`}
                     className="absolute -bottom-6 left-0 text-sm text-red-500 flex items-center gap-1"
@@ -136,7 +166,7 @@ const StateSelect = ({
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
-                    {error}
+                    {displayError}
                 </div>
             )}
         </div>
