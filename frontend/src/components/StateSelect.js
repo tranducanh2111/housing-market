@@ -8,20 +8,25 @@ const StateSelect = ({
     label = "State",
     required = true,
     name = "state",
-    onFocus
+    onFocus,
+    touched = false // New prop to track if form has been submitted
 }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const inputRef = useRef(null);
-    const [localError, setLocalError] = useState('');
+    const [isDirty, setIsDirty] = useState(false); // Track if user has typed since last submission
 
     // Update searchTerm when value changes externally
     useEffect(() => {
         setSearchTerm(value || '');
-        setLocalError('');
     }, [value]);
+
+    // Reset dirty state when form is submitted (touched changes)
+    useEffect(() => {
+        setIsDirty(false);
+    }, [touched]);
 
     // Helper function to check if a state is valid
     const isValidState = (input) => {
@@ -39,22 +44,18 @@ const StateSelect = ({
         const inputValue = e.target.value;
         setSearchTerm(inputValue);
         setIsOpen(true);
+        setIsDirty(true); // Mark as dirty when user types
         
-        if (inputValue.trim() === '') {
-            setLocalError(required ? 'State is required' : '');
-            onChange({ target: { name, value: '' } });
-        } else if (!isValidState(inputValue)) {
-            setLocalError('Only US state is supported');
-            onChange({ target: { name, value: '' } });
-        } else {
-            setLocalError('');
+        if (isValidState(inputValue)) {
             onChange({ target: { name, value: inputValue } });
+        } else {
+            onChange({ target: { name, value: '' } });
         }
     };
 
     const handleStateSelect = (state) => {
         setSearchTerm(state);
-        setLocalError('');
+        setIsDirty(true);
         onChange({ target: { name, value: state } });
         setIsOpen(false);
         setIsFocused(false);
@@ -83,13 +84,6 @@ const StateSelect = ({
     const handleBlur = () => {
         setTimeout(() => {
             if (!isOpen) {
-                if (searchTerm.trim() === '') {
-                    setLocalError(required ? 'State is required' : '');
-                } else if (!isValidState(searchTerm)) {
-                    setLocalError('Only US state is supported');
-                } else {
-                    setLocalError('');
-                }
                 setIsFocused(false);
             }
         }, 200);
@@ -102,8 +96,9 @@ const StateSelect = ({
         };
     }, []);
 
+    // Only show error if the form has been submitted (touched) and user hasn't made changes since
+    const showError = touched && !isDirty && error;
     const showDropdown = isOpen && filteredStates.length > 0;
-    const displayError = error || localError;
 
     return (
         <div className="relative mb-8 cursor-text" ref={dropdownRef} onClick={handleContainerClick}>
@@ -117,13 +112,13 @@ const StateSelect = ({
                     onFocus={handleInputFocus}
                     onBlur={handleBlur}
                     className={`block w-full px-3 pt-6 pb-2 text-gray-900 bg-white border rounded-md appearance-none focus:outline-none focus:ring-0 peer ${
-                        displayError
+                        showError
                             ? 'border-red-500 hover:border-red-500 focus:border-red-500'
                             : 'border-gray-300 hover:border-primary focus:border-primary'
                     }`}
                     placeholder=" "
-                    aria-invalid={!!displayError}
-                    aria-describedby={displayError ? `${name}-error` : undefined}
+                    aria-invalid={!!showError}
+                    aria-describedby={showError ? `${name}-error` : undefined}
                 />
                 <label
                     className={`absolute text-sm duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-3 
@@ -131,7 +126,7 @@ const StateSelect = ({
                         peer-placeholder-shown:translate-y-0 
                         peer-focus:scale-75 
                         peer-focus:-translate-y-3
-                        ${displayError
+                        ${showError
                             ? 'text-red-500'
                             : isFocused ? 'text-primary' : 'text-gray-500'
                         }
@@ -157,7 +152,7 @@ const StateSelect = ({
                 </div>
             )}
 
-            {displayError && (
+            {showError && (
                 <div 
                     id={`${name}-error`}
                     className="absolute -bottom-6 left-0 text-sm text-red-500 flex items-center gap-1"
@@ -166,7 +161,7 @@ const StateSelect = ({
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
-                    {displayError}
+                    {error}
                 </div>
             )}
         </div>

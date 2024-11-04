@@ -1,4 +1,3 @@
-// PropertyForm.js
 import React, { useState } from 'react';
 import { submitPropertyData, submitAddressData } from '../../api/propertyService';
 import FormInput from '../../components/ultility/FormInput';
@@ -101,7 +100,11 @@ const PropertyForm = ({ onSubmitSuccess }) => {
                         value={formData[field]}
                         onChange={handleChange}
                         error={errorMessages[field]}
+                        touched={hasAttemptedSubmit} // Pass the form submission state
                         onFocus={() => handleInputFocus(field)}
+                        name="state"
+                        label="State"
+                        required={true}
                     />
                 );
             }
