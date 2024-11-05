@@ -176,10 +176,10 @@ const PropertyForm = ({ onSubmitSuccess }) => {
             )}
 
             {formType === 'address' 
-                ? renderInputs(['address', 'state', 'city'])
+                ? renderInputs(['state', 'city', 'address'])
                 : (
                     <>
-                        {renderInputs(['city', 'state', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'])}
+                        {renderInputs(['state', 'city' , 'bedrooms', 'bathrooms', 'livingArea', 'landSize'])}
                         <div className="flex items-center mb-6 mt-2">
                             <input
                                 type="checkbox"
