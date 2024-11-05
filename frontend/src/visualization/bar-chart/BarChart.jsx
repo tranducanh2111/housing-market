@@ -150,8 +150,6 @@ const BarChart = ({ data, selectedCity}) =>
         // handle panning to red bar
         d3.select("#bar-chart-button").on("click", panToRedBar);
 
-        panToRedBar();
-
         // tooltip
         const tooltip = d3.select('body')
             .append('div')
@@ -170,11 +168,7 @@ const BarChart = ({ data, selectedCity}) =>
                 .style('left', event.pageX + 40 + 'px');
         });
 
-        bars.on('mouseout', (event) =>
-        {
-            d3.select(event.target).attr('stroke-width', 0);
-            tooltip.style('visibility', 'hidden');
-        });
+        bars.on('mouseout', () => { tooltip.style('visibility', 'hidden'); });
 
         /*
         * Function that creates the x-axis scaler. This ensures that the chart will contain at most 37 bars in view, in
