@@ -289,8 +289,8 @@ const BarChart = ({ data, selectedCity}) =>
                     className="border rounded p-1 text-body-sm sm:text-body">
 
                     <option value="Alphabetical">Alphabetical</option>
-                    <option value="Ascending">Ascending</option>
-                    <option value="Descending">Descending</option>
+                    <option value="Ascending">Price Ascending</option>
+                    <option value="Descending">Price Descending</option>
                 </select>
                 <button type="button" id="bar-chart-button">Pan to inputted city</button>
             </form>
