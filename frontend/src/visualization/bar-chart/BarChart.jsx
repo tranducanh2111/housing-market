@@ -131,13 +131,15 @@ const BarChart = ({ data, selectedCity}) =>
 
         // pan by scrolling functionality
         let transform = JSON.parse(JSON.stringify(d3.zoomIdentity));
+        console.log(transform);
+
         const maxPan = containerWidth - rangeLeft;
         svg.on('wheel', (event) =>
         {
             event.preventDefault(); // block page scroll on event
 
             // convert vertical delta to horizontal translation
-            transform = transform.translate(-event.deltaY * 0.6, 0);
+            transform.x += -event.deltaY * 0.6;
             transform.x = Math.max(maxPan, Math.min(0, transform.x));
 
             svg.select('#bar-chart-x-axis').attr('transform', `translate(${transform.x}, ${containerHeight - marginBottom})`);
