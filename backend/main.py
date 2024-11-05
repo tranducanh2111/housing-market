@@ -36,6 +36,12 @@ class HousePricePredictionModelInput(BaseModel):
             raise ValueError('String is empty')
         return string_input
 
+    @field_validator('state')
+    def check_valid_state(cls, string_input: str) -> str:
+        if string_input.title() not in STATES:
+            raise ValueError(f'{string_input} is not a valid U.S. state')
+        return string_input
+
     @field_validator('prev_sold_date')
     def validate_sold_date(cls, date_input: Optional[date], info: ValidationInfo) -> date:
         """Validator for the 'prev_sold_date' field. Checks three things:
