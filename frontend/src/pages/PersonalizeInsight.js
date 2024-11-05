@@ -30,7 +30,7 @@ const PersonalizeInsightContent = () => {
     const selectedCity = result.result['property-details'].city;
 
     return (
-        <section className="mx-auto max-w-[78rem] w-full flex flex-col gap-8 px-5 mb-10">
+        <section className="mx-auto max-w-[1920px] w-full flex flex-col gap-8 px-5 mb-10">
             <section className="grid grid-cols-1 md:grid-cols-[270px_1fr] gap-8">
                 <PredictionResult result={result} />
                 <div className="bg-white rounded-lg shadow p-4 h-[500px]">
@@ -43,28 +43,27 @@ const PersonalizeInsightContent = () => {
                     </div>
                 </div>
             </section>
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                
-                <div className="bg-white rounded-lg shadow p-4 h-[540px]">
-                    <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">City Comparison</h3>
-                    <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
-                        <BarChart 
-                            data={result.result['bar-chart-data']} 
-                            selectedCity={selectedCity}
-                        />
-                    </div>
+            <section className="flex flex-wrap gap-8">
+            <div className="flex-1 min-w-[500px] bg-white rounded-lg shadow p-4 h-[540px]">
+                <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">City Comparison</h3>
+                <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
+                    <BarChart
+                        data={result.result['bar-chart-data']}
+                        selectedCity={selectedCity}
+                    />
                 </div>
-                <div className="bg-white rounded-lg shadow p-4 h-[540px]">
-                    <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">Area Impact</h3>
-                    <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
-                        <LineChart 
-                            livingAreaData={result.result['line-chart-data']['living-area-prices']}
-                            landAreaData={result.result['line-chart-data']['land-area-prices']}
-                            predictionResult={result.result}
-                        />
-                    </div>
+            </div>
+            <div className="flex-1 min-w-[500px] bg-white rounded-lg shadow p-4 h-[540px]">
+                <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">Area Impact</h3>
+                <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
+                    <LineChart
+                        livingAreaData={result.result['line-chart-data']['living-area-prices']}
+                        landAreaData={result.result['line-chart-data']['land-area-prices']}
+                        predictionResult={result.result}
+                    />
                 </div>
-            </section>
+            </div>
+        </section>
         </section>
     );
 };

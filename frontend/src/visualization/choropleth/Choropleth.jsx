@@ -9,7 +9,7 @@ import './Choropleth.css'
 /**
  * Choropleth Component
  * Creates an interactive US state map visualization with color-coded price data
- * Features include zoom, hover effects, tooltips, and animated state rendering
+ * Features include zoom, hover effects, and tooltips
  * 
  * @param {Object[]} data - Array of objects containing state price data
  * @param {string} selectedState - Currently selected state to highlight
