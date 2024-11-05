@@ -130,7 +130,7 @@ const BarChart = ({ data, selectedCity}) =>
             .text('↑ Price (USD)')
 
         // pan by scrolling functionality
-        let transform = d3.zoomIdentity;
+        let transform = JSON.parse(JSON.stringify(d3.zoomIdentity));
         const maxPan = containerWidth - rangeLeft;
         svg.on('wheel', (event) =>
         {
@@ -229,7 +229,7 @@ const BarChart = ({ data, selectedCity}) =>
 
         function panToRedBar()
         {
-            const redBarX = +d3.select('#selected-city').attr('x');
+            const redBarX = d3.select('#selected-city').attr('x');
             const middle = containerWidth / 2;
             const xOffset = middle - redBarX - xAxisScaler.bandwidth() / 2;
 
