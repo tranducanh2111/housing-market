@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import {formatPrice, observeContainerSize} from '../utils.js'
+import {formatPrice, observeContainerSize, tooltipHover } from '../utils.js'
 import * as d3 from 'd3';
 import './LineChart.css';
 
@@ -204,8 +204,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             });
 
             hoverDots.on('mousemove', (event) => {
-                tooltip.style('top', event.pageY - 20 + 'px')
-                    .style('left', event.pageX + 40 + 'px');
+                tooltipHover(tooltip, event);
             });
 
             hoverDots.on('mouseout', (event) => {
@@ -248,8 +247,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                                    Price: ${formatPrice(d['price'])} USD`);
                     })
                     .on('mousemove', (event) => {
-                        tooltip.style('top', event.pageY - 20 + 'px')
-                            .style('left', event.pageX + 40 + 'px');
+                        tooltipHover(tooltip, event);
                     })
                     .on('mouseout', (event) => {
                         d3.select(event.target).style('opacity', 0);

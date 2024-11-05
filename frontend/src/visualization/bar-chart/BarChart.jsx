@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import {formatPrice, observeContainerSize} from "../utils";
+import { formatPrice, observeContainerSize, tooltipHover } from "../utils";
 import * as d3 from 'd3';
 import './BarChart.css';
 
@@ -164,8 +164,7 @@ const BarChart = ({ data, selectedCity}) =>
 
         bars.on('mousemove', (event) =>
         {
-            tooltip.style('top', event.pageY - 20 + 'px')
-                .style('left', event.pageX + 40 + 'px');
+            tooltipHover(tooltip, event)
         });
 
         bars.on('mouseout', () => { tooltip.style('visibility', 'hidden'); });

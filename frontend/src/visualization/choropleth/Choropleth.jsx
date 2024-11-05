@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Legend } from './colorLegend';
 import { feature } from 'topojson-client';
-import { formatPrice, observeContainerSize } from "../utils";
+import { formatPrice, observeContainerSize, tooltipHover } from "../utils";
 import geoJson from "./us.json"
 import './Choropleth.css'
 
@@ -104,8 +104,7 @@ const Choropleth = ({ data, selectedState }) => {
 
         states.on('mousemove', (event) =>
         {
-            tooltip.style('top', event.pageY - 20 + 'px')
-                .style('left', event.pageX + 20 + 'px');
+            tooltipHover(tooltip, event);
         });
 
         states.on('mouseout', () => { tooltip.style('visibility', 'hidden'); });

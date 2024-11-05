@@ -19,3 +19,19 @@ export function observeContainerSize(containerRef, setDimensions) {
 
     return () => { resizeObserver.disconnect(); };
 }
+
+export function tooltipHover(tooltip, event)
+{
+    const tooltipNode = tooltip.node();
+    const tooltipWidth = tooltipNode.offsetWidth;
+    const windowWidth = window.innerWidth;
+    const mouseX = event.pageX;
+
+    const wouldOverflowRight = mouseX + tooltipWidth + 60 > windowWidth;
+
+    tooltip
+        .style('top', (event.pageY - 20) + 'px')
+        .style('left', wouldOverflowRight
+            ? (mouseX - tooltipWidth - 30) + 'px'
+            : (mouseX + 40) + 'px');
+}
