@@ -1,5 +1,6 @@
 // src/components/PredictionResult.js
 import React from 'react';
+import { formatPrice } from "../visualization/utils";
 
 // Functional component to display the prediction result
 const PredictionResult = ({ result }) => {
@@ -27,7 +28,7 @@ const PredictionResult = ({ result }) => {
                     <li><p className='text-body-sm sm:text-body'><strong>Land Area:</strong> {propertyDetails['land-area'].toFixed(2)} m²</p></li>
                     <hr className='my-2 border-black'/>
                     {/* Displaying the predicted price */}
-                    <li><p className='text-body-sm sm:text-body'><strong>Predicted Price:</strong> ${predictionPrice?.toFixed(2) || 'N/A'}</p></li>
+                    <li><p className='text-body-sm sm:text-body'><strong>Predicted Price:</strong> {`${formatPrice(predictionPrice)} USD` || 'N/A'}</p></li>
                     {/* Debug information (commented out) */}
                     {/* <li className="mt-4 pt-4 border-t border-gray-300">
                         <strong>Full Response:</strong>

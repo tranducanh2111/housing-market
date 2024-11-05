@@ -273,11 +273,8 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         
         // Cleanup function
         return () => {
-            // Remove all tooltips when component unmounts
-            d3.select(containerRef.current).selectAll('#tooltip').remove();
-            d3.selectAll('.bar-chart-tooltip').remove();
             // Also remove any orphaned tooltips from the body
-            d3.select('body').selectAll('#tooltip').remove();
+            d3.selectAll('#tooltip').remove();
         };
     }, [drawLineChart, livingAreaData, landAreaData]);
 
