@@ -3,6 +3,7 @@ import { submitPropertyData, submitAddressData } from 'api/propertyService';
 import FormInput from 'components/ultility/FormInput';
 import StateSelect from 'components/StateSelect';
 import InfoIcon from 'assets/icons/info.svg';
+import { capitalizeState } from 'utils/utils';
 
 const PropertyForm = ({ onSubmitSuccess }) => {
     const [formType, setFormType] = useState('details');
@@ -25,9 +26,12 @@ const PropertyForm = ({ onSubmitSuccess }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        const formattedValue = name === 'city' ? capitalizeState(value) : value;
+
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value
+            [name]: formattedValue
         }));
         
         // Clear error for this field if form has been submitted once

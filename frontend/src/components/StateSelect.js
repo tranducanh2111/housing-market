@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import statesData from 'sample_data/us_state.json';
+import { capitalizeState } from 'utils/utils';
 
 const StateSelect = ({ 
     value,
@@ -9,26 +10,24 @@ const StateSelect = ({
     required = true,
     name = "state",
     onFocus,
-    touched = false // New prop to track if form has been submitted
+    touched = false
 }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
     const inputRef = useRef(null);
-    const [isDirty, setIsDirty] = useState(false); // Track if user has typed since last submission
+    const [isDirty, setIsDirty] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    // Update searchTerm when value changes externally
     useEffect(() => {
         setSearchTerm(value || '');
     }, [value]);
 
-    // Reset dirty state when form is submitted (touched changes)
     useEffect(() => {
         setIsDirty(false);
     }, [touched]);
 
-    // Helper function to check if a state is valid
     const isValidState = (input) => {
         return statesData.states.some(
             state => state.toLowerCase() === input.toLowerCase()
@@ -40,25 +39,29 @@ const StateSelect = ({
             state.toLowerCase().includes(searchTerm.toLowerCase()) &&
             state.toLowerCase() !== searchTerm.toLowerCase()
         )
-        .sort((a, b) => a.localeCompare(b)); // Sort states alphabetically
+        .sort((a, b) => a.localeCompare(b));
 
     const handleInputChange = (e) => {
         const inputValue = e.target.value;
         setSearchTerm(inputValue);
         setIsOpen(true);
-        setIsDirty(true); // Mark as dirty when user types
+        setIsDirty(true);
         
-        if (isValidState(inputValue)) {
-            onChange({ target: { name, value: inputValue } });
+        const formattedState = capitalizeState(inputValue);
+
+        if (isValidState(formattedState)) {
+            onChange({ target: { name, value: formattedState } });
         } else {
             onChange({ target: { name, value: '' } });
+            setErrorMessage(`${formattedState} is not a valid state.`);
         }
     };
 
     const handleStateSelect = (state) => {
-        setSearchTerm(state);
+        const formattedState = capitalizeState(state);
+        setSearchTerm(formattedState);
         setIsDirty(true);
-        onChange({ target: { name, value: state } });
+        onChange({ target: { name, value: formattedState } });
         setIsOpen(false);
         setIsFocused(false);
         inputRef.current?.blur();
@@ -98,8 +101,7 @@ const StateSelect = ({
         };
     }, []);
 
-    // Only show error if the form has been submitted (touched) and user hasn't made changes since
-    const showError = touched && !isDirty && error;
+    const showError = touched && !isDirty && (error || errorMessage);
     const showDropdown = isOpen && filteredStates.length > 0;
 
     return (
@@ -163,7 +165,7 @@ const StateSelect = ({
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
-                    {error}
+                    {errorMessage || error}
                 </div>
             )}
         </div>
