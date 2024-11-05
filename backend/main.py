@@ -148,7 +148,7 @@ async def predict_house_price(user_input: HousePricePredictionModelInput):
         return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e}')
 
 
 RAPID_API_URL = "https://zillow56.p.rapidapi.com/search_address"
@@ -209,7 +209,7 @@ async def predict_house_price(street: str, city: str, state: str):
         return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
-        raise HTTPException(status_code=500, detail='Internal server error')
+        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e}')
 
 
 @trace_exception
