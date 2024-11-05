@@ -38,6 +38,7 @@ class HousePricePredictionModelInput(BaseModel):
 
     @field_validator('state')
     def check_valid_state(cls, string_input: str) -> str:
+        """Validator that checks if the 'state' input is a valid U.S. state."""
         if string_input.title() not in STATES:
             raise ValueError(f'{string_input} is not a valid U.S. state')
         return string_input
@@ -85,6 +86,7 @@ class HousePricePredictionModelInput(BaseModel):
         else:
             return self.encode_state_value()
 
+    @trace_exception
     def get_processed_input(self) -> dict:
         """Returns all the values in the correct order and format for the model prediction."""
         return {
