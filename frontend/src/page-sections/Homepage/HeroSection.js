@@ -1,8 +1,9 @@
 // src/pages-section/HomePage.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import HeroDecorImage from 'assets/images/hero-sub-image.png';
+import { submitAddressData } from 'api/propertyService';
 import Button from 'components/ultility/Button';
+
 import ArrowRight from 'assets/icons/arrow-right-white.svg';
 import ArrowUpTilt from 'assets/icons/arrow-up-tilt.svg';
 // import Hat from 'assets/icons/hat.svg';
@@ -14,59 +15,151 @@ import { EffectCards, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-cards';
 
+import HeroDecorImage from 'assets/images/hero-sub-image.png';
 import HeroImage from 'assets/images/sub-hero-section.jpg';
-import VenueImage from 'assets/images/7478054_0.jpg';
-import VenueImage2 from 'assets/images/4196182_0.jpg';
-import VenueImage3 from 'assets/images/streetview.jpg';
-import VenueImage4 from 'assets/images/genMid.2510113_0.jpg';
-import VenueImage5 from 'assets/images/6618843-150-single-family-home-1.med.jpg';
+import VenueImage1 from 'assets/images/homepage-property1.jpg';
+import VenueImage2 from 'assets/images/homepage-property2.jpg';
+import VenueImage3 from 'assets/images/homepage-property3.jpg';
+import VenueImage4 from 'assets/images/homepage-property4.jpg';
+import VenueImage5 from 'assets/images/homepage-property5.jpg';
+import VenueImage6 from 'assets/images/homepage-property6.jpg';
+import VenueImage7 from 'assets/images/homepage-property7.jpg';
+import VenueImage8 from 'assets/images/homepage-property8.jpg';
+import VenueImage9 from 'assets/images/homepage-property9.jpg';
+import VenueImage10 from 'assets/images/homepage-property10.jpg';
 import SmallLocationImage from 'assets/images/6618843-150-single-family-home-1.med.jpg';
 
 const slidesData = [
     {
-        image: VenueImage,
-        title: '1237 Citadel Dr NE, Atlanta, GA 30324',
-        bedroom: '5',
-        bathroom: '5',
-        price: '1,950,000',
-        link: 'https://www.zillow.com/homedetails/1237-Citadel-Dr-NE-Atlanta-GA-30324/14533056_zpid/'
+        image: VenueImage1,
+        address: '4254 Hayvenhurst Ave',
+        city: 'Encino',
+        state: 'California',
+        bedroom: '8',
+        bathroom: '9',
+        price: '7,995,000',
+        link: 'https://www.zillow.com/homedetails/4254-Hayvenhurst-Ave-Encino-CA-91436/19994273_zpid/'
     },
     {
         image: VenueImage2,
-        title: '5348 Rockwood Rd, Charlotte, NC 28216',
-        bedroom: '3',
-        bathroom: '2',
-        price: '374,990',
-        link: 'https://www.zillow.com/homedetails/5348-Rockwood-Rd-Charlotte-NC-28216/64999929_zpid/'
+        address: '4640 Petit Ave',
+        city: 'Encino',
+        state: 'California',
+        bedroom: '6',
+        bathroom: '10',
+        price: '14,995,000',
+        link: 'https://www.zillow.com/homedetails/4640-Petit-Ave-Encino-CA-91436/19991694_zpid/'
     },
     {
         image: VenueImage3,
-        title: '201 Sleepy Hollow Dr, Amherst, OH 44001',
-        bedroom: '4',
-        bathroom: '3',
-        price: '385,000',
-        link: 'https://www.zillow.com/homedetails/201-Sleepy-Hollow-Dr-Amherst-OH-44001/34571745_zpid/'
+        address: '9880 SW 87th Ave',
+        city: 'Miami',
+        state: 'Florida',
+        bedroom: '5',
+        bathroom: '7',
+        price: '4,595,000',
+        link: 'https://www.zillow.com/homedetails/9880-SW-87th-Ave-Miami-FL-33176/247679656_zpid/'
     },
     {
         image: VenueImage4,
-        title: '759 London Groveport Rd, Lockbourne, OH 43137',
-        bedroom: '4',
-        bathroom: '3',
-        price: '749,900',
-        link: 'https://www.zillow.com/homedetails/759-London-Groveport-Rd-Lockbourne-OH-43137/34036365_zpid/'
+        address: '6080 SW 104th St',
+        city: 'Pinecrest',
+        state: 'Florida',
+        bedroom: '7',
+        bathroom: '9',
+        price: '10,499,000',
+        link: 'https://www.zillow.com/homedetails/6080-SW-104th-St-Pinecrest-FL-33156/44024853_zpid/'
     },
     {
         image: VenueImage5,
-        title: '38655 Branch Ave, North Branch, MN 55056',
-        bedroom: '2',
-        bathroom: '3',
-        price: '155,000',
-        link: 'https://www.zillow.com/homedetails/38655-Branch-Ave-North-Branch-MN-55056/53220179_zpid/'
+        address: '808 Lakeside Avenue S',
+        city: 'Seattle',
+        state: 'Washington',
+        bedroom: '3',
+        bathroom: '4',
+        price: '8,800,000',
+        link: 'https://www.zillow.com/homedetails/808-Lakeside-Ave-S-Seattle-WA-98144/48921603_zpid/'
+    },
+    {
+        image: VenueImage6,
+        address: '31 Eagles Landing Ln',
+        city: 'Las Vegas',
+        state: 'Nevada',
+        bedroom: '7',
+        bathroom: '11',
+        price: '8,250,000',
+        link: 'https://www.zillow.com/homedetails/31-Eagles-Landing-Ln-Las-Vegas-NV-89141/66826917_zpid/'
+    },
+    {
+        image: VenueImage7,
+        address: '1721 S Tioga Way',
+        city: 'Las Vegas',
+        state: 'Nevada',
+        bedroom: '7',
+        bathroom: '8',
+        price: '4,499,500',
+        link: 'https://www.zillow.com/homedetails/1721-S-Tioga-Way-Las-Vegas-NV-89117/141419815_zpid/'
+    },
+    {
+        image: VenueImage8,
+        address: '27 Eagles Landing Ln',
+        city: 'Las Vegas',
+        state: 'Nevada',
+        bedroom: '6',
+        bathroom: '8',
+        price: '13,279,000',
+        link: 'https://www.zillow.com/homedetails/27-Eagles-Landing-Ln-Las-Vegas-NV-89141/70055445_zpid/'
+    },
+    {
+        image: VenueImage9,
+        address: '5 Promontory Pointe Ln',
+        city: 'Las Vegas',
+        state: 'Nevada',
+        bedroom: '5',
+        bathroom: '8',
+        price: '21,450,000',
+        link: 'https://www.zillow.com/homedetails/5-Promontory-Pointe-Ln-Las-Vegas-NV-89135/89592384_zpid/'
+    },
+    {
+        image: VenueImage10,
+        address: '25 Painted Feather Way',
+        city: 'Las Vegas',
+        state: 'Nevada',
+        bedroom: '5',
+        bathroom: '8',
+        price: '9,175,000',
+        link: 'https://www.zillow.com/homedetails/25-Painted-Feather-Way-Las-Vegas-NV-89135/70055548_zpid/'
     },
 ];
 
 const HeroSection = () => {
     const navigate = useNavigate();
+
+    const handlePropertyPrediction = async (propertyData) => {
+        try {
+            const { address, city, state } = propertyData;
+            
+            // Format the address by replacing spaces with %20
+            const formattedAddress = address.replace(/\s+/g, '%20');
+            const formattedCity = city.replace(/\s+/g, '%20');
+            
+            // Make the API call using the property service
+            const response = await submitAddressData({
+                address: formattedAddress,
+                city: formattedCity,
+                state: state
+            });
+
+            // Store the prediction result in localStorage
+            localStorage.setItem('predictionResult', JSON.stringify(response));
+            
+            // Navigate to the personalize insight page
+            navigate('/personalize-insight');
+        } catch (error) {
+            console.error('Error predicting property price:', error);
+            // You might want to add error handling here, such as showing a toast notification
+        }
+    };
 
     return (
         <main className="max-w-[78rem] mx-auto grid grid-cols-1 xl:grid-cols-2 gap-16 px-4">
@@ -195,7 +288,7 @@ const HeroSection = () => {
                                         id="swiper-title"
                                         className="text-white text-h4-sm sm:text-h4 font-semibold line-clamp-1"
                                     >
-                                        {slide.title}
+                                        {`${slide.address}, ${slide.city}, ${slide.state}`}
                                     </h4>
                                 </div>
                                 <div className="absolute bottom-3 left-3 z-10">
@@ -233,6 +326,7 @@ const HeroSection = () => {
                                         style={{
                                             padding: '2px 8px',
                                         }}
+                                        onClick={() => handlePropertyPrediction(slide)}
                                     />
                                 </a>
                             </SwiperSlide>
