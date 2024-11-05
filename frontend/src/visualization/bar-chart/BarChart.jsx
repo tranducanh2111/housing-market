@@ -23,6 +23,7 @@ const BarChart = ({ data, selectedCity}) =>
     const chartRef = useRef(null);          // Reference for main chart container
     const containerRef = useRef(null);       // Reference for outer container
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const [currentOrder, setCurrentOrder] = useState('Alphabetical');
 
     useEffect(() => observeContainerSize(containerRef, setDimensions), [containerRef]);
 
@@ -46,8 +47,8 @@ const BarChart = ({ data, selectedCity}) =>
             ['Descending', (a, b) => d3.descending(a['price'], b['price'])]
         ]);
 
-        // initially , have the data sorted alphabetically
-        data.sort(orderMap.get('Alphabetical'));
+        // Sort data according to current order
+        data.sort(orderMap.get(currentOrder));
 
         // create svg
         const svg = d3.select(chartRef.current)
@@ -147,7 +148,10 @@ const BarChart = ({ data, selectedCity}) =>
         });
 
         // handle bar sorting
-        d3.select('#bar-chart-order').on('change', (event) => orderBars(event.target.value));
+        d3.select('#bar-chart-order').on('change', (event) => {
+            setCurrentOrder(event.target.value);
+            orderBars(event.target.value);
+        });
 
         // handle panning to red bar
         d3.select("#bar-chart-button").on("click", panToRedBar);
@@ -267,7 +271,7 @@ const BarChart = ({ data, selectedCity}) =>
             d3.select('#bar-chart-button').attr('disabled', null);
         }
 
-    }, [dimensions, selectedCity]);
+    }, [dimensions, selectedCity, currentOrder]);
 
     useEffect(() => {
         if (data && dimensions.width && dimensions.height)
@@ -288,8 +292,10 @@ const BarChart = ({ data, selectedCity}) =>
                 <label htmlFor="bar-chart-order" className="mr-2 text-body-sm sm:text-body">Sort by</label>
                 <select
                     id="bar-chart-order"
-                    className="border rounded p-1 text-body-sm sm:text-body">
-
+                    className="border rounded p-1 text-body-sm sm:text-body"
+                    value={currentOrder}
+                    onChange={(e) => setCurrentOrder(e.target.value)}
+                >
                     <option value="Alphabetical">Alphabetical</option>
                     <option value="Ascending">Price Ascending</option>
                     <option value="Descending">Price Descending</option>

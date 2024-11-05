@@ -108,11 +108,13 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .style('visibility', 'hidden');
 
         d3.selectAll('input[name="area"]')
-            .on('change', function () { update(this.value, 800); });
+            .on('change', function() { 
+                setSelectedArea(this.value);
+                update(this.value, 800); 
+            });
 
-        // Create graph
-        update('living_area', 0);
-        update('living_area', 0); // this has to be called twice for the tooltip to work ¯\_(ツ)_/¯
+        // Create graph with current selected area
+        update(selectedArea, 0);
 
         function update(areaType, t)
         {
@@ -255,7 +257,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     });
             }
         }
-    }, [dimensions, predictionResult]);
+    }, [dimensions, predictionResult, selectedArea]);
 
     function calculateAxisDomain(lowerBound, upperBound, paddingPercent)
     {
@@ -273,10 +275,9 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         
         // Cleanup function
         return () => {
-            // Also remove any orphaned tooltips from the body
             d3.selectAll('#tooltip').remove();
         };
-    }, [drawLineChart, livingAreaData, landAreaData]);
+    }, [drawLineChart, livingAreaData, landAreaData, selectedArea]);
 
     return (
         <div ref={containerRef} className="w-full h-full">
