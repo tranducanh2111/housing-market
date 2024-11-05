@@ -307,9 +307,6 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
         data_living_area['living_area'] = living_area * percent / 100
         data_land_area['land_area'] = land_area * percent / 100
 
-        print(percent)
-        print(data_living_area['living_area'])
-
         result_living_area.append({
             'living_area': int(data_living_area['living_area']),
             'price': make_prediction(model, data_living_area)
