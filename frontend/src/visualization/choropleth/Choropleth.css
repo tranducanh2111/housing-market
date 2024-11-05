@@ -1,0 +1,13 @@
+.state {
+    stroke: rgb(128, 128, 128);
+    stroke-width: 1.5;
+}
+
+.state:hover {
+    fill: yellow;
+}
+
+#selected-state {
+    stroke-width: 2.5;
+    stroke: yellow;
+}
