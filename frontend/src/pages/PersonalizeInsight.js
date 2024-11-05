@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ErrorBoundary from 'components/ultility/ErrorBoundary';
 import withErrorBoundary from 'hoc/withErrorBoundary';
-import PredictionResult from '../components/PredictionResult';
+import PredictionResult from 'components/PredictionResult';
 
 // Visualizations
 import BarChart from 'visualization/bar-chart/BarChart';
