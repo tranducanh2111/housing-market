@@ -151,10 +151,10 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .tickSize(10)
                 .tickValues(xTickValues);
 
-            // update x-axis
+            // Update x-axis with animation
             svg.select('#line-chart-x-axis')
                 .transition()
-                .duration(t)
+                .duration(800) // Adjust duration as needed
                 .call(xAxisGenerator);
             svg.select('#line-chart-x-axis .domain')
                 .remove();
@@ -176,28 +176,41 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .x(d => xAxisScaler(d[areaType]))
                 .y(d => yAxisScaler(d['price']));
 
-            // Update the line
+            // Draw the line with animation
             const line = svg.selectAll('.chart-line').data([data]);
             line.enter()
                 .append('path')
                 .attr('class', 'chart-line')
-                .merge(line)
-                .transition()
-                .duration(t)
+                .attr('fill', 'none')
+                .attr('stroke', 'steelblue')
+                .attr('stroke-width', 2)
                 .attr('d', lineGenerator)
-                .attr('fill', 'none');
+                .attr('stroke-dasharray', function() {
+                    const totalLength = this.getTotalLength();
+                    return `${totalLength} ${totalLength}`;
+                })
+                .attr('stroke-dashoffset', function() {
+                    return this.getTotalLength();
+                })
+                .transition()
+                .duration(1000) // Adjust duration as needed
+                .ease(d3.easeLinear)
+                .attr('stroke-dashoffset', 0);
 
-            // Update dots
+            // Update dots with delayed appearance
             const dots = svg.selectAll('.line-chart-dot').data(data);
             dots.enter()
                 .append('circle')
                 .attr('class', 'line-chart-dot')
                 .attr('r', 4)
+                .attr('opacity', 0)
                 .merge(dots)
                 .transition()
                 .duration(t)
+                .delay((d, i) => i * (t / data.length)) // Stagger the appearance
                 .attr('cx', d => xAxisScaler(d[areaType]))
-                .attr('cy', d => yAxisScaler(d['price']));
+                .attr('cy', d => yAxisScaler(d['price']))
+                .attr('opacity', 1);
 
             // Update hover dots for tooltip
             const hoverDots = svg.selectAll('.line-chart-hover-dot').data(data);
