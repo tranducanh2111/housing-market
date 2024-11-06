@@ -6,7 +6,7 @@
 * - https://d3-graph-gallery.com/graph/line_change_data.html
 * */
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import {formatPrice, observeContainerSize, tooltipHover } from '../utils.js'
 import * as d3 from 'd3';
 import './LineChart.css';
@@ -16,6 +16,16 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
     const containerRef = useRef(null);
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [selectedArea, setSelectedArea] = useState('living_area');
+
+    const formattedPredictionResult = useMemo(() => {
+        if (!predictionResult) return null;
+        
+        return {
+            living_area: parseFloat(predictionResult['property-details']['living-area']),
+            land_area: parseFloat(predictionResult['property-details']['land-area']),
+            predicted_price: predictionResult.prediction
+        };
+    }, [predictionResult]);
 
     useEffect(() => observeContainerSize(containerRef, setDimensions), [containerRef]);
 
@@ -229,9 +239,55 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 d3.select(event.target).style('opacity', 0);
                 tooltip.style('visibility', 'hidden');
             });
+
+            // Add prediction point (red dot)
+            if (formattedPredictionResult) {
+                const predictionDot = svg.selectAll('.prediction-dot').data([formattedPredictionResult]);
+                
+                predictionDot.enter()
+                    .append('circle')
+                    .attr('class', 'prediction-dot')
+                    .attr('r', 6)
+                    .attr('fill', 'red')
+                    .merge(predictionDot)
+                    .transition()
+                    .duration(t)
+                    .attr('cx', d => xAxisScaler(d[areaType]))
+                    .attr('cy', d => yAxisScaler(d.predicted_price));
+
+                // Add hover functionality for prediction dot
+                const predictionHoverDot = svg.selectAll('.prediction-hover-dot').data([formattedPredictionResult]);
+                
+                predictionHoverDot.enter()
+                    .append('circle')
+                    .attr('class', 'prediction-hover-dot')
+                    .attr('r', 12)
+                    .style('opacity', 0)
+                    .merge(predictionHoverDot)
+                    .transition()
+                    .duration(t)
+                    .attr('cx', d => xAxisScaler(d[areaType]))
+                    .attr('cy', d => yAxisScaler(d.predicted_price));
+
+                // Add hover events for prediction dot
+                predictionHoverDot.on('mouseover', (event, d) => {
+                    d3.select(event.target).style('opacity', 1);
+                    
+                    const areaStr = areaType === 'living_area' ? 'Living area' : 'Land area';
+                    tooltip.style('visibility', 'visible')
+                        .text(`${areaStr}: ${parseInt(d[areaType])} m²\nPredicted Price: ${formatPrice(d.predicted_price)} USD`);
+                });
+                predictionHoverDot.on('mousemove', (event) => {
+                    tooltipHover(tooltip, event);
+                });
+                predictionHoverDot.on('mouseout', (event) => {
+                    d3.select(event.target).style('opacity', 0);
+                    tooltip.style('visibility', 'hidden');
+                });
+            }
         }
         
-    }, [dimensions, predictionResult, selectedArea]);
+    }, [dimensions, formattedPredictionResult, selectedArea]);
 
     function calculateAxisDomain(lowerBound, upperBound, paddingPercent)
     {
