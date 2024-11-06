@@ -1,5 +1,13 @@
+/*
+* Filename: LineChart.jsx
+* Author: John Iliadis - 104010553
+*
+* References:
+* - https://d3-graph-gallery.com/graph/line_change_data.html
+* */
+
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import {formatPrice, observeContainerSize} from '../utils.js'
+import {formatPrice, observeContainerSize, tooltipHover } from '../utils.js'
 import * as d3 from 'd3';
 import './LineChart.css';
 
@@ -105,20 +113,23 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .text('↑ Price (USD)')
 
         // Remove any existing tooltips
-        d3.select(containerRef.current).selectAll('#tooltip').remove();
+        // d3.select(containerRef.current).selectAll('#tooltip').remove();
 
         // Create new tooltip
         const tooltip = d3.select('body')
             .append('div')
-            .attr('id', 'tooltip')
+            .attr('id', 'line-chart-tooltip')
             .style('visibility', 'hidden');
 
         d3.selectAll('input[name="area"]')
-            .on('change', function () { update(this.value, 800); });
+            .on('change', function() { 
+                setSelectedArea(this.value);
+                update(this.value, 800); 
+            });
 
-        // Create graph
-        update('living_area', 0);
-        update('living_area', 0); // this has to be called twice for the tooltip to work ¯\_(ツ)_/¯
+        // Create graph with current selected area
+        update(selectedArea, 0);
+        update(selectedArea, 0); // DO NOT REMOVE THIS LINE
 
         function update(areaType, t)
         {
@@ -206,12 +217,11 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
                 const areaStr = areaType === 'living_area' ? 'Living area' : 'Land area';
                 tooltip.style('visibility', 'visible')
-                    .text(`${areaStr}: ${d[areaType]} m²\nPrice: ${formatPrice(d['price'])} USD`);
+                    .text(`${areaStr}: ${parseInt(d[areaType])} m²\nPrice: ${formatPrice(d['price'])} USD`);
             });
 
             hoverDots.on('mousemove', (event) => {
-                tooltip.style('top', event.pageY - 20 + 'px')
-                    .style('left', event.pageX + 40 + 'px');
+                tooltipHover(tooltip, event);
             });
 
             hoverDots.on('mouseout', (event) => {
@@ -249,13 +259,10 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                         d3.select(event.target).style('opacity', 0.3);
                         const areaTypeText = areaType === 'living_area' ? 'Living area' : 'Land area';
                         tooltip.style('visibility', 'visible')
-                            .text(`Predicted Property
-                                   ${areaTypeText}: ${d['area']} m²
-                                   Price: ${formatPrice(d['price'])} USD`);
+                            .text(`${areaTypeText}: ${parseInt(d['area'])} m²\nPrice: ${formatPrice(d['price'])} USD`);
                     })
                     .on('mousemove', (event) => {
-                        tooltip.style('top', event.pageY - 20 + 'px')
-                            .style('left', event.pageX + 40 + 'px');
+                        tooltipHover(tooltip, event);
                     })
                     .on('mouseout', (event) => {
                         d3.select(event.target).style('opacity', 0);
@@ -263,7 +270,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                     });
             }
         }
-    }, [dimensions, predictionResult]);
+    }, [dimensions, predictionResult, selectedArea]);
 
     function calculateAxisDomain(lowerBound, upperBound, paddingPercent)
     {
@@ -276,18 +283,11 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
     useEffect(() => {
         if (livingAreaData && landAreaData) {
+            d3.selectAll('#line-chart-tooltip').remove();
             drawLineChart(livingAreaData, landAreaData);
         }
-        
-        // Cleanup function
-        return () => {
-            // Remove all tooltips when component unmounts
-            d3.select(containerRef.current).selectAll('#tooltip').remove();
-            d3.selectAll('.bar-chart-tooltip').remove();
-            // Also remove any orphaned tooltips from the body
-            d3.select('body').selectAll('#tooltip').remove();
-        };
-    }, [drawLineChart, livingAreaData, landAreaData]);
+
+    }, [drawLineChart, livingAreaData, landAreaData, selectedArea]);
 
     return (
         <div ref={containerRef} className="w-full h-full">

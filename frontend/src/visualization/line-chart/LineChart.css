@@ -33,7 +33,7 @@
     opacity: 0.3;
 }
 
-#tooltip {
+#line-chart-tooltip {
     position: absolute;
     padding: 10px;
     background-color: white;

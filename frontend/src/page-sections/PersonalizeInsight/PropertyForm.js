@@ -161,12 +161,14 @@ const PropertyForm = ({ onSubmitSuccess }) => {
 
             <h2 className="text-xl font-bold mb-6 text-center text-gray-800">
                 {formType === 'address' ? 'Property Address' : 'Property Details'}
-                <span className="relative inline-block ml-2 cursor-pointer group">
-                    <img src={InfoIcon} alt="info" className="w-4 h-4" />
-                    <div className="absolute left-1/2 transform -translate-x-1/2 mt-1 w-40 p-2 bg-gray-700 text-white text-footnote-sm sm:text-footnote rounded-md opacity-0 transition-opacity duration-200 group-hover:opacity-100 z-10">
-                        Only US addresses are supported.
-                    </div>
-                </span>
+                {formType === 'address' && (
+                    <span className="relative inline-block ml-2 cursor-pointer group">
+                        <img src={InfoIcon} alt="info" className="w-4 h-4" />
+                        <div className="absolute left-1/2 transform -translate-x-1/2 mt-1 w-40 p-2 bg-gray-700 text-white text-footnote-sm sm:text-footnote rounded-md opacity-0 transition-opacity duration-200 group-hover:opacity-100 z-10">
+                            The "By Address" input type requires a real U.S. address to function. An API call to Zillow.com will be made to retrieve property data for the model.
+                        </div>
+                    </span>
+                )}
             </h2>
             
             {error && (
@@ -176,10 +178,10 @@ const PropertyForm = ({ onSubmitSuccess }) => {
             )}
 
             {formType === 'address' 
-                ? renderInputs(['address', 'state', 'city'])
+                ? renderInputs(['state', 'city', 'address'])
                 : (
                     <>
-                        {renderInputs(['city', 'state', 'bedrooms', 'bathrooms', 'livingArea', 'landSize'])}
+                        {renderInputs(['state', 'city' , 'bedrooms', 'bathrooms', 'livingArea', 'landSize'])}
                         <div className="flex items-center mb-6 mt-2">
                             <input
                                 type="checkbox"

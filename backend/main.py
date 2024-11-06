@@ -17,7 +17,7 @@ import json
 import requests
 
 
-class HousePricePredictionModelInput(BaseModel):
+class HousePricePredictionInput(BaseModel):
     """Pydantic model used for validating the input data. This class also processes the data into an appropriate
     format for the model."""
     state: str = Field(..., description='American state')
@@ -34,6 +34,13 @@ class HousePricePredictionModelInput(BaseModel):
         """Validator makes sure that the 'state' and 'city' fields are not empty."""
         if string_input.strip() == '':
             raise ValueError('String is empty')
+        return string_input
+
+    @field_validator('state')
+    def check_valid_state(cls, string_input: str) -> str:
+        """Validator that checks if the 'state' input is a valid U.S. state."""
+        if string_input.title() not in STATES:
+            raise ValueError(f'{string_input} is not a valid U.S. state')
         return string_input
 
     @field_validator('prev_sold_date')
@@ -79,6 +86,7 @@ class HousePricePredictionModelInput(BaseModel):
         else:
             return self.encode_state_value()
 
+    @trace_exception
     def get_processed_input(self) -> dict:
         """Returns all the values in the correct order and format for the model prediction."""
         return {
@@ -134,18 +142,18 @@ async def load_city_state_encoded_data():
 
 
 @app.post('/predict')
-async def predict_house_price(user_input: HousePricePredictionModelInput):
+async def predict_house_price(user_input: HousePricePredictionInput):
     """Post method used for making a price prediction on a property, given the property's details."""
     try:
         return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e)}')
 
 
 RAPID_API_URL = "https://zillow56.p.rapidapi.com/search_address"
 RAPID_API_HEADERS = {
-    "x-rapidapi-key": "7fe6ede6dcmsha5ef7a4b1eb6781p1d1f25jsn2cbe369ca4b7",
+    "x-rapidapi-key": "425c7407a5msh331cd772dfdbec6p1cc1a7jsna5fc5693f5eb",
     "x-rapidapi-host": "zillow56.p.rapidapi.com"
 }
 
@@ -174,9 +182,10 @@ async def predict_house_price(street: str, city: str, state: str):
     API is used to fetch the data required for the model. This method is used for when the user doesn't know the
     property's specific details, but knows the property address."""
     address = f'{street} {city} {state}'
-    house_data = fetch_rapid_api_house_data(address)
 
     try:
+        house_data = fetch_rapid_api_house_data(address)
+
         living_area = house_data['livingArea'] * 0.09290304  # convert from square feet to square meters
         land_area = house_data['lotSize'] * 0.09290304  # convert from square feet to square meters
         sold = True
@@ -187,7 +196,7 @@ async def predict_house_price(street: str, city: str, state: str):
             sold = False
             date_sold = None
 
-        user_input = HousePricePredictionModelInput(
+        user_input = HousePricePredictionInput(
             state=state,
             city=city,
             beds=house_data['bedrooms'],
@@ -201,11 +210,11 @@ async def predict_house_price(street: str, city: str, state: str):
         return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
-        raise HTTPException(status_code=500, detail='Internal server error')
+        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e)}')
 
 
 @trace_exception
-def get_result_data(user_input: HousePricePredictionModelInput) -> dict:
+def get_result_data(user_input: HousePricePredictionInput) -> dict:
     """Calculates and returns all the data needed for the visualizations."""
     return {
         'prediction': make_prediction(model, user_input.get_processed_input()),
@@ -217,7 +226,7 @@ def get_result_data(user_input: HousePricePredictionModelInput) -> dict:
 
 
 @trace_exception
-def get_choropleth_chart_data(user_input: HousePricePredictionModelInput) -> list:
+def get_choropleth_chart_data(user_input: HousePricePredictionInput) -> list:
     """Calculates the data required for the US state choropleth chart. It returns a
     list of dictionaries in the following format:
 
@@ -242,7 +251,7 @@ def get_choropleth_chart_data(user_input: HousePricePredictionModelInput) -> lis
 
 
 @trace_exception
-def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
+def get_bar_chart_data(user_input: HousePricePredictionInput) -> list:
     """Calculates the data required for the bar chart. It returns a list of
     dictionaries in the following format:
 
@@ -283,7 +292,7 @@ def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
 
 
 @trace_exception
-def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
+def get_line_chart_data(user_input: HousePricePredictionInput) -> dict:
     """Calculates the data required for the line chart. It returns two lists of
     dictionaries in the following format:
 
@@ -302,10 +311,10 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
 
     # calculates the price of the property depending on the land and living areas.
     # The area will range from 50% to 150% of the inputted area in 10% intervals.
-    percent = 0.5
+    percent = 50
     for i in range(11):
-        data_living_area['living_area'] = living_area * percent
-        data_land_area['land_area'] = land_area * percent
+        data_living_area['living_area'] = living_area * percent / 100
+        data_land_area['land_area'] = land_area * percent / 100
 
         result_living_area.append({
             'living_area': int(data_living_area['living_area']),
@@ -317,7 +326,7 @@ def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
             'price': make_prediction(model, data_land_area)
         })
 
-        percent += 0.1
+        percent += 10
 
     return {
         'living-area-prices': result_living_area,

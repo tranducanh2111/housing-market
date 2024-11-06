@@ -1,0 +1,24 @@
+.state {
+    stroke: rgb(128, 128, 128);
+    stroke-width: 1.5;
+}
+
+.state:hover {
+    fill: yellow;
+}
+
+#selected-state {
+    stroke-width: 3;
+    stroke: yellow;
+}
+
+#choropleth-tooltip {
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    pointer-events: none;
+    white-space: pre-line;
+}
+

@@ -1,13 +1,24 @@
+/*
+* Filename: Choropleth.jsx
+* Author: John Iliadis - 104010553
+*
+* References:
+* - https://observablehq.com/@d3/zoom-to-bounding-box
+* - https://observablehq.com/@d3/us-state-choropleth/2
+* */
+
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Legend } from './colorLegend';
 import { feature } from 'topojson-client';
-import { formatPrice, observeContainerSize } from "../utils";
+import { formatPrice, observeContainerSize, tooltipHover } from "../utils";
+import geoJson from "./us.json"
+import './Choropleth.css'
 
 /**
  * Choropleth Component
  * Creates an interactive US state map visualization with color-coded price data
- * Features include zoom, hover effects, tooltips, and animated state rendering
+ * Features include zoom, hover effects, and tooltips
  * 
  * @param {Object[]} data - Array of objects containing state price data
  * @param {string} selectedState - Currently selected state to highlight
@@ -23,181 +34,126 @@ const Choropleth = ({ data, selectedState }) => {
     // Set up ResizeObserver for responsive behavior
     useEffect(() => observeContainerSize(containerRef, setDimensions), [containerRef]);
 
-    // Main effect for drawing and updating the choropleth map
+    function drawChoropleth()
+    {
+        // Clear any existing SVG
+        d3.select(chartRef.current).selectAll('*').remove();
+
+        // hash map that maps each state to a price predicted by the model
+        const priceMap = new Map(data.map(d => [d['state'], d['price']]));
+
+        // create color scale based on the min and max state price 
+        const minHousePrice = d3.min(data, d => d['price']);
+        const maxHousePrice = d3.max(data, d => d['price']);
+        const colorScale = d3.scaleSequential([minHousePrice, maxHousePrice], d3.interpolateBlues)
+
+        // create svg element
+        const containerWidth = dimensions.width;
+        const containerHeight = dimensions.height;
+        const svg = d3.select(chartRef.current)
+            .append('svg')
+            .attr('width', containerWidth)
+            .attr('height', containerHeight)
+            .attr('viewBox', [0, 0, 975, 610])
+            .attr('style', 'max-width: 100%; height: auto;')
+            .on('click', reset);
+
+        // line generator that works with geo json data. Is used for generating the state borders.
+        const geoLineGenerator = d3.geoPath();
+
+        // draw the states
+        const getStateID = (d) => getStateName(d) === selectedState
+            ? 'selected-state'
+            : getStateName(d);
+
+        const g = svg.append('g');
+        const states = g.append('g')
+            .selectAll('path')
+            .data(feature(geoJson, geoJson.objects.states).features)
+            .join('path')
+            .attr('class', 'state')
+            .attr('id', getStateID)
+            .attr('fill', getStateColor)
+            .attr('d', geoLineGenerator);
+
+        d3.select('#selected-state').raise();
+
+        // zooming and panning functionality
+        const zoom = d3.zoom()
+            .scaleExtent([1, 4])
+            .on('zoom', (event) => { g.attr('transform', event.transform); });
+        svg.call(zoom);
+
+        // tooltip
+        const tooltip = d3.select('body')
+            .append('div')
+            .attr('id', 'choropleth-tooltip')
+            .style('visibility', 'hidden');
+
+        states.on('mouseover', (event, d) =>
+        {
+            d3.select(event.target).raise();
+            d3.select('#selected-state').raise();
+
+            tooltip.interrupt();
+            const state = getStateName(d);
+            let price = getStatePrice(d);
+            let tooltipText = `No data for ${state}`;
+
+            // if the price is -1, that means that there is no data for that state. This is guaranteed for Alaska.
+            if (price !== -1)
+            {
+                tooltipText = `State: ${state}\nPrice: ${formatPrice(price)} USD`;
+            }
+
+            tooltip
+                .style('visibility', 'visible')
+                .text(tooltipText);
+        });
+
+        states.on('mousemove', (event) =>
+        {
+            tooltipHover(tooltip, event);
+        });
+
+        states.on('mouseout', () => { tooltip.style('visibility', 'hidden'); });
+
+        // color legend
+        svg.append('g')
+            .attr('id', 'state-choropleth-legend')
+            .attr('transform', 'translate(600, 0) scale(1.4)')
+            .append(() => Legend(colorScale, {title: 'Price (USD)', width: 200}));
+
+        // resets map view when the user clicks on the svg
+        function reset()
+        {
+            svg.transition().duration(400).call(
+                zoom.transform,
+                d3.zoomIdentity,
+                d3.zoomTransform(svg.node()).invert([containerWidth / 2, containerHeight / 2])
+            );
+        }
+
+        function getStateName(d)
+        {
+            return d['properties']['name'];
+        }
+
+        function getStatePrice(d)
+        {
+            return priceMap.get(getStateName(d)) || -1;
+        }
+
+        function getStateColor(d)
+        {
+            return colorScale(getStatePrice(d));
+        }
+    }
+
     useEffect(() => {
-        if (!data || !dimensions.width || !dimensions.height) return;
-
-        /**
-         * Main function to draw the choropleth map
-         * @param {Object} geoJson - GeoJSON data for US states
-         * @param {Object[]} statePrices - Array of state price data
-         */
-        const drawChoropleth = async (geoJson, statePrices) => {
-            const containerWidth = dimensions.width;
-            const containerHeight = dimensions.height;
-
-            // Clear existing SVG
-            d3.select(chartRef.current).selectAll('*').remove();
-
-            // Create main SVG container
-            const svg = d3.select(chartRef.current)
-                .append('svg')
-                .attr('width', '100%')
-                .attr('height', '100%')
-                .attr('viewBox', `0 0 ${containerWidth} ${containerHeight}`)
-                .attr('preserveAspectRatio', 'xMidYMid meet');
-
-            // Calculate map scale based on container size
-            const scale = Math.min(containerWidth, containerHeight) * 1.8;
-            
-            // Set up US map projection
-            const projection = d3.geoAlbersUsa()
-                .translate([containerWidth / 2, containerHeight / 2])
-                .scale(scale);
-
-            // Create path generator for map features
-            const path = d3.geoPath().projection(projection);
-
-            // Create map of state prices for easy lookup
-            const priceMap = new Map(statePrices.map(d => [d.state, d.price]));
-
-            // Set up color scale for price visualization
-            const minHousePrice = d3.min(statePrices, d => d.price);
-            const maxHousePrice = d3.max(statePrices, d => d.price);
-            const colorScale = d3.scaleSequential()
-                .domain([minHousePrice, maxHousePrice])
-                .interpolator(d3.interpolate('#E8EEF1', '#0E4459'));
-
-            // Configure zoom behavior
-            const zoom = d3.zoom()
-                .scaleExtent([1, 6]) // Limit zoom range
-                .on('zoom', (event) => {
-                    g.attr('transform', event.transform);
-                });
-
-            svg.call(zoom);
-
-            // Create group for map elements
-            const g = svg.append('g');
-            
-            // Create and animate state paths
-            const states = g.selectAll('path')
-                .data(geoJson.features)
-                .enter()
-                .append('path')
-                .attr('class', 'state')
-                .attr('d', path)
-                .attr('id', d => d.properties.name)
-                .attr('fill', d => colorScale(priceMap.get(d.properties.name) || 0))
-                .style('transform', `translateX(${containerWidth}px)`) // Initial position for animation
-                .style('opacity', 0);
-
-            // Animate states flying in from right with staggered timing
-            states.each(function(d, i) {
-                d3.select(this)
-                    .transition()
-                    .delay(i * 30) // Stagger each state's animation
-                    .duration(1500)
-                    .style('transform', 'translateX(0px)')
-                    .style('opacity', 1)
-                    .ease(d3.easeBackOut.overshoot(1.1)); // Add bounce effect
-            });
-
-            // Highlight selected state if any
-            if (selectedState) {
-                states.filter(d => d.properties.name === selectedState)
-                    .style('stroke', 'red')
-                    .style('stroke-width', '2');
-            }
-
-            // Create tooltip
-            const tooltip = d3.select('body')
-                .append('div')
-                .attr('id', 'tooltip')
-                .style('visibility', 'hidden');
-
-            // Add hover interactions
-            states.on('mouseover', (event, d) => {
-                d3.select(event.target).raise();
-                d3.select(event.target)
-                    .style('stroke', 'yellow')
-                    .style('stroke-width', '2');
-
-                const state = d.properties.name;
-                const price = priceMap.get(state);
-                const tooltipText = price 
-                    ? `State: ${state}\nPrice: ${formatPrice(price)} USD`
-                    : `No data for ${state}`;
-
-                tooltip.style('visibility', 'visible')
-                    .text(tooltipText);
-            });
-
-            // Handle tooltip positioning
-            states.on('mousemove', (event) => {
-                const tooltipNode = tooltip.node();
-                const tooltipWidth = tooltipNode.offsetWidth;
-                const windowWidth = window.innerWidth;
-                const mouseX = event.pageX;
-                
-                // Prevent tooltip from overflowing window
-                const wouldOverflowRight = mouseX + tooltipWidth + 40 > windowWidth;
-                
-                tooltip
-                    .style('top', (event.pageY - 20) + 'px')
-                    .style('left', wouldOverflowRight
-                        ? (mouseX - tooltipWidth - 30) + 'px'
-                        : (mouseX + 40) + 'px');
-            });
-
-            // Handle mouseout events
-            states.on('mouseout', (event, d) => {
-                const stateName = d.properties.name;
-                d3.select(event.target)
-                    .style('stroke', stateName === selectedState ? 'red' : 'white')
-                    .style('stroke-width', stateName === selectedState ? '2' : '1');
-
-                tooltip.style('visibility', 'hidden');
-            });
-
-            // Reset zoom on map click
-            svg.on('click', () => {
-                svg.transition().duration(500).call(
-                    zoom.transform,
-                    d3.zoomIdentity,
-                    d3.zoomTransform(svg.node()).invert([containerWidth / 2, containerHeight / 2])
-                );
-            });
-
-            // Add color legend
-            svg.append('g')
-                .attr('id', 'state-choropleth-legend')
-                .attr('transform', `translate(${containerWidth - 260}, 20)`)
-                .append(() => Legend(colorScale, { title: 'Price (USD)', width: 260 }));
-        };
-
-        /**
-         * Fetches and processes US state geometry data
-         * Uses topojson-client to convert TopoJSON to GeoJSON
-         */
-        const fetchGeoData = async () => {
-            try {
-                const response = await fetch('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json');
-                const us = await response.json();
-                const usStates = feature(us, us.objects.states);
-                drawChoropleth(usStates, data);
-            } catch (error) {
-                console.error('Error loading US states geometry:', error);
-            }
-        };
-
-        fetchGeoData();
-
-        // Cleanup tooltip on unmount
-        return () => {
-            d3.select('body').selectAll('#tooltip').remove();
-        };
-    }, [data, dimensions, selectedState]);
+        d3.select('#choropleth-tooltip').remove();
+        drawChoropleth();
+    }, [data, dimensions]);
 
     return (
         <div ref={containerRef} className="w-full h-full">
