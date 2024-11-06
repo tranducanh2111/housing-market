@@ -33,8 +33,62 @@ const BarChart = ({ data, selectedCity}) =>
     const containerRef = useRef(null);       // Reference for outer container
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
     const [currentOrder, setCurrentOrder] = useState('Alphabetical');
+    const svgRef = useRef(null);
+    const xAxisScalerRef = useRef(null);
 
     useEffect(() => observeContainerSize(containerRef, setDimensions), [containerRef]);
+
+    const disableTransitions = useCallback(() => {
+        d3.select('#bar-chart-order').attr('disabled', true);
+        d3.select('#bar-chart-button').attr('disabled', true);
+    }, []);
+
+    const enableTransitions = useCallback(() => {
+        d3.select('#bar-chart-order').attr('disabled', null);
+        d3.select('#bar-chart-button').attr('disabled', null);
+    }, []);
+
+    const orderBars = useCallback((order) => {
+        const svg = d3.select(chartRef.current).select('svg');
+        const xAxisScaler = xAxisScalerRef.current;
+        
+        if (!svg.empty() && xAxisScaler) {
+            disableTransitions();
+
+            // sort the data
+            const orderMap = new Map([
+                ['Alphabetical', (a, b) => d3.ascending(a['city'], b['city'])],
+                ['Ascending', (a, b) => d3.ascending(a['price'], b['price'])],
+                ['Descending', (a, b) => d3.descending(a['price'], b['price'])]
+            ]);
+
+            data.sort(orderMap.get(order));
+
+            // create new domain for x-axis
+            xAxisScaler.domain(data.map(d => d['city']));
+
+            const t = d3.transition()
+                .duration(2000)
+                .on('end', enableTransitions);
+
+            // transition for the x-axis
+            svg.select('#bar-chart-x-axis')
+                .transition(t)
+                .call(d3.axisBottom(xAxisScaler).tickSizeOuter(0));
+
+            // transition for the bars
+            svg.selectAll('.bar')
+                .data(data, d => d['city'])
+                .transition(t)
+                .attr('x', d => xAxisScaler(d['city']));
+        }
+    }, [data, disableTransitions, enableTransitions]);
+
+    const handleOrderChange = (event) => {
+        const newOrder = event.target.value;
+        setCurrentOrder(newOrder);
+        orderBars(newOrder);
+    };
 
     const drawBarChart = useCallback((data) =>
     {
@@ -104,9 +158,29 @@ const BarChart = ({ data, selectedCity}) =>
             .attr('class', 'bar')
             .attr('id', getBarID)
             .attr('x', d => xAxisScaler(d['city']))
-            .attr('y', d => yAxisScaler(d['price']))
+            .attr('y', yAxisScaler(0))
             .attr('width', xAxisScaler.bandwidth())
-            .attr('height', d => yAxisScaler(0) - yAxisScaler(d['price']));
+            .attr('height', 0);
+
+        // Attach event listeners before transition
+        bars.on('mouseover', (event, d) => {
+            tooltip.style('visibility', 'visible')
+                .text(`City: ${d['city']}\nPrice: ${formatPrice(d['price'])} USD`);
+        });
+
+        bars.on('mousemove', (event) => {
+            tooltipHover(tooltip, event);
+        });
+
+        bars.on('mouseout', () => {
+            tooltip.style('visibility', 'hidden');
+        });
+
+        // Transition for bars
+        bars.transition()
+            .duration(1000) // Duration of 1 second
+            .attr('y', d => yAxisScaler(d['price'])) // Transition to final y position
+            .attr('height', d => yAxisScaler(0) - yAxisScaler(d['price'])); // Transition to final height
 
         // x-axis creation
         svg.append('g')
@@ -169,19 +243,6 @@ const BarChart = ({ data, selectedCity}) =>
             .attr('id', 'bar-chart-tooltip')
             .style('visibility', 'hidden');
 
-        bars.on('mouseover', (event, d) =>
-        {
-            tooltip.style('visibility', 'visible')
-                .text(`City: ${d['city']}\nPrice: ${formatPrice(d['price'])} USD`);
-        });
-
-        bars.on('mousemove', (event) =>
-        {
-            tooltipHover(tooltip, event)
-        });
-
-        bars.on('mouseout', () => { tooltip.style('visibility', 'hidden'); });
-
         /*
         * Function that creates the x-axis scaler. This ensures that the chart will contain at most 37 bars in view, in
         * order to avoid the label strings overlapping. In this case, the user will have to scroll to view the rest of
@@ -211,35 +272,6 @@ const BarChart = ({ data, selectedCity}) =>
                 .padding(0.2);
         }
 
-        /*
-        * Function used for ordering the x-axis (cities). The order can either be alphabetical, ascending (price), and
-        * descending (price).
-        * */
-        function orderBars(order)
-        {
-            disableTransitions();
-
-            // sort the data
-            data.sort(orderMap.get(order));
-
-            // create new domain for x-axis
-            xAxisScaler.domain(data.map(d => d['city']));
-
-            const t = d3.transition()
-                .duration(2000)
-                .on('end', enableTransitions);
-
-            // transition for the x-axis
-            svg.select('#bar-chart-x-axis')
-                .transition(t)
-                .call(xAxisGenerator);
-
-            // transition for the bars
-            svg.selectAll('.bar')
-                .transition(t)
-                .attr('x', d => xAxisScaler(d['city']));
-        }
-
         function panToRedBar()
         {
             const redBarX = d3.select('#selected-city').attr('x');
@@ -266,18 +298,6 @@ const BarChart = ({ data, selectedCity}) =>
                 .attr('transform', `translate(${offset}, 0)`);
         }
 
-        function disableTransitions()
-        {
-            d3.select('#bar-chart-order').attr('disabled', true);
-            d3.select('#bar-chart-button').attr('disabled', true);
-        }
-
-        function enableTransitions()
-        {
-            d3.select('#bar-chart-order').attr('disabled', null);
-            d3.select('#bar-chart-button').attr('disabled', null);
-        }
-
     }, [dimensions, selectedCity, currentOrder]);
 
     useEffect(() => {
@@ -295,7 +315,7 @@ const BarChart = ({ data, selectedCity}) =>
                         id="bar-chart-order"
                         className="border rounded p-1 text-body-sm sm:text-body"
                         value={currentOrder}
-                        onChange={(e) => setCurrentOrder(e.target.value)}
+                        onChange={handleOrderChange}
                     >
                         <option value="Alphabetical">Alphabetical</option>
                         <option value="Ascending">Price Ascending</option>
