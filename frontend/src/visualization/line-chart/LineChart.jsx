@@ -1,3 +1,11 @@
+/*
+* Filename: LineChart.jsx
+* Author: John Iliadis - 104010553
+*
+* References:
+* - https://d3-graph-gallery.com/graph/line_change_data.html
+* */
+
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {formatPrice, observeContainerSize, tooltipHover } from '../utils.js'
 import * as d3 from 'd3';

@@ -1,3 +1,12 @@
+/*
+* Filename: BarChart.jsx
+* Author: John Iliadis - 104010553
+*
+* References:
+* - https://observablehq.com/@d3/bar-chart/2
+* - https://observablehq.com/@d3/bar-chart-transitions/2
+* */
+
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { formatPrice, observeContainerSize, tooltipHover } from "../utils";
 import * as d3 from 'd3';

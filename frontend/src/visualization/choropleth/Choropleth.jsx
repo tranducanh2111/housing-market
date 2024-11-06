@@ -1,3 +1,12 @@
+/*
+* Filename: Choropleth.jsx
+* Author: John Iliadis - 104010553
+*
+* References:
+* - https://observablehq.com/@d3/zoom-to-bounding-box
+* - https://observablehq.com/@d3/us-state-choropleth/2
+* */
+
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Legend } from './colorLegend';
