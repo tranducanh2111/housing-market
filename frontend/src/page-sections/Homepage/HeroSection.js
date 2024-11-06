@@ -38,6 +38,7 @@ const slidesData = [
         bedroom: '8',
         bathroom: '9',
         price: '7,995,000',
+        area: 762,
         link: 'https://www.zillow.com/homedetails/4254-Hayvenhurst-Ave-Encino-CA-91436/19994273_zpid/'
     },
     {
@@ -48,6 +49,7 @@ const slidesData = [
         bedroom: '6',
         bathroom: '10',
         price: '14,995,000',
+        area: 1118,
         link: 'https://www.zillow.com/homedetails/4640-Petit-Ave-Encino-CA-91436/19991694_zpid/'
     },
     {
@@ -58,6 +60,7 @@ const slidesData = [
         bedroom: '5',
         bathroom: '7',
         price: '4,595,000',
+        area: 483,
         link: 'https://www.zillow.com/homedetails/9880-SW-87th-Ave-Miami-FL-33176/247679656_zpid/'
     },
     {
@@ -68,6 +71,7 @@ const slidesData = [
         bedroom: '7',
         bathroom: '9',
         price: '10,499,000',
+        area: 794,
         link: 'https://www.zillow.com/homedetails/6080-SW-104th-St-Pinecrest-FL-33156/44024853_zpid/'
     },
     {
@@ -78,6 +82,7 @@ const slidesData = [
         bedroom: '3',
         bathroom: '4',
         price: '8,800,000',
+        area: 346,
         link: 'https://www.zillow.com/homedetails/808-Lakeside-Ave-S-Seattle-WA-98144/48921603_zpid/'
     },
     {
@@ -88,6 +93,7 @@ const slidesData = [
         bedroom: '7',
         bathroom: '11',
         price: '8,250,000',
+        area: 1180,
         link: 'https://www.zillow.com/homedetails/31-Eagles-Landing-Ln-Las-Vegas-NV-89141/66826917_zpid/'
     },
     {
@@ -98,6 +104,7 @@ const slidesData = [
         bedroom: '7',
         bathroom: '8',
         price: '4,499,500',
+        area: 722,
         link: 'https://www.zillow.com/homedetails/1721-S-Tioga-Way-Las-Vegas-NV-89117/141419815_zpid/'
     },
     {
@@ -108,6 +115,7 @@ const slidesData = [
         bedroom: '6',
         bathroom: '8',
         price: '13,279,000',
+        area: 1252,
         link: 'https://www.zillow.com/homedetails/27-Eagles-Landing-Ln-Las-Vegas-NV-89141/70055445_zpid/'
     },
     {
@@ -118,6 +126,7 @@ const slidesData = [
         bedroom: '5',
         bathroom: '8',
         price: '21,450,000',
+        area: 1215,
         link: 'https://www.zillow.com/homedetails/5-Promontory-Pointe-Ln-Las-Vegas-NV-89135/89592384_zpid/'
     },
     {
@@ -128,6 +137,7 @@ const slidesData = [
         bedroom: '5',
         bathroom: '8',
         price: '9,175,000',
+        area: 827,
         link: 'https://www.zillow.com/homedetails/25-Painted-Feather-Way-Las-Vegas-NV-89135/70055548_zpid/'
     },
 ];
@@ -313,7 +323,7 @@ const HeroSection = () => {
                                             id="swiper-author-date"
                                             className="text-white text-footnote-sm sm:text-footnote line-clamp-1"
                                         >
-                                            Price: ${slide.price}
+                                            Living Area: ${slide.area} m<sup>2</sup>
                                         </p>
                                     </div>
                                 </div>
