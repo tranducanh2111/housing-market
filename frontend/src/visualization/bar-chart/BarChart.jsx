@@ -305,7 +305,7 @@ const BarChart = ({ data, selectedCity}) =>
                     id="bar-chart-button"
                     className='w-fit bg-primary text-white text-body-sm sm:text-body flex items-center justify-center text-body px-[9px] sm:px-[15px] py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out'
                 >
-                    Pan to inputted city
+                    Go to selected city
                 </button>
             </form>
             <div ref={chartRef} className="chart-container min-w-full h-full"></div>
