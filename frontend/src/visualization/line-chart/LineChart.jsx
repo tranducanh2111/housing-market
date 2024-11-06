@@ -115,6 +115,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
         // Create graph with current selected area
         update(selectedArea, 0);
+        update(selectedArea, 0); // DO NOT REMOVE THIS LINE
 
         function update(areaType, t)
         {
