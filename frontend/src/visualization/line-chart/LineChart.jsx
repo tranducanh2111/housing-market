@@ -211,7 +211,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
                 const areaStr = areaType === 'living_area' ? 'Living area' : 'Land area';
                 tooltip.style('visibility', 'visible')
-                    .text(`${areaStr}: ${d[areaType]} m²\nPrice: ${formatPrice(d['price'])} USD`);
+                    .text(`${areaStr}: ${parseInt(d[areaType])} m²\nPrice: ${formatPrice(d['price'])} USD`);
             });
 
             hoverDots.on('mousemove', (event) => {
@@ -253,7 +253,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                         d3.select(event.target).style('opacity', 0.3);
                         const areaTypeText = areaType === 'living_area' ? 'Living area' : 'Land area';
                         tooltip.style('visibility', 'visible')
-                            .text(`${areaTypeText}: ${d['area']} m²\nPrice: ${formatPrice(d['price'])} USD`);
+                            .text(`${areaTypeText}: ${parseInt(d['area'])} m²\nPrice: ${formatPrice(d['price'])} USD`);
                     })
                     .on('mousemove', (event) => {
                         tooltipHover(tooltip, event);
