@@ -17,7 +17,7 @@ import json
 import requests
 
 
-class HousePricePredictionModelInput(BaseModel):
+class HousePricePredictionInput(BaseModel):
     """Pydantic model used for validating the input data. This class also processes the data into an appropriate
     format for the model."""
     state: str = Field(..., description='American state')
@@ -142,13 +142,13 @@ async def load_city_state_encoded_data():
 
 
 @app.post('/predict')
-async def predict_house_price(user_input: HousePricePredictionModelInput):
+async def predict_house_price(user_input: HousePricePredictionInput):
     """Post method used for making a price prediction on a property, given the property's details."""
     try:
         return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
-        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e}')
+        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e)}')
 
 
 RAPID_API_URL = "https://zillow56.p.rapidapi.com/search_address"
@@ -195,7 +195,7 @@ async def predict_house_price(street: str, city: str, state: str):
             sold = False
             date_sold = None
 
-        user_input = HousePricePredictionModelInput(
+        user_input = HousePricePredictionInput(
             state=state,
             city=city,
             beds=house_data['bedrooms'],
@@ -209,11 +209,11 @@ async def predict_house_price(street: str, city: str, state: str):
         return {'result': get_result_data(user_input)}
     except Exception as e:
         logger.error(f'Error occurred in predict_house_price(): {str(e)}')
-        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e}')
+        raise HTTPException(status_code=500, detail=f'Internal server error: {str(e)}')
 
 
 @trace_exception
-def get_result_data(user_input: HousePricePredictionModelInput) -> dict:
+def get_result_data(user_input: HousePricePredictionInput) -> dict:
     """Calculates and returns all the data needed for the visualizations."""
     return {
         'prediction': make_prediction(model, user_input.get_processed_input()),
@@ -225,7 +225,7 @@ def get_result_data(user_input: HousePricePredictionModelInput) -> dict:
 
 
 @trace_exception
-def get_choropleth_chart_data(user_input: HousePricePredictionModelInput) -> list:
+def get_choropleth_chart_data(user_input: HousePricePredictionInput) -> list:
     """Calculates the data required for the US state choropleth chart. It returns a
     list of dictionaries in the following format:
 
@@ -250,7 +250,7 @@ def get_choropleth_chart_data(user_input: HousePricePredictionModelInput) -> lis
 
 
 @trace_exception
-def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
+def get_bar_chart_data(user_input: HousePricePredictionInput) -> list:
     """Calculates the data required for the bar chart. It returns a list of
     dictionaries in the following format:
 
@@ -291,7 +291,7 @@ def get_bar_chart_data(user_input: HousePricePredictionModelInput) -> list:
 
 
 @trace_exception
-def get_line_chart_data(user_input: HousePricePredictionModelInput) -> dict:
+def get_line_chart_data(user_input: HousePricePredictionInput) -> dict:
     """Calculates the data required for the line chart. It returns two lists of
     dictionaries in the following format:
 
