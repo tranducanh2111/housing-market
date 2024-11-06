@@ -150,14 +150,10 @@ const Choropleth = ({ data, selectedState }) => {
         }
     }
 
-    useEffect(drawChoropleth, [data, dimensions]);
-
     useEffect(() => {
-        return () => {
-            // Remove bar chart tooltip when component unmounts
-            d3.select('#choropleth-tooltip').remove();
-        };
-    }, []);
+        d3.select('#choropleth-tooltip').remove();
+        drawChoropleth();
+    }, [data, dimensions]);
 
     return (
         <div ref={containerRef} className="w-full h-full">

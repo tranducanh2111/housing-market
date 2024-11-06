@@ -281,17 +281,10 @@ const BarChart = ({ data, selectedCity}) =>
     }, [dimensions, selectedCity, currentOrder]);
 
     useEffect(() => {
+        d3.select('#bar-chart-tooltip').remove();
         if (data && dimensions.width && dimensions.height)
             drawBarChart(data);
     }, [data, drawBarChart, dimensions]);
-
-    // Cleanup function
-    useEffect(() => {
-        return () => {
-            // Remove bar chart tooltip when component unmounts
-            d3.select('#bar-chart-tooltip').remove();
-        };
-    }, []);
 
     return (
         <div ref={containerRef} className="bar-chart-container w-full h-full">

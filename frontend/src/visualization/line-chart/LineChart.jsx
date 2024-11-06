@@ -277,13 +277,10 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
 
     useEffect(() => {
         if (livingAreaData && landAreaData) {
+            d3.selectAll('#line-chart-tooltip').remove();
             drawLineChart(livingAreaData, landAreaData);
         }
-        
-        // Cleanup function
-        return () => {
-            d3.selectAll('#line-chart-tooltip').remove();
-        };
+
     }, [drawLineChart, livingAreaData, landAreaData, selectedArea]);
 
     return (
