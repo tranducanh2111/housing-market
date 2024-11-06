@@ -305,7 +305,7 @@ const BarChart = ({ data, selectedCity}) =>
                 <button
                     type="button"
                     id="bar-chart-button"
-                    className='w-fit bg-primary text-white text-body-sm sm:text-body flex items-center justify-center text-body px-[9px] sm:px-[15px] py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out'
+                    className='w-fit bg-primary text-white text-footnote-sm sm:text-footnote flex items-center justify-center px-3 sm:px-3 py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out'
                 >
                     Go to selected city
                 </button>
