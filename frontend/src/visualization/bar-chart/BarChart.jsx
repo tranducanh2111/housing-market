@@ -131,18 +131,18 @@ const BarChart = ({ data, selectedCity}) =>
             .text('↑ Price (USD)')
 
         // pan by scrolling functionality
-        let transform = JSON.parse(JSON.stringify(d3.zoomIdentity));
+        let offset = 0;
         const maxPan = containerWidth - rangeLeft;
         svg.on('wheel', (event) =>
         {
             event.preventDefault(); // block page scroll on event
 
             // convert vertical delta to horizontal translation
-            transform.x += -event.deltaY * 0.6;
-            transform.x = Math.max(maxPan, Math.min(0, transform.x));
+            offset += -event.deltaY * 0.6;
+            offset = Math.max(maxPan, Math.min(0, offset));
 
-            svg.select('#bar-chart-x-axis').attr('transform', `translate(${transform.x}, ${containerHeight - marginBottom})`);
-            svg.selectAll('.bar').attr('transform', `translate(${transform.x}, 0)`);
+            svg.select('#bar-chart-x-axis').attr('transform', `translate(${offset}, ${containerHeight - marginBottom})`);
+            svg.selectAll('.bar').attr('transform', `translate(${offset}, 0)`);
         });
 
         // handle bar sorting
@@ -237,12 +237,12 @@ const BarChart = ({ data, selectedCity}) =>
             const middle = containerWidth / 2;
             const xOffset = middle - redBarX - xAxisScaler.bandwidth() / 2;
 
-            if (xOffset === transform.x)
+            if (xOffset === offset)
                 return;
 
             disableTransitions();
 
-            transform.x = Math.max(maxPan, Math.min(0, xOffset));
+            offset = Math.max(maxPan, Math.min(0, xOffset));
 
             const t = d3.transition()
                 .duration(1000)
@@ -250,11 +250,11 @@ const BarChart = ({ data, selectedCity}) =>
 
             svg.select('#bar-chart-x-axis')
                 .transition(t)
-                .attr('transform', `translate(${transform.x}, ${containerHeight - marginBottom})`);
+                .attr('transform', `translate(${offset}, ${containerHeight - marginBottom})`);
 
             svg.selectAll('.bar')
                 .transition(t)
-                .attr('transform', `translate(${transform.x}, 0)`);
+                .attr('transform', `translate(${offset}, 0)`);
         }
 
         function disableTransitions()

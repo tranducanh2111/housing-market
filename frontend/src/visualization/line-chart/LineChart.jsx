@@ -245,9 +245,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                         d3.select(event.target).style('opacity', 0.3);
                         const areaTypeText = areaType === 'living_area' ? 'Living area' : 'Land area';
                         tooltip.style('visibility', 'visible')
-                            .text(`Predicted Property
-                                   ${areaTypeText}: ${d['area']} m²
-                                   Price: ${formatPrice(d['price'])} USD`);
+                            .text(`${areaTypeText}: ${d['area']} m²\nPrice: ${formatPrice(d['price'])} USD`);
                     })
                     .on('mousemove', (event) => {
                         tooltipHover(tooltip, event);
