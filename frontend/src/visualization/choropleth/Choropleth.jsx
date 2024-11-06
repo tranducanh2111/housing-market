@@ -84,39 +84,43 @@ const Choropleth = ({ data, selectedState }) => {
             .on('zoom', (event) => { g.attr('transform', event.transform); });
         svg.call(zoom);
 
-        // tooltip
+        // Create the tooltip
         const tooltip = d3.select('body')
             .append('div')
-            .attr('id', 'choropleth-tooltip')
-            .style('visibility', 'hidden');
+            .attr('id', 'tooltip') // Ensure the ID matches the CSS
+            .style('visibility', 'hidden')
+            .style('position', 'absolute')
+            .style('background', 'rgba(69,77,93,.9)')
+            .style('border-radius', '.5rem')
+            .style('color', '#fff')
+            .style('box-shadow', '0 0 5px #999999')
+            .style('font-size', '14px')
+            .style('padding', '.2rem .4rem')
+            .style('z-index', '9999');
 
-        states.on('mouseover', (event, d) =>
-        {
+        // Update event listeners
+        states.on('mouseover', (event, d) => {
             d3.select(event.target).raise();
             d3.select('#selected-state').raise();
-
             tooltip.interrupt();
             const state = getStateName(d);
             let price = getStatePrice(d);
             let tooltipText = `No data for ${state}`;
-
-            // if the price is -1, that means that there is no data for that state. This is guaranteed for Alaska.
-            if (price !== -1)
-            {
+            if (price !== -1) {
                 tooltipText = `State: ${state}\nPrice: ${formatPrice(price)} USD`;
             }
-
-            tooltip
-                .style('visibility', 'visible')
+            tooltip.style('visibility', 'visible')
                 .text(tooltipText);
         });
 
-        states.on('mousemove', (event) =>
-        {
-            tooltipHover(tooltip, event);
+        states.on('mousemove', (event) => {
+            tooltip.style('top', (event.pageY - 20) + 'px')
+                .style('left', (event.pageX + 20) + 'px');
         });
 
-        states.on('mouseout', () => { tooltip.style('visibility', 'hidden'); });
+        states.on('mouseout', () => {
+            tooltip.style('visibility', 'hidden');
+        });
 
         // color legend
         svg.append('g')

@@ -118,8 +118,16 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         // Create new tooltip
         const tooltip = d3.select('body')
             .append('div')
-            .attr('id', 'line-chart-tooltip')
-            .style('visibility', 'hidden');
+            .attr('id', 'tooltip')
+            .style('visibility', 'hidden')
+            .style('position', 'absolute')
+            .style('background', 'rgba(69,77,93,.9)')
+            .style('border-radius', '.5rem')
+            .style('color', '#fff')
+            .style('box-shadow', '0 0 5px #999999')
+            .style('font-size', '14px')
+            .style('padding', '.2rem .4rem')
+            .style('z-index', '9999');
 
         d3.selectAll('input[name="area"]')
             .on('change', function() { 
@@ -228,14 +236,14 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             // update hover functionality
             hoverDots.on('mouseover', (event, d) => {
                 d3.select(event.target).style('opacity', 1);
-
                 const areaStr = areaType === 'living_area' ? 'Living area' : 'Land area';
                 tooltip.style('visibility', 'visible')
                     .text(`${areaStr}: ${parseInt(d[areaType])} m²\nPrice: ${formatPrice(d['price'])} USD`);
             });
 
             hoverDots.on('mousemove', (event) => {
-                tooltipHover(tooltip, event);
+                tooltip.style('top', (event.pageY - 20) + 'px')
+                    .style('left', (event.pageX + 20) + 'px');
             });
 
             hoverDots.on('mouseout', (event) => {

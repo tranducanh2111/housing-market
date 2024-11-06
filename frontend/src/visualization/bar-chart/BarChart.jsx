@@ -51,7 +51,7 @@ const BarChart = ({ data, selectedCity}) => {
         data.sort(orderMap.get(currentOrder));
 
         // x-axis scaler
-        const xAxisScaler = getXaxisScaler();
+        const xAxisScaler = getXaxisScaler(containerWidth, marginLeft, marginRight);
         const rangeLeft = xAxisScaler.range()[1];
 
         // y-axis scaler
@@ -128,8 +128,43 @@ const BarChart = ({ data, selectedCity}) => {
             .attr('class', 'bar')
             .attr('id', getBarID)
             .attr('x', d => xAxisScaler(d['city']))
-            .attr('y', d => yAxisScaler(d['price']))
+            .attr('y', containerHeight - marginBottom) // Start from the bottom
             .attr('width', xAxisScaler.bandwidth())
+            .attr('height', 0); // Start with height 0
+
+        // Create the tooltip
+        const tooltip = d3.select('body')
+            .append('div')
+            .attr('id', 'tooltip')
+            .style('visibility', 'hidden')
+            .style('position', 'absolute')
+            .style('background', 'rgba(69,77,93,.9)')
+            .style('border-radius', '.5rem')
+            .style('color', '#fff')
+            .style('box-shadow', '0 0 5px #999999')
+            .style('font-size', '14px')
+            .style('padding', '.2rem .4rem')
+            .style('z-index', '9999');
+
+        // Attach event listeners to bars
+        bars.on('mouseover', function(event, d) {
+            tooltip.style('visibility', 'visible')
+                .text(`City: ${d['city']}\nPrice: ${formatPrice(d['price'])} USD`);
+        });
+
+        bars.on('mousemove', function(event) {
+            tooltip.style('top', (event.pageY - 20) + 'px')
+                .style('left', (event.pageX + 20) + 'px');
+        });
+
+        bars.on('mouseout', function() {
+            tooltip.style('visibility', 'hidden');
+        });
+
+        // Apply transitions separately
+        bars.transition()
+            .duration(750)
+            .attr('y', d => yAxisScaler(d['price']))
             .attr('height', d => yAxisScaler(0) - yAxisScaler(d['price']));
 
         // x-axis
@@ -140,53 +175,13 @@ const BarChart = ({ data, selectedCity}) => {
             .selectAll('text')
             .attr('transform', 'rotate(45)')
             .attr('text-anchor', 'start')
-            // .attr('font-size', '12px')
             .attr('dx', '0.5em')
             .attr('dy', '0.5em')
-            .style('font-size', '10.5px');
-
-        // tooltip
-        const tooltip = d3.select('body')
-            .append('div')
-            .attr('id', 'tooltip')
-            .style('visibility', 'hidden')
-            .style('z-index', '9999');
-
-        bars.on('mouseover', (event, d) => {
-            tooltip.style('visibility', 'visible')
-                .text(`City: ${d['city']}\nPrice: ${formatPrice(d['price'])} USD`);
-        });
-
-        bars.on('mousemove', (event) => {
-            tooltipHover(tooltip, event);
-        });
-
-        bars.on('mouseout', () => {
-            tooltip.style('visibility', 'hidden');
-        });
-
-        function getXaxisScaler() {
-            const dataLength = data.length;
-            const maxBars = 20;
-
-            const maxDimensions = d3.scaleBand()
-                .domain(d3.range(maxBars).map(i => `${i + 1}`))
-                .range([0, containerWidth - marginRight])
-                .padding(0.2);
-
-            const maxBarWidth = maxDimensions.bandwidth();
-            const maxPaddingWidth = maxDimensions.step() - maxDimensions.bandwidth();
-
-            const axisWidth = containerWidth - marginLeft - marginRight;
-            const currentWidth = dataLength * maxBarWidth + (dataLength + 1) * maxPaddingWidth;
-
-            const calculatedWidth = Math.max(axisWidth, currentWidth);
-
-            return d3.scaleBand()
-                .domain(data.map(d => d['city']))
-                .range([0, calculatedWidth])
-                .padding(0.2);
-        }
+            .style('font-size', '10.5px')
+            .style('opacity', 0) // Start with opacity 0
+            .transition() // Add transition
+            .duration(750)
+            .style('opacity', 1); // Fade in text
 
         // handle bar sorting
         d3.select('#bar-chart-order').on('change', (event) => {
@@ -263,6 +258,29 @@ const BarChart = ({ data, selectedCity}) => {
         };
     }, []);
 
+    function getXaxisScaler(containerWidth, marginLeft, marginRight) {
+        const dataLength = data.length;
+        const maxBars = 20;
+
+        const maxDimensions = d3.scaleBand()
+            .domain(d3.range(maxBars).map(i => `${i + 1}`))
+            .range([0, containerWidth - marginRight])
+            .padding(0.2);
+
+        const maxBarWidth = maxDimensions.bandwidth();
+        const maxPaddingWidth = maxDimensions.step() - maxDimensions.bandwidth();
+
+        const axisWidth = containerWidth - marginLeft - marginRight;
+        const currentWidth = dataLength * maxBarWidth + (dataLength + 1) * maxPaddingWidth;
+
+        const calculatedWidth = Math.max(axisWidth, currentWidth);
+
+        return d3.scaleBand()
+            .domain(data.map(d => d['city']))
+            .range([0, calculatedWidth])
+            .padding(0.2);
+    }
+
     return (
         <div ref={containerRef} className="bar-chart-container w-full h-full">
             <form id="plot-form" className="mb-4 flex justify-between items-center gap-2 flex-wrap">
@@ -287,13 +305,13 @@ const BarChart = ({ data, selectedCity}) => {
                     Go to selected city
                 </button>
             </form>
-            <div className="flex h-full">
-                <div ref={yAxisRef} className="sticky left-0 bg-white" style={{ zIndex: 20 }}></div>
-                <div ref={scrollContainerRef} className="flex-grow overflow-x-auto scroll-container" style={{ zIndex: 10 }}>
+            <div className="flex">
+                <div ref={yAxisRef} className="sticky left-0" style={{ zIndex: 20 }}></div>
+                <div ref={scrollContainerRef} className="flex-grow overflow-x-hidden scroll-container" style={{ zIndex: 10 }}>
                     <div ref={chartRef} className="h-full"></div>
                 </div>
             </div>
-            <p className='text-center text-[14px] font-bold text-primary' style={{ marginTop: '-32px' }}>City</p>
+            <p className='text-center text-[14px] font-bold text-primary -mt-[32px] sm:-mt-[12px]'>City</p>
         </div>
     );
 };
