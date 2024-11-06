@@ -125,34 +125,33 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         update(selectedArea, 0);
         update(selectedArea, 0); // DO NOT REMOVE THIS LINE
 
-        function update(areaType, t)
-        {
+        function update(areaType, t) {
             const data = areaType === 'living_area' ? livingAreaPrice : landAreaPrice;
-
-            // calculate min and max area
+        
+            // Calculate min and max area
             const minArea = d3.min(data, d => d[areaType]);
             const maxArea = d3.max(data, d => d[areaType]);
-
-            // setup x-axis domain
+        
+            // Set up x-axis domain
             const [xLowerBound, xUpperBound] = calculateAxisDomain(minArea, maxArea, xAxisDomainPadding);
             xAxisScaler.domain([xLowerBound, xUpperBound]);
-
-            // create custom tick values for always keeping the tick positions consistent
-            const xTickValues = d3.range(xLowerBound, xUpperBound + 1, (xUpperBound - xLowerBound) / 10)
-
-            // create x-axis generator
+        
+            // Create custom tick values for consistent tick positions
+            const xTickValues = d3.range(xLowerBound, xUpperBound + 1, (xUpperBound - xLowerBound) / 10);
+        
+            // Create x-axis generator
             const xAxisGenerator = d3.axisBottom(xAxisScaler)
                 .tickSize(10)
                 .tickValues(xTickValues);
-
-            // update x-axis
+        
+            // Update x-axis with animation
             svg.select('#line-chart-x-axis')
                 .transition()
-                .duration(t)
+                .duration(800)
                 .call(xAxisGenerator);
-            svg.select('#line-chart-x-axis .domain')
-                .remove();
-
+        
+            svg.select('#line-chart-x-axis .domain').remove();
+        
             // Vertical grid lines
             svg.selectAll('line.line-chart-vertical-gridline')
                 .data(xTickValues)
@@ -164,23 +163,33 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .attr('y2', marginTop)
                 .attr('stroke', 'black')
                 .attr('stroke-width', 0.5);
-
+        
             // Create the line generator
             const lineGenerator = d3.line()
                 .x(d => xAxisScaler(d[areaType]))
                 .y(d => yAxisScaler(d['price']));
-
-            // Update the line
+        
+            // Draw the line with animation
             const line = svg.selectAll('.chart-line').data([data]);
             line.enter()
                 .append('path')
                 .attr('class', 'chart-line')
-                .merge(line)
-                .transition()
-                .duration(t)
+                .attr('fill', 'none')
+                .attr('stroke', 'steelblue')
+                .attr('stroke-width', 2)
                 .attr('d', lineGenerator)
-                .attr('fill', 'none');
-
+                .attr('stroke-dasharray', function() {
+                    const totalLength = this.getTotalLength();
+                    return `${totalLength} ${totalLength}`;
+                })
+                .attr('stroke-dashoffset', function() {
+                    return this.getTotalLength();
+                })
+                .transition()
+                .duration(1000)
+                .ease(d3.easeLinear)
+                .attr('stroke-dashoffset', 0);
+        
             // Update dots
             const dots = svg.selectAll('.line-chart-dot').data(data);
             dots.enter()
@@ -192,8 +201,8 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .duration(t)
                 .attr('cx', d => xAxisScaler(d[areaType]))
                 .attr('cy', d => yAxisScaler(d['price']));
-
-            // Update hover dots for tooltip
+        
+            // Hover dots for tooltips
             const hoverDots = svg.selectAll('.line-chart-hover-dot').data(data);
             hoverDots.enter()
                 .append('circle')
@@ -204,66 +213,24 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .duration(t)
                 .attr('cx', d => xAxisScaler(d[areaType]))
                 .attr('cy', d => yAxisScaler(d['price']));
-
-            // update hover functionality
+        
+            // Update tooltip hover functionality
             hoverDots.on('mouseover', (event, d) => {
                 d3.select(event.target).style('opacity', 1);
-
+        
                 const areaStr = areaType === 'living_area' ? 'Living area' : 'Land area';
                 tooltip.style('visibility', 'visible')
                     .text(`${areaStr}: ${parseInt(d[areaType])} m²\nPrice: ${formatPrice(d['price'])} USD`);
             });
-
             hoverDots.on('mousemove', (event) => {
                 tooltipHover(tooltip, event);
             });
-
             hoverDots.on('mouseout', (event) => {
                 d3.select(event.target).style('opacity', 0);
                 tooltip.style('visibility', 'hidden');
             });
-
-            // Add prediction point if available
-            if (predictionResult)
-            {
-                const predictionPoint = {
-                    price: predictionResult.prediction,
-                    area: areaType === 'living_area'
-                        ? predictionResult['property-details']['living-area']
-                        : predictionResult['property-details']['land-area']
-                };
-
-                svg.selectAll('.prediction-dot')
-                    .data([predictionPoint])
-                    .join('circle')
-                    .attr('class', 'prediction-dot')
-                    .attr('r', 10)
-                    .attr('cx', d => xAxisScaler(d['area']))
-                    .attr('cy', d => yAxisScaler(d['price']));
-
-                // Add hover functionality for prediction dot
-                svg.selectAll('.prediction-hover-dot')
-                    .data([predictionPoint])
-                    .join('circle')
-                    .attr('class', 'prediction-hover-dot')
-                    .attr('r', 16)
-                    .attr('cx', d => xAxisScaler(d['area']))
-                    .attr('cy', d => yAxisScaler(d['price']))
-                    .on('mouseover', (event, d) => {
-                        d3.select(event.target).style('opacity', 0.3);
-                        const areaTypeText = areaType === 'living_area' ? 'Living area' : 'Land area';
-                        tooltip.style('visibility', 'visible')
-                            .text(`${areaTypeText}: ${parseInt(d['area'])} m²\nPrice: ${formatPrice(d['price'])} USD`);
-                    })
-                    .on('mousemove', (event) => {
-                        tooltipHover(tooltip, event);
-                    })
-                    .on('mouseout', (event) => {
-                        d3.select(event.target).style('opacity', 0);
-                        tooltip.style('visibility', 'hidden');
-                    });
-            }
         }
+        
     }, [dimensions, predictionResult, selectedArea]);
 
     function calculateAxisDomain(lowerBound, upperBound, paddingPercent)
