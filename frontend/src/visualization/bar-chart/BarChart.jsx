@@ -38,7 +38,7 @@ const BarChart = ({ data, selectedCity}) => {
         const marginTop = 40;
         const marginRight = 20;
         const marginBottom = 80;
-        const marginLeft = 45;
+        const marginLeft = 50;
 
         // hash map containing the sorting functions for the chart's order
         const orderMap = new Map([
@@ -65,7 +65,8 @@ const BarChart = ({ data, selectedCity}) => {
             .append('svg')
             .attr('width', marginLeft)
             .attr('height', containerHeight)
-            .attr('class', 'y-axis-svg');
+            .attr('class', 'y-axis-svg')
+            .style('z-index', '20');
 
         // Y-axis
         yAxisSvg.append('g')
@@ -78,29 +79,13 @@ const BarChart = ({ data, selectedCity}) => {
         yAxisSvg.append('text')
             .attr('class', 'legend-text')
             .attr('x', 0)
-            .attr('y', 20)
+            .attr('y', 12)
+            .style('text-anchor', 'start')
+            .style('text-color', '#0E4459')
             .text('↑ Price (USD)');
 
         // Add domain line
         const maxPrice = d3.max(data, d => d['price']);
-        yAxisSvg.append('line')
-            .attr('x1', marginLeft) // Align with the y-axis
-            .attr('y1', yAxisScaler(maxPrice)) // Position at max value
-            .attr('x2', marginLeft + 10) // Extend line to the right
-            .attr('y2', yAxisScaler(maxPrice))
-            .attr('stroke', 'black') // Line color
-            .attr('stroke-width', 2) // Line width
-            .attr('class', 'domain-line'); // Optional class for styling
-
-        // Draw a line at y=0 for the domain line
-        yAxisSvg.append('line')
-            .attr('x1', marginLeft) // Align with the y-axis
-            .attr('y1', yAxisScaler(0)) // Position at y=0
-            .attr('x2', marginLeft + 10) // Extend line to the right
-            .attr('y2', yAxisScaler(0))
-            .attr('stroke', 'black') // Line color
-            .attr('stroke-width', 2) // Line width
-            .attr('class', 'domain-line'); // Optional class for styling
 
         // Add vertical domain line
         yAxisSvg.append('line')
@@ -109,7 +94,7 @@ const BarChart = ({ data, selectedCity}) => {
             .attr('x2', marginLeft) // Vertical line, so x1 = x2
             .attr('y2', containerHeight - marginBottom) // End at the bottom margin
             .attr('stroke', 'black') // Line color
-            .attr('stroke-width', 2) // Line width
+            .attr('stroke-width', 1) // Line width
             .attr('class', 'vertical-domain-line'); // Optional class for styling
 
         // Create main chart SVG
@@ -117,7 +102,8 @@ const BarChart = ({ data, selectedCity}) => {
             .append('svg')
             .attr('width', rangeLeft)
             .attr('height', containerHeight)
-            .attr('class', 'main-svg');
+            .attr('class', 'main-svg')
+            .style('z-index', '10');
 
         // horizontal dashed gridlines
         mainSvg.selectAll('line.bar-chart-horizontal-gridline')
@@ -154,15 +140,10 @@ const BarChart = ({ data, selectedCity}) => {
             .selectAll('text')
             .attr('transform', 'rotate(45)')
             .attr('text-anchor', 'start')
+            // .attr('font-size', '12px')
             .attr('dx', '0.5em')
-            .attr('dy', '0.5em');
-
-        // x-axis legend
-        // mainSvg.append('text')
-        //     .attr('class', 'legend-text')
-        //     .attr('x', rangeLeft / 2)
-        //     .attr('y', containerHeight - 4)
-        //     .text('City');
+            .attr('dy', '0.5em')
+            .style('font-size', '11px');
 
         // tooltip
         const tooltip = d3.select('body')
@@ -301,14 +282,14 @@ const BarChart = ({ data, selectedCity}) => {
                 <button
                     type="button"
                     id="bar-chart-button"
-                    className="w-fit bg-primary text-white text-body-sm sm:text-body flex items-center justify-center text-body px-[9px] sm:px-[15px] py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out"
+                    className="w-fit bg-primary text-white text-footnote-sm sm:text-footnote flex items-center justify-center px-3 py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out"
                 >
                     Go to selected city
                 </button>
             </form>
             <div className="flex h-full">
-                <div ref={yAxisRef} className="sticky left-0 z-10 bg-white"></div>
-                <div ref={scrollContainerRef} className="flex-grow overflow-x-auto scroll-container">
+                <div ref={yAxisRef} className="sticky left-0 bg-white" style={{ zIndex: 20 }}></div>
+                <div ref={scrollContainerRef} className="flex-grow overflow-x-auto scroll-container" style={{ zIndex: 10 }}>
                     <div ref={chartRef} className="h-full"></div>
                 </div>
             </div>

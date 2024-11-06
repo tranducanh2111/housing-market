@@ -30,44 +30,38 @@
 }
 
 .legend-text {
-    fill: black;
+    fill: #0E4459;
     font-size: 14px;
     font-weight: bold;
+    font-family: sans-serif;
 }
-
-#x-axis-legend-text {
-    text-anchor: middle;
-}
-
-/* #bar-chart-button {
-    display: inline-block;
-    color: blue;
-    background: green;
-    border-radius: 4px;
-} */
 
 .bar-chart-container {
     position: relative;
 }
 
-/* Hide scrollbar for Chrome, Safari, and Opera */
 .scroll-container::-webkit-scrollbar {
     display: none;
 }
 
-/* Hide scrollbar for IE, Edge, and Firefox */
 .scroll-container {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
-/* Add or update these CSS rules */
 .y-axis-svg {
     z-index: 20;
     position: relative;
+    overflow: visible;
 }
 
 .main-svg {
     z-index: 10;
     position: relative;
+}
+
+/* New styles for axis labels */
+.bar-chart-axis text {
+    font-size: 12px;
+    font-family: sans-serif;
 }
