@@ -38,10 +38,3 @@
 #x-axis-legend-text {
     text-anchor: middle;
 }
-
-#bar-chart-button {
-    display: inline-block;
-    color: blue;
-    background: green;
-    border-radius: 4px;
-}

@@ -43,7 +43,7 @@ const PersonalizeInsightContent = () => {
                     </div>
                 </div>
             </section>
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="flex-1 min-w-[290px] bg-white rounded-lg shadow p-4 h-[540px]">
                     <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">City Comparison</h3>
                     <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>

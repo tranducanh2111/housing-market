@@ -288,19 +288,27 @@ const BarChart = ({ data, selectedCity}) =>
 
     return (
         <div ref={containerRef} className="bar-chart-container w-full h-full">
-            <form id="plot-form" className="mb-4">
-                <label htmlFor="bar-chart-order" className="mr-2 text-body-sm sm:text-body">Sort by</label>
-                <select
-                    id="bar-chart-order"
-                    className="border rounded p-1 text-body-sm sm:text-body"
-                    value={currentOrder}
-                    onChange={(e) => setCurrentOrder(e.target.value)}
+            <form id="plot-form" className="mb-4 flex justify-between items-center gap-2 flex-wrap">
+                <div>
+                    <label htmlFor="bar-chart-order" className="mr-2 text-body-sm sm:text-body">Sort by</label>
+                    <select
+                        id="bar-chart-order"
+                        className="border rounded p-1 text-body-sm sm:text-body"
+                        value={currentOrder}
+                        onChange={(e) => setCurrentOrder(e.target.value)}
+                    >
+                        <option value="Alphabetical">Alphabetical</option>
+                        <option value="Ascending">Price Ascending</option>
+                        <option value="Descending">Price Descending</option>
+                    </select>
+                </div>
+                <button
+                    type="button"
+                    id="bar-chart-button"
+                    className='w-fit bg-primary text-white text-body-sm sm:text-body flex items-center justify-center text-body px-[9px] sm:px-[15px] py-[8px] h-[36px] rounded-md transition duration-300 ease-in-out'
                 >
-                    <option value="Alphabetical">Alphabetical</option>
-                    <option value="Ascending">Price Ascending</option>
-                    <option value="Descending">Price Descending</option>
-                </select>
-                <button type="button" id="bar-chart-button">Pan to inputted city</button>
+                    Pan to inputted city
+                </button>
             </form>
             <div ref={chartRef} className="chart-container min-w-full h-full"></div>
         </div>
