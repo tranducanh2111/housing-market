@@ -190,7 +190,7 @@ const BarChart = ({ data, selectedCity}) =>
         function getXaxisScaler()
         {
             const dataLength = data.length;
-            const maxBars = 20;
+            const maxBars = 16;
 
             const maxDimensions = d3.scaleBand()
                 .domain(d3.range(maxBars).map(i => `${i + 1}`))
