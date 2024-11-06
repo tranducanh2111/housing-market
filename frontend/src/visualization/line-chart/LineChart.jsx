@@ -96,6 +96,9 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .attr('id', 'x-axis-legend-text')
             .attr('x', containerWidth / 2)
             .attr('y', containerHeight - 4)
+            .style('font-size', '14px')
+            .attr("font-weight", "700")
+            .style('fill', '#0E4459')
             .text('Area m²')
 
         // y-axis legend
@@ -104,6 +107,9 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .attr('id', 'y-axis-legend-text')
             .attr('x', 8)
             .attr('y', 20)
+            .style('font-size', '14px')
+            .attr("font-weight", "700")
+            .style('fill', '#0E4459')
             .text('↑ Price (USD)')
 
         // Remove any existing tooltips

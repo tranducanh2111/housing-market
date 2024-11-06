@@ -35,3 +35,7 @@ export function tooltipHover(tooltip, event)
             ? (mouseX - tooltipWidth - 30) + 'px'
             : (mouseX + 40) + 'px');
 }
+// export function tooltipHover(tooltip, event) {
+//    tooltip.style('top', event.pageY - 20 + 'px')
+//           .style('left', event.pageX + 20 + 'px');
+//}

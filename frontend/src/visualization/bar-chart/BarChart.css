@@ -5,7 +5,7 @@
 }
 
 .bar {
-    fill: steelblue;
+    fill: #0E4459;
 }
 
 #selected-city {
@@ -30,21 +30,38 @@
 }
 
 .legend-text {
-    fill: black;
+    fill: #0E4459;
     font-size: 14px;
     font-weight: bold;
+    font-family: sans-serif;
 }
 
-#x-axis-legend-text {
-    text-anchor: middle;
+.bar-chart-container {
+    position: relative;
 }
 
-#bar-chart-tooltip {
-    position: absolute;
-    padding: 10px;
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 5px;
-    pointer-events: none;
-    white-space: pre-line;
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.y-axis-svg {
+    z-index: 20;
+    position: relative;
+    overflow: visible;
+}
+
+.main-svg {
+    z-index: 10;
+    position: relative;
+}
+
+/* New styles for axis labels */
+.bar-chart-axis text {
+    font-size: 12px;
+    font-family: sans-serif;
 }
