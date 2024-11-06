@@ -100,7 +100,7 @@ const BarChart = ({ data, selectedCity}) => {
         // Create main chart SVG
         const mainSvg = d3.select(chartRef.current)
             .append('svg')
-            .attr('width', rangeLeft)
+            .attr('width', rangeLeft + 30)
             .attr('height', containerHeight)
             .attr('class', 'main-svg')
             .style('z-index', '10');
@@ -143,7 +143,7 @@ const BarChart = ({ data, selectedCity}) => {
             // .attr('font-size', '12px')
             .attr('dx', '0.5em')
             .attr('dy', '0.5em')
-            .style('font-size', '11px');
+            .style('font-size', '10.5px');
 
         // tooltip
         const tooltip = d3.select('body')
