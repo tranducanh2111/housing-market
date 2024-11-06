@@ -282,7 +282,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         
         // Cleanup function
         return () => {
-            d3.selectAll('#tooltip').remove();
+            // d3.selectAll('#tooltip').remove();
         };
     }, [drawLineChart, livingAreaData, landAreaData, selectedArea]);
 
