@@ -1,10 +1,11 @@
 # Setup
 ## Backend
-1. Setup a python environment for this project (I used VSCode + `pyenv`).
-2. In the python environment, run the following `pip` commands:
+1. Setup a python environment.
+2. Run the following `pip` commands:
 - `pip install scikit-learn`
 - `pip install fastapi uvicorn`
 - `pip install requests`
+- `pip install pydantic`
 ## Frontend
 1. Install `npm`.
 2. Open a terminal and navigate to the `frontend` folder.
@@ -27,7 +28,7 @@ To run the backend:
 - Start a `uvicorn` web server of `main.py` with: `uvicorn main:app --reload`
 - Run `main.py` directly. This also starts a `uvicorn` server.
 ## Frontend
-To run the frontend, run the following from the `frontend` folder: `npm run start`
+To run the frontend, run the following from the `frontend` folder: `npm start`
 # Misc
-## Formatting
+### Formatting
 To format the frontend code you can run `npm run format` from the `frontend` folder.
