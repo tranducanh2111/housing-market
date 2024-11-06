@@ -323,7 +323,7 @@ const HeroSection = () => {
                                             id="swiper-author-date"
                                             className="text-white text-footnote-sm sm:text-footnote line-clamp-1"
                                         >
-                                            Living Area: ${slide.area} m<sup>2</sup>
+                                            Living Area: {slide.area} m<sup>2</sup>
                                         </p>
                                     </div>
                                 </div>
