@@ -7,9 +7,9 @@
 - `pip install requests`
 - `pip install pydantic`
 ## Frontend
-1. Install `npm`.
-2. Open a terminal and navigate to the `frontend` folder.
-3. Run the following `npm` commands:
+1. Open a terminal and navigate to the `frontend` folder.
+2. Run the following `npm` commands:
+- `npm install`
 - `npm install swiper`
 - `npm install react-router-dom`
 - `npm install react-phone-input-2`
