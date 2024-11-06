@@ -182,9 +182,10 @@ async def predict_house_price(street: str, city: str, state: str):
     API is used to fetch the data required for the model. This method is used for when the user doesn't know the
     property's specific details, but knows the property address."""
     address = f'{street} {city} {state}'
-    house_data = fetch_rapid_api_house_data(address)
 
     try:
+        house_data = fetch_rapid_api_house_data(address)
+
         living_area = house_data['livingArea'] * 0.09290304  # convert from square feet to square meters
         land_area = house_data['lotSize'] * 0.09290304  # convert from square feet to square meters
         sold = True

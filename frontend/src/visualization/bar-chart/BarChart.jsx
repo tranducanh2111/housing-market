@@ -132,8 +132,6 @@ const BarChart = ({ data, selectedCity}) =>
 
         // pan by scrolling functionality
         let transform = JSON.parse(JSON.stringify(d3.zoomIdentity));
-        console.log(transform);
-
         const maxPan = containerWidth - rangeLeft;
         svg.on('wheel', (event) =>
         {
