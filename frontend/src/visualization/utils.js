@@ -19,3 +19,8 @@ export function observeContainerSize(containerRef, setDimensions) {
 
     return () => { resizeObserver.disconnect(); };
 }
+
+export function tooltipHover(tooltip, event) {
+    tooltip.style('top', event.pageY - 20 + 'px')
+           .style('left', event.pageX + 20 + 'px');
+}
