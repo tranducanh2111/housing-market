@@ -45,7 +45,7 @@ const PersonalizeInsightContent = () => {
             </section>
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <div className="flex-1 min-w-[290px] bg-white rounded-lg shadow-md p-4 h-[540px]">
-                    <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">{`Property Cost in Different Cities of ${selectedState}`}</h3>
+                    <h3 className="text-h3-sm sm:text-h3 font-semibold mb-4">City Comparison</h3>
                     <div className='h-[calc(100%-3rem-41px)] sm:h-[calc(100%-4rem-41px)]'>
                         <BarChart
                             data={result.result['bar-chart-data']}
