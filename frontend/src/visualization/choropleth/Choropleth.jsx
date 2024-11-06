@@ -87,7 +87,7 @@ const Choropleth = ({ data, selectedState }) => {
         // tooltip
         const tooltip = d3.select('body')
             .append('div')
-            .attr('id', 'tooltip')
+            .attr('id', 'choropleth-tooltip')
             .style('visibility', 'hidden');
 
         states.on('mouseover', (event, d) =>
@@ -151,6 +151,13 @@ const Choropleth = ({ data, selectedState }) => {
     }
 
     useEffect(drawChoropleth, [data, dimensions]);
+
+    useEffect(() => {
+        return () => {
+            // Remove bar chart tooltip when component unmounts
+            d3.select('#choropleth-tooltip').remove();
+        };
+    }, []);
 
     return (
         <div ref={containerRef} className="w-full h-full">

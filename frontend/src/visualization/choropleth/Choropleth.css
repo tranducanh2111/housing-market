@@ -11,3 +11,14 @@
     stroke-width: 3;
     stroke: yellow;
 }
+
+#choropleth-tooltip {
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    pointer-events: none;
+    white-space: pre-line;
+}
+

@@ -38,3 +38,13 @@
 #x-axis-legend-text {
     text-anchor: middle;
 }
+
+#bar-chart-tooltip {
+    position: absolute;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    pointer-events: none;
+    white-space: pre-line;
+}

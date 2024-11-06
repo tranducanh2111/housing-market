@@ -107,12 +107,12 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
             .text('↑ Price (USD)')
 
         // Remove any existing tooltips
-        d3.select(containerRef.current).selectAll('#tooltip').remove();
+        // d3.select(containerRef.current).selectAll('#tooltip').remove();
 
         // Create new tooltip
         const tooltip = d3.select('body')
             .append('div')
-            .attr('id', 'tooltip')
+            .attr('id', 'line-chart-tooltip')
             .style('visibility', 'hidden');
 
         d3.selectAll('input[name="area"]')
@@ -282,7 +282,7 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
         
         // Cleanup function
         return () => {
-            // d3.selectAll('#tooltip').remove();
+            d3.selectAll('#line-chart-tooltip').remove();
         };
     }, [drawLineChart, livingAreaData, landAreaData, selectedArea]);
 

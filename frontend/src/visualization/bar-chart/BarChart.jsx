@@ -166,7 +166,7 @@ const BarChart = ({ data, selectedCity}) =>
         // tooltip
         const tooltip = d3.select('body')
             .append('div')
-            .attr('id', 'tooltip')
+            .attr('id', 'bar-chart-tooltip')
             .style('visibility', 'hidden');
 
         bars.on('mouseover', (event, d) =>
@@ -289,7 +289,7 @@ const BarChart = ({ data, selectedCity}) =>
     useEffect(() => {
         return () => {
             // Remove bar chart tooltip when component unmounts
-            d3.selectAll('.bar-chart-tooltip').remove();
+            d3.select('#bar-chart-tooltip').remove();
         };
     }, []);
 
