@@ -327,18 +327,16 @@ const HeroSection = () => {
                                         </p>
                                     </div>
                                 </div>
-                                <a href={slide.link} target="_blank" rel="noopener noreferrer">
-                                    <Button
-                                        title="More Details"
-                                        icon={ArrowRight}
-                                        className="absolute bottom-3 right-3 z-10 mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md rounded-lg hover:bg-secondary hover:bg-opacity-100 hover:mix-blend-normal transition duration-200"
-                                        textColor="text-white"
-                                        style={{
-                                            padding: '2px 8px',
-                                        }}
-                                        onClick={() => handlePropertyPrediction(slide)}
-                                    />
-                                </a>
+                                <Button
+                                    title="More Details"
+                                    icon={ArrowRight}
+                                    className="absolute bottom-3 right-3 z-10 mix-blend-luminosity bg-black bg-opacity-20 backdrop-blur-md rounded-lg hover:bg-secondary hover:bg-opacity-100 hover:mix-blend-normal transition duration-200"
+                                    textColor="text-white"
+                                    style={{
+                                        padding: '2px 8px',
+                                    }}
+                                    onClick={() => handlePropertyPrediction(slide)}
+                                />
                             </SwiperSlide>
                         ))}
                     </Swiper>
