@@ -33,7 +33,7 @@ const BarChart = ({ data, selectedCity}) => {
         d3.select(yAxisRef.current).selectAll('svg').remove();
 
         const containerWidth = dimensions.width;
-        const containerHeight = dimensions.height;
+        const containerHeight = dimensions.height - 24;
 
         const marginTop = 40;
         const marginRight = 20;
@@ -312,6 +312,7 @@ const BarChart = ({ data, selectedCity}) => {
                     <div ref={chartRef} className="h-full"></div>
                 </div>
             </div>
+            <p className='text-center text-[14px] font-bold text-primary' style={{ marginTop: '-32px' }}>City</p>
         </div>
     );
 };
