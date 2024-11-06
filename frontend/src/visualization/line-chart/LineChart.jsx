@@ -206,8 +206,9 @@ const LineChart = ({ livingAreaData, landAreaData, predictionResult }) => {
                 .attr('opacity', 0)
                 .merge(dots)
                 .transition()
-                .duration(t)
-                .delay((d, i) => i * (t / data.length)) // Stagger the appearance
+                .duration(1000) // Match the duration with the line's animation
+                .ease(d3.easeLinear) // Use the same easing function as the line
+                .delay((d, i) => i * (180 / data.length)) // Stagger the appearance
                 .attr('cx', d => xAxisScaler(d[areaType]))
                 .attr('cy', d => yAxisScaler(d['price']))
                 .attr('opacity', 1);
