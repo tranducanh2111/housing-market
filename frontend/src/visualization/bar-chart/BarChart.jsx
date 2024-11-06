@@ -168,7 +168,8 @@ const BarChart = ({ data, selectedCity}) => {
         const tooltip = d3.select('body')
             .append('div')
             .attr('id', 'tooltip')
-            .style('visibility', 'hidden');
+            .style('visibility', 'hidden')
+            .style('z-index', '9999');
 
         bars.on('mouseover', (event, d) => {
             tooltip.style('visibility', 'visible')
